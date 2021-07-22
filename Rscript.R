@@ -3,8 +3,7 @@
 #                               math project final                            #
 # --------------------------------------------------------------------------- #
 
-# diff_eq_cov.R
-# .rs.restartR()
+
 rm(list = ls())
 gc()
 library(ggplot2) 
@@ -95,16 +94,19 @@ dat0 <- rbind(
   
   
 dat <- dat0
-dat <- dat[ - which(dat$family == ''), ] # remove empty species
+
+# remove empty species
+dat <- dat[ - which(dat$family == ''), ] 
 
 # sanity check on year
 sort(unique(dat$year))
 dat <- dat[dat$year > 1900,]
 years <- cbind( year = min(dat$year) : max(dat$year) )
 
-# pre process data
+# pre process data: create Y such that we will have the individual count
+# for each species for each year (min #rows required -> 30)
 Y <- data.frame()
-min.row <- 45
+min.row <- 30
 fams <- unique(dat$family)
 for(f in fams){
   i.dat <- dat[dat$family == f, ]
@@ -118,270 +120,287 @@ for(f in fams){
   }
 }
 
-# need to remove Scolopacidae as the values are too high compared to 
-# the other species and we are not going to standardize or take relative change
-# as we are interested in the absolute number
-# Y <- Y[ - which(Y$species == 'Scolopacidae'), ]
+# create Y_wide such that we will have one species per column 
+# and the related individual count per row
+Y_wide <- tidyr::pivot_wider(Y,
+                             names_from = 'species',
+                             values_from = 'individualCount'
+                             )
 
-# wrong values
-Y <- Y[- which(Y$species == 'Scolopacidae' & Y$year == 1975), ] 
+# quick visualization
+matplot(Y_wide[,1], Y_wide[,-1], type = 'l')
 
-# pivot table
-Y_wide <- data.frame(
-  tidyr::pivot_wider(Y,
-                     names_from = species,
-                     values_from = individualCount
-                     )
-  )
+# we observe some "unusual spike" according to a population evolution
+# we decide to remove it from the data
+to_investigate <- Y[which.max(Y$individualCount), 'species']
+matplot(Y_wide[,1], Y_wide[,to_investigate], type = 'l')
 
-# plot families
-par(las = 2)
-matplot(Y_wide[,1], Y_wide[,-1], type = 'l', xlab = 'year', ylab = 'individualCount', xaxt = 'n')
+# remove Glareolidae
+Y <- Y[- which(Y$species == 'Glareolidae'),]
+Y_wide <- Y_wide[, - which(colnames(Y_wide) == 'Glareolidae')]
+
+# quick visualization
+Y_wide <- data.frame(Y_wide)
+matplot(Y_wide[,1], Y_wide[,-1], type = 'l', xaxt = 'n')
 axis(1, at = Y_wide[,1], labels = Y_wide[,1])
 title('Species count vs time')
+
+# stop('2013 20210722')
 
 # --------------------------------------------------------------------------- #
 #                            model of interest                                #
 # --------------------------------------------------------------------------- #
 
 # combine data ----------------------------------------------------------------
-Y <- merge(Y, X, by = 'year', all.x = TRUE)
-Y <- Y[order(Y$species), ]
+
+Y <- merge(Y, X, by = 'year', all.x = TRUE) # join data by year
+Y <- Y[order(Y$species), ] # sort data by species
+Y$individualCount <- round(
+  as.numeric(Y$individualCount)
+  ) # cast into num
+
+# inspect individual count distribution: we can try a Pois distr
+par(mfrow = c(1,2))
+hist(Y$individualCount)
+hist(Y$individualCount[Y$individualCount < 50])
 
 # center data -----------------------------------------------------------------
-scale <- TRUE
+scale <- FALSE
 Y$syear <- scale(Y$year, scale = scale)
-Y$stemp <- scale(Y$temp, scale = scale)
-Y$srain <- scale(Y$rain, scale = scale)
-Y$individualCount <- round(as.numeric(Y$individualCount))
-Y <- Y[!is.na(Y$temp),]
+# Y$stemp <- scale(Y$temp, scale = scale)
+# Y$srain <- scale(Y$rain, scale = scale)
+# Y$individualCount <- round(as.numeric(Y$individualCount))
+# Y <- Y[!is.na(Y$temp),]
 
 # fit model -------------------------------------------------------------------
-fit <-
-  lme4::glmer(
-    individualCount ~ stemp * year + srain * year + (1 | species), 
-    family = 'poisson', data = Y
+
+# define degree
+q <- 2
+
+library(gam)
+fit_year <- lme4::glmer(
+  individualCount ~ ns(syear, q) + (1 | species), 
+  family = 'poisson', data = Y
 )
-summary(fit) 
+summary(fit_year)
 
+# what is the effect of year
+t <- sort(unique(Y$syear))
+t_pred <- ns(t, q) %*% as.numeric(coef(fit_year)[[1]][1,-1])
+plot(t, t_pred, type = 'l', main = 'effect of time')
 
-# visualize result ------------------------------------------------------------
+# inspect residuals: we can see some structure not explained by syear
+# therefore we will include further predictors
+plot(fitted(fit_year), residuals(fit_year))
 
-Y$fitted <- fitted(fit)
-Y_wide <- data.frame(
-  tidyr::pivot_wider(Y,
-                     names_from = species,
-                     values_from = c(individualCount, fitted)
-  )
+# further pred
+q_temp <- 2
+Y$srain <- scale(Y$rain, scale = TRUE)
+Y$stemp <- scale(Y$temp, scale = TRUE)
+fit_year_temp <- lme4::glmer(
+  # this model returns the best AIC among those explored
+  individualCount ~ ns(syear, q_temp) * stemp + (1 | species), 
+  family = 'poisson', data = Y
 )
+summary(fit_year_temp)
 
- 
-matplot(Y_wide$year, Y_wide[,grep('individualCount', names(Y_wide))], type = 'p',
-        xlab = 'years', ylab = 'individualCount', xaxt = 'n')
-matlines(Y_wide$year, Y_wide[,grep('fitted', names(Y_wide))], type = 'l')
-axis(1, at = Y_wide[,1], labels = Y_wide[,1])
+# less pronounced but still some structure 
+plot(fitted(fit_year), residuals(fit_year))
+plot(fitted(fit_year_temp), residuals(fit_year_temp))
 
-
-
-#
-# we now want to focus on one of the species, we take the one for which
-# the valeus are not zero yet
-
-Y1 <- Y[Y$species == 'Charadriidae', - which(names(Y) == 'species')]
-
-formula(fit) # individualCount ~ stemp * srain * syear - stemp * srain 
-
-fitg <- 
-  glm(individualCount ~ stemp * year + srain * year, 
-      data = Y1, family = 'poisson')
-summary(fitg)
-
-# -----------------------------------------------------------------------------
-
-Y1$fitted <- fitted(fitg)
+stop('2146 20210722')
 
 
-plot(Y1$year, Y1$individualCount, ylim = c(0, max(Y1$individualCount)), xaxt = 'n',
-     xlab = 'year', ylab = 'individualCount')
-title('Charadriidae in time')
-lines(Y1$year, Y1$fitted, type = 'l', col = 'red')
-axis(1, at = Y_wide[,1], labels = Y_wide[,1])
+# --------------------------------------------------------------------------- #
+#                   propose a model for rain evolution by temp                #
+# --------------------------------------------------------------------------- #
 
-years_plus <- 1975:2030
-t_long <- 0:length(years_plus) # times long 
-Y1$time <- 0 : ( nrow(Y1) - 1)
+# need to understand how temp evolves
+rain_temp <- merge(rain, temp, by = 'year')
+fit_rain <- lm(rain ~ temp, data = rain_temp)
+
+temp_seq <- seq(min(rain_temp$temp), max(rain_temp$temp), length.out = 100)
+fitteds <- predict(fit_rain, newdata = data.frame(temp = temp_seq))
+plot(rain_temp$temp, rain_temp$rain)
+lines(temp_seq, fitteds, lwd = 2, col = 'red')
+
+
+# species count subset
+to_sub <- names(
+  sort(table(Y[!is.na(Y$individualCount),'species']), decreasing = TRUE)[1]
+)
+Y1 <- Y[Y$species == to_sub,]
+
 
 # --------------------------------------------------------------------------- #
 #                      model rain data with differential eq                   #
 # --------------------------------------------------------------------------- #
 
 # rain
-rainchange <- function(t,c,parms){# rate constant passed through a list called parms
-  
-  alpha <- parms$alpha
-  
-  # derivatives dr/dt are computed below
-  r <- rep(0,length(c))
-  r[1] <- alpha * c["rain"]
-  
-  return(list(r))
-}
 
-warning('write as linear system ?')
 rainchange <- function(t, state, parms) {
+  
+  # browser()
 
     with(as.list(c(state,parms)), {
-      
-      alpha <- as.numeric(parms["alpha"]) 
-      beta <- as.numeric(parms["beta"]) 
-      gamma <- as.numeric(parms["gamma"]) 
-    
-      dR = alpha * rain + beta * temp
-      #dR = (alpha + beta * temp) * rain
+
+      # alpha <- as.numeric(parms["alpha"])
+      # beta <- as.numeric(parms["beta"])
+      gamma <- as.numeric(parms["gamma"])
+
+      # dR = alpha * rain + beta * temp
+      # dR = (alpha + beta * temp) * rain
       dT = gamma * temp
-    
-      return(list(c(dR,dT)))
+
+      return(list(c(dT)))
   })
 }
 
-t <- Y1$time
+stop('need to check NA in y1 time')
+t <- Y1$time <- Y1$year - min(Y1$year)
 yini <- c(rain = Y1$rain[1], temp = Y1$temp[1])
+yini <- c(temp = Y1$temp[1])
 parms <- c(alpha = -1e-2, beta = 1e-2, gamma = 1e-3)
 out <- deSolve::ode(y = yini, time = t, func = rainchange, parms = as.list(parms))
 out
+plot(out)
 
 # function that calculates residual sum of squares
 ssq_rain <- function(parms){
-  
-  #browser()
-  
+
+  browser()
+
   # inital concentration
   cinit <- c(rain = Y1$rain[1], temp = Y1$temp[1])
-  # time points for which conc is reported
-  t <- sort( unique( c(seq(0,5,0.1),Y1$time) ))
+  cinit <- c(temp = Y1$temp[1])
   
+  # time points for which conc is reported
+  t <- sort( unique( c(seq(0,5,0.1), t ) ))
+
   # solve ODE for a given set of parameters
   out=ode(y=cinit,times=t,func=rainchange,parms=as.list(parms))
-  
+
   # Filter data that contains time points where data is available
   outdf=data.frame(out)
   outdf=outdf[outdf$time %in% Y1$time,]
   # Evaluate predicted vs experimental residual
-  ssqres <- c(outdf$rain-Y1$rain, outdf$temp - Y1$temp)
-  
+  #ssqres <- c(outdf$rain-Y1$rain, outdf$temp - Y1$temp)
+  ssqres <- outdf$temp - Y1$temp
+
   return(ssqres) # return predicted vs experimental residual
 }
 
 # parameter fitting using levenberg marquart algorithm
 parms_rain <- c(alpha = -1e-2, beta = 1e-2, gamma = 1e-3)
+parms_rain <- c(gamma = 1e-3)
 
 # fitting
 fitval_rain <- nls.lm(par = parms_rain, fn = ssq_rain)
 summary(fitval_rain)
-
-parest_rain <- fitval_rain$par # parest
-cinit <- c(rain = Y1$rain[1], temp = Y1$temp[1])
-out_rain = ode(y=cinit,times=t_long,func=rainchange,parms=as.list(parest_rain))
-out_rain <- data.frame(out_rain)
-
-par(mfrow = c(1,2))
-plot(Y1$time, Y1$rain, type = 'b')
-points(out_rain$time, out_rain$rain, col = 'red')
-plot(Y1$time, Y1$temp, type = 'b')
-points(out_rain$time, out_rain$temp, col = 'red')
-
-
-# --------------------------------------------------------------------------- #
-#                      model temp data with differential eq                   #
-# --------------------------------------------------------------------------- #
-
-
-# rain
-tempchange <- function(t,c,parms){# rate constant passed through a list called parms
-  
-  beta <- parms$beta
-  
-  # derivatives dr/dt are computed below
-  r <- rep(0,length(c))
-  r[1] <- beta * c["temp"]
-  
-  return(list(r))
-}
-
-# function that calculates residual sum of squares
-ssq_temp <- function(parms){
-  #browser()
-  
-  # inital concentration
-  cinit <- c(temp = Y1$temp[1])
-  t=c(seq(0,5,1),Y1$time)
-  t=sort(unique(t))
-  
-  # solve ODE for a given set of parameters
-  out=ode(y=cinit,times=t,func=tempchange,parms=as.list(parms))
-  
-  # Filter data that contains time points where data is available
-  outdf=data.frame(out)
-  outdf=outdf[outdf$time %in% Y1$time,]
-  ssqres=outdf$temp-Y1$temp
-  
-  return(ssqres) # return predicted vs experimental residual
-}
-
-# parameter fitting using levenberg marquart algorithm
-cinit <- c(temp = Y1$temp[1])
-t <- Y1$time
-parms_temp <- c(beta = 0.1)
-
-# fitting
-fitval_temp <- nls.lm(par = parms_temp, fn = ssq_temp)
-summary(fitval_temp)
-
-parest_temp <- fitval_temp$par # parest
-out_temp = ode(y=cinit,times=t_long,func=tempchange,parms=as.list(parest_temp))
-
-# visualize results ------------------------------------------------------------
-
-par(las = 2, mfrow = c(1,2))
-
-plot(out_rain[,1], out_rain[,2], xaxt = 'n', lwd = 2, col = 'royalblue', type = 'l',
-     xlab = 'time', ylab = 'rain')
-title('Evolution of rain in time')
-points(Y1$time, Y1$rain)
-axis(1, at = t_long, t_long + 1975)
-
-
-plot(out_temp[,1], out_temp[,2], xaxt = 'n', lwd = 2, col = 'darkorange2', type = 'l',
-     xlab = 'time', ylab = 'temperature')
-title('Evolution of temperature in time')
-points(Y1$time, Y1$temp)
-axis(1, at = t_long, t_long + 1975)
-
-
-
-# i want to estimate the uncertainty of these estimation
- 
-warning('do you really want to specify your matrix in this way?')
-S <- diag(c(vcov(fitval_rain), vcov(fitval_temp)))
-dof <- nrow(Y1) * 3 #dof
-
-# draw the confidence region
-# get points for a circle with radius r
-r=sqrt(qf(0.95,2,dof)*2)
-theta=seq(0,2*pi,length.out=100)
-z=cbind(r*cos(theta),r*sin(theta))
-# transform points of circle into points of ellipse using
-# svd of covariance matrix
-S_svd=svd(S)      # SVD of covariance matrix
-xt=t(S_svd$v)%*%diag(sqrt(S_svd$d))%*%t(z) # transform from circle to ellispse
-x=t(xt)
-# translate the ellipse so that center is the estimated parameter value
-parest <- c(alpha = parest_rain, beta = parest_temp)
-x=x+matrix(rep(as.numeric(parest),100),nrow=100,byrow=T)
-
-par(mfrow = c(1,1))
-plot(x[,1],x[,2],type="l",xlab="alpha",ylab="beta",lwd=2)
-points(parest[1], parest[2], pch=20,col="blue",cex=2)
+# 
+# parest_rain <- fitval_rain$par # parest
+# cinit <- c(rain = Y1$rain[1], temp = Y1$temp[1])
+# out_rain = ode(y=cinit,times=t_long,func=rainchange,parms=as.list(parest_rain))
+# out_rain <- data.frame(out_rain)
+# 
+# par(mfrow = c(1,2))
+# plot(Y1$time, Y1$rain, type = 'b')
+# points(out_rain$time, out_rain$rain, col = 'red')
+# plot(Y1$time, Y1$temp, type = 'b')
+# points(out_rain$time, out_rain$temp, col = 'red')
+# 
+# 
+# # --------------------------------------------------------------------------- #
+# #                      model temp data with differential eq                   #
+# # --------------------------------------------------------------------------- #
+# 
+# 
+# # rain
+# tempchange <- function(t,c,parms){# rate constant passed through a list called parms
+#   
+#   beta <- parms$beta
+#   
+#   # derivatives dr/dt are computed below
+#   r <- rep(0,length(c))
+#   r[1] <- beta * c["temp"]
+#   
+#   return(list(r))
+# }
+# 
+# # function that calculates residual sum of squares
+# ssq_temp <- function(parms){
+#   #browser()
+#   
+#   # inital concentration
+#   cinit <- c(temp = Y1$temp[1])
+#   t=c(seq(0,5,1),Y1$time)
+#   t=sort(unique(t))
+#   
+#   # solve ODE for a given set of parameters
+#   out=ode(y=cinit,times=t,func=tempchange,parms=as.list(parms))
+#   
+#   # Filter data that contains time points where data is available
+#   outdf=data.frame(out)
+#   outdf=outdf[outdf$time %in% Y1$time,]
+#   ssqres=outdf$temp-Y1$temp
+#   
+#   return(ssqres) # return predicted vs experimental residual
+# }
+# 
+# # parameter fitting using levenberg marquart algorithm
+# cinit <- c(temp = Y1$temp[1])
+# t <- Y1$time
+# parms_temp <- c(beta = 0.1)
+# 
+# # fitting
+# fitval_temp <- nls.lm(par = parms_temp, fn = ssq_temp)
+# summary(fitval_temp)
+# 
+# parest_temp <- fitval_temp$par # parest
+# out_temp = ode(y=cinit,times=t_long,func=tempchange,parms=as.list(parest_temp))
+# 
+# # visualize results ------------------------------------------------------------
+# 
+# par(las = 2, mfrow = c(1,2))
+# 
+# plot(out_rain[,1], out_rain[,2], xaxt = 'n', lwd = 2, col = 'royalblue', type = 'l',
+#      xlab = 'time', ylab = 'rain')
+# title('Evolution of rain in time')
+# points(Y1$time, Y1$rain)
+# axis(1, at = t_long, t_long + 1975)
+# 
+# 
+# plot(out_temp[,1], out_temp[,2], xaxt = 'n', lwd = 2, col = 'darkorange2', type = 'l',
+#      xlab = 'time', ylab = 'temperature')
+# title('Evolution of temperature in time')
+# points(Y1$time, Y1$temp)
+# axis(1, at = t_long, t_long + 1975)
+# 
+# 
+# 
+# # i want to estimate the uncertainty of these estimation
+#  
+# warning('do you really want to specify your matrix in this way?')
+# S <- diag(c(vcov(fitval_rain), vcov(fitval_temp)))
+# dof <- nrow(Y1) * 3 #dof
+# 
+# # draw the confidence region
+# # get points for a circle with radius r
+# r=sqrt(qf(0.95,2,dof)*2)
+# theta=seq(0,2*pi,length.out=100)
+# z=cbind(r*cos(theta),r*sin(theta))
+# # transform points of circle into points of ellipse using
+# # svd of covariance matrix
+# S_svd=svd(S)      # SVD of covariance matrix
+# xt=t(S_svd$v)%*%diag(sqrt(S_svd$d))%*%t(z) # transform from circle to ellispse
+# x=t(xt)
+# # translate the ellipse so that center is the estimated parameter value
+# parest <- c(alpha = parest_rain, beta = parest_temp)
+# x=x+matrix(rep(as.numeric(parest),100),nrow=100,byrow=T)
+# 
+# par(mfrow = c(1,1))
+# plot(x[,1],x[,2],type="l",xlab="alpha",ylab="beta",lwd=2)
+# points(parest[1], parest[2], pch=20,col="blue",cex=2)
 
 
 
