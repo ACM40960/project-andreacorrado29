@@ -1,0 +1,97 @@
+
+# drought info
+
+/****************************************************************************/
+
+potential data source
+       CITES and IUCN
+
+
+waterbirds count
+https://www.gbif.org/occurrence/download/0298659-200613084148143
+Citation GBIF.org (09 June 2021) GBIF Occurrence Download https://doi.org/10.15468/dl.zy5hhv
+License Unspecified
+Make sure to read the data user agreement and citation guidelines.
+
+/****************************************************************************/
+
+# talk about
+
+wildlife population dynamics
+
+ecosystem break up 
+    what the consequences could be
+    example 20th century where one specied left
+
+/****************************************************************************/
+
+
+institution
+Intergovernmental Panel on Climate Change (IPCC) [ http://www.ipcc-data.org ]
+
+Department: forestry, fisheries and the environment (ROSA)
+https://egis.environment.gov.za/data_egis/user/reset/16718/1622994733/SRkNqTeiQE1FvQNPdA89QnsCVvBpEUpbMKopzDHO8ok
+
+
+/****************************************************************************/
+
+types: 
+    meteorological: amount of rain 
+    hydrologists: stream flow, lake, reservoir, aquifer water level
+    agricultural: crop, change of natural distribution of various species
+
+/****************************************************************************/
+
+identify some of the factors influencing drought
+# https://www.thoughtco.com/drought-causes-stages-and-problems-1434940
+
+- amount of water vapor in atmosphere
+    this is the factor Wwordhich Creates precipitation 
+    more rain, sleet, hail, snow can occour where there are moist,
+    low pressure air system. 
+    If there is more dry, high pressure air system,
+    we will have less moisture hence less precipitation
+- wind shift air masses and warm, dry, continental air
+    as opposed to cooler, moist oceaninc air masse,
+    making wet places dry and dry places wet
+- deforestation makes the soil less able to absorb moisture
+
+
+/****************************************************************************/
+
+what values to monitor?
+
+from CCPI
+
+- rainfall 
+- temperature
+- GHG emissions
+- renawable energy
+- energy efficiency
+
+
+/****************************************************************************/
+
+important dates?
+
+# https://www.history.com/topics/natural-disasters-and-environment/history-of-climate-change
+1940-70: boom in aerosol pollutants which reflected sunlight away from the planet
+1988: Many experts point to 1988 as a critical turning point when watershed events placed global warming in the spotlight.
+
+
+
+/****************************************************************************/
+
+
+factor analysis on the previous factor
+
+determine a kind of relation
+
+
+
+/****************************************************************************/
+
+external reference
+
+https://scholarship.claremont.edu/cgi/viewcontent.cgi?article=1035&context=codee
+

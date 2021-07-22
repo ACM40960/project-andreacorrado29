@@ -37,7 +37,7 @@ plot_lowess <- function(x, y, f = .5, title = '', ax = NULL, type = 'l', ...){
 #                                   rain                                      #
 # --------------------------------------------------------------------------- #
 
-rain <- read.csv('pr_1901_2020_ZAF.csv') # load data
+rain <- read.csv('./data/pr_1901_2020_ZAF.csv') # load data
 names(rain)[1] <- 'rain' # assign name
 rain_mean <- tapply(rain$rain, rain$Year, mean)
 rain_sd <- tapply(rain$rain, rain$Year, sd)
@@ -49,7 +49,7 @@ plot_lowess(rain$year, rain$rain, f = .75, main = 'yearly rain', ax = rain$year)
 #                                temperature                                  #
 # --------------------------------------------------------------------------- #
 
-temp <- read.csv('tas_1901_2020_ZAF.csv')
+temp <- read.csv('./data/tas_1901_2020_ZAF.csv')
 names(temp)[1] <- 'temp'
 temp_mean <-tapply(temp$temp, temp$Year, mean)
 temp_sd <-tapply(temp$temp, temp$Year, sd)
@@ -61,7 +61,7 @@ plot_lowess(temp$year, temp$temp, f = .75, main = 'yearly temp', ax = temp$year)
 # --------------------------------------------------------------------------- #
 
 
-co2 <- read.csv("co2_raw.txt")
+co2 <- read.csv("./data/co2_raw.txt")
 co2 <- co2[co2$country == 'South Africa',c('year','co2')]
 co2$co2_change <- c(NA, diff(co2$co2))
 co2 <- co2[co2$year > 1901,]
@@ -86,9 +86,10 @@ X <- X[,-4] # remove co2 as highly correlated with temp
 #                            load count data                                  #
 # --------------------------------------------------------------------------- #
 
-if(!('dat0' %in% ls())){
-  dat0 <- read.delim("~/Dropbox/ucd_MATH_PROJ/DROUGHT/occurrence.txt") # load data
-}
+occurrence1 <- read.csv("~/Dropbox/git_ACM40960/data/occurrence1.txt", row.names=1)
+occurrence2 <- read.csv("~/Dropbox/git_ACM40960/data/occurrence2.txt", row.names=1)
+dat0 <- rbind(occurrence1, occurrence2)
+rm(list = c('occurrence1', 'occurrence2'))
 
 dat <- dat0
 dat <- dat[ - which(dat$family == ''), ] # remove empty species
