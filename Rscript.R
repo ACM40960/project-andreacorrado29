@@ -86,11 +86,14 @@ X <- X[,-4] # remove co2 as highly correlated with temp
 #                            load count data                                  #
 # --------------------------------------------------------------------------- #
 
-occurrence1 <- read.csv("~/Dropbox/git_ACM40960/data/occurrence1.txt", row.names=1)
-occurrence2 <- read.csv("~/Dropbox/git_ACM40960/data/occurrence2.txt", row.names=1)
-dat0 <- rbind(occurrence1, occurrence2)
-rm(list = c('occurrence1', 'occurrence2'))
-
+dat0 <- rbind(
+  read.csv("~/Dropbox/git_ACM40960/data/occurrence1.txt", row.names=1),
+  read.csv("~/Dropbox/git_ACM40960/data/occurrence2.txt", row.names=1),
+  read.csv("~/Dropbox/git_ACM40960/data/occurrence3.txt", row.names=1),
+  read.csv("~/Dropbox/git_ACM40960/data/occurrence4.txt", row.names=1)
+)
+  
+  
 dat <- dat0
 dat <- dat[ - which(dat$family == ''), ] # remove empty species
 
