@@ -205,31 +205,17 @@ fit_year_temp <- lme4::glmer(
 summary(fit_year_temp)
 
 # less pronounced but still some structure 
+par(mfrow = c(1,2))
 plot(fitted(fit_year), residuals(fit_year))
 plot(fitted(fit_year_temp), residuals(fit_year_temp))
 
-stop('2146 20210722')
-
-
-# --------------------------------------------------------------------------- #
-#                   propose a model for rain evolution by temp                #
-# --------------------------------------------------------------------------- #
-
-# need to understand how temp evolves
-rain_temp <- merge(rain, temp, by = 'year')
-fit_rain <- lm(rain ~ temp, data = rain_temp)
-
-temp_seq <- seq(min(rain_temp$temp), max(rain_temp$temp), length.out = 100)
-fitteds <- predict(fit_rain, newdata = data.frame(temp = temp_seq))
-plot(rain_temp$temp, rain_temp$rain)
-lines(temp_seq, fitteds, lwd = 2, col = 'red')
-
+# stop('2146 20210722')
 
 # species count subset
 to_sub <- names(
   sort(table(Y[!is.na(Y$individualCount),'species']), decreasing = TRUE)[1]
 )
-Y1 <- Y[Y$species == to_sub,]
+Y1 <- Y[Y$species == to_sub & complete.cases(Y),] # remove NA obs
 
 
 # --------------------------------------------------------------------------- #
@@ -256,7 +242,8 @@ rainchange <- function(t, state, parms) {
   })
 }
 
-stop('need to check NA in y1 time')
+stop('0839 20210723')
+
 t <- Y1$time <- Y1$year - min(Y1$year)
 yini <- c(rain = Y1$rain[1], temp = Y1$temp[1])
 yini <- c(temp = Y1$temp[1])
@@ -268,7 +255,7 @@ plot(out)
 # function that calculates residual sum of squares
 ssq_rain <- function(parms){
 
-  browser()
+  # browser()
 
   # inital concentration
   cinit <- c(rain = Y1$rain[1], temp = Y1$temp[1])
@@ -297,17 +284,68 @@ parms_rain <- c(gamma = 1e-3)
 # fitting
 fitval_rain <- nls.lm(par = parms_rain, fn = ssq_rain)
 summary(fitval_rain)
-# 
-# parest_rain <- fitval_rain$par # parest
+
+# estimate uncertainty
+se <- summary(fitval_rain)$coefficients[1, 'Std. Error']
+parest_rain <- c(fitval_rain$par - qnorm(.975) * se,
+                 fitval_rain$par,
+                 fitval_rain$par + qnorm(.975) * se)
+
+# estimate scenarios
 # cinit <- c(rain = Y1$rain[1], temp = Y1$temp[1])
-# out_rain = ode(y=cinit,times=t_long,func=rainchange,parms=as.list(parest_rain))
-# out_rain <- data.frame(out_rain)
+cinit <- c(temp = Y1$temp[1])
+out_rain <- ode(y=cinit,times=t,func=rainchange,parms=as.list(parest_rain[2]))
+out_rain <- data.frame(out_rain)
 # 
-# par(mfrow = c(1,2))
+# propose longer data 
+t_long <- 0:60
+Y1 <- merge(Y1, data.frame(time = t_long), all.y = TRUE)
+out_rain_long <- ode(y=cinit,times=t_long,func=rainchange,parms=as.list(parest_rain))
+out_rain_long <- data.frame(out_rain_long)
+
+# predict longer data
+out_rain_lb = ode(y=cinit,times=t_long,func=rainchange,parms=as.list(parest_rain[1]))
+out_rain_pe = ode(y=cinit,times=t_long,func=rainchange,parms=as.list(parest_rain[2]))
+out_rain_ub = ode(y=cinit,times=t_long,func=rainchange,parms=as.list(parest_rain[3]))
+out_rain_par <- merge(merge(out_rain_lb, out_rain_pe, by = 'time'), out_rain_ub, by = 'time')
+names(out_rain_par) <- c('time', 'lb', 'pe', 'ub')
+
+out_rain_par_only <- out_rain_par[out_rain_par$time > max(out_rain$time),]
+
+par(mfrow = c(1,2))
 # plot(Y1$time, Y1$rain, type = 'b')
 # points(out_rain$time, out_rain$rain, col = 'red')
-# plot(Y1$time, Y1$temp, type = 'b')
-# points(out_rain$time, out_rain$temp, col = 'red')
+
+ylim <- range(out_rain_par[,-1])
+plot(Y1$time, Y1$temp, type = 'l', ylim = ylim, xaxt = 'n')
+lines(out_rain$time, out_rain$temp, col = 'red')
+axis(1, at = Y1$time, labels = Y1$year)
+
+plot(t_long, Y1$temp, type = 'l', ylim = ylim, xaxt = 'n')
+lines(out_rain_par$time, out_rain_par$pe, col = 'red')
+polygon(c(out_rain_par_only$time, rev(out_rain_par_only$time)),
+        c(out_rain_par_only$lb, rev(out_rain_par_only$ub)),
+        col = ggplot2::alpha('red', .2), border = NA)
+axis(1, at = Y1$time, labels = Y1$time + 1975)
+
+# --------------------------------------------------------------------------- #
+#                   propose a model for rain evolution by temp                #
+# --------------------------------------------------------------------------- #
+
+# need to understand how temp evolves
+rain_temp <- merge(rain, temp, by = 'year')
+fit_rain <- lm(rain ~ temp, data = rain_temp)
+
+temp_seq <- seq(min(rain_temp$temp), max(rain_temp$temp), length.out = 100)
+fitteds <- predict(fit_rain, newdata = data.frame(temp = temp_seq))
+
+par(mfrow = c(1,1))
+plot(rain_temp$temp, rain_temp$rain)
+lines(temp_seq, fitteds, lwd = 2, col = 'red')
+
+
+
+
 # 
 # 
 # # --------------------------------------------------------------------------- #
