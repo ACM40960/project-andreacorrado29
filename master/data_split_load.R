@@ -25,8 +25,8 @@ dat3 <- dat[N3, ]
 dat4 <- dat[N4, ]
 
 # check file existence and write files
-files_available <- list.files('./data/')
-if (!('occurrence1.txt' %in% files_available)) write.csv(dat1, './data/occurrence1.txt')
-if (!('occurrence2.txt' %in% files_available)) write.csv(dat1, './data/occurrence2.txt')
-if (!('occurrence3.txt' %in% files_available)) write.csv(dat2, './data/occurrence3.txt')
-if (!('occurrence4.txt' %in% files_available)) write.csv(dat2, './data/occurrence4.txt')
+files_available <- list.files('../data/')
+if (!('occurrence1.txt' %in% files_available)) write.csv(dat1, '../data/occurrence1.txt')
+if (!('occurrence2.txt' %in% files_available)) write.csv(dat1, '../data/occurrence2.txt')
+if (!('occurrence3.txt' %in% files_available)) write.csv(dat2, '../data/occurrence3.txt')
+if (!('occurrence4.txt' %in% files_available)) write.csv(dat2, '../data/occurrence4.txt')
