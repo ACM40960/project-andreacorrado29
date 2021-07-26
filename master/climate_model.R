@@ -5,14 +5,13 @@
 
 
 rm(list = ls()) # clean env
+gc()
 source('functions.R') # load functions  
 
-gc()
 library(ggplot2) 
 library(reshape2) 
 library(deSolve) 
 library(minpack.lm)
-
 
 # --------------------------------------------------------------------------- #
 #                                   rain                                      #
@@ -24,7 +23,6 @@ rain_mean <- tapply(rain$rain, rain$Year, mean)
 rain_sd <- tapply(rain$rain, rain$Year, sd)
 rain <- data.frame(year = as.numeric(names(rain_mean)), rain = rain_mean, rain_sd = rain_sd)
 plot_lowess(rain$year, rain$rain, f = .75, main = 'yearly rain', ax = rain$year)
-
 
 # --------------------------------------------------------------------------- #
 #                                temperature                                  #
@@ -55,7 +53,6 @@ plot_lowess(temp$year, temp$temp, f = .75, main = 'yearly temp', ax = temp$year)
 #                            join data together                               #
 # --------------------------------------------------------------------------- #
 
-
 # X <- merge(merge(rain, temp, by = 'year'), co2, by = 'year') # join data
 X <- merge(rain, temp, by = 'year')
 # X <- X[, c('year','rain','temp','co2')]
@@ -63,50 +60,43 @@ X <- X[, c('year','rain','temp')]
 pairs(X)
 cor(X)
 
-# X <- X[,-4] # remove co2 as highly correlated with temp
+# the dependence of time in over time is very clear -> propose an ODE model
+# the dependence of rain over time is somewhat weak, however, we can observe
+# a clear structure in the relation btw rain amount and temperature -> lm
 
+# X <- X[,-4] # remove co2 as highly correlated with temp
 
 # --------------------------------------------------------------------------- #
 #                      model rain data with differential eq                   #
 # --------------------------------------------------------------------------- #
 
-warning('here it would be intersting to track the evolution of temp and rain together')
-
 # rain
-
 rainchange <- function(t, state, parms) {
   
   # browser()
   
   with(as.list(c(state,parms)), {
     
-    # alpha <- as.numeric(parms["alpha"])
-    # beta <- as.numeric(parms["beta"])
     gamma <- as.numeric(parms["gamma"])
+    dtemp <- gamma * temp 
     
-    # dR = alpha * rain + beta * temp
-    # dR = (alpha + beta * temp) * rain
-    dT = gamma   
-    
-    return(list(c(dT)))
+    return(list(c(dtemp)))
   })
 }
 
 #stop('0839 20210723')
 
 t <- X$time <- X$year - min(X$year, na.rm = TRUE)
-yini <- c(rain = X$rain[1], temp = X$temp[1])
 yini <- c(temp = mean(X$temp[1:5]))
-parms <- c(alpha = -1e-2, beta = 1e-2, gamma = 1e-3)
+parms <- c(gamma = 1e-3) #, alpha = 1e-3)
 out <- deSolve::ode(y = yini, time = t, func = rainchange, parms = as.list(parms))
 
 # function that calculates residual sum of squares
 ssq_rain <- function(parms){
   
-  # browser()
+  #browser()
   
   # inital concentration
-  cinit <- c(rain = X$rain[1], temp = X$temp[1])
   cinit <- c(temp = mean(X$temp[1:5]))
   
   # time points for which conc is reported
@@ -126,8 +116,7 @@ ssq_rain <- function(parms){
 }
 
 # parameter fitting using levenberg marquart algorithm
-parms_rain <- c(alpha = -1e-2, beta = 1e-2, gamma = 1e-3)
-parms_rain <- c(gamma = 1e-3)
+parms_rain <- parms
 
 # fitting
 fitval_rain <- nls.lm(par = parms_rain, fn = ssq_rain)
@@ -176,11 +165,13 @@ polygon(c(out_rain_par_only$time, rev(out_rain_par_only$time)),
         col = ggplot2::alpha('red', .2), border = NA)
 axis(1, at = X$time, labels = X$time + min(X$year, na.rm = 1))
 
-# stop('after temp model')
+stop('after temp model')
 
 # --------------------------------------------------------------------------- #
 #                   propose a model for rain evolution by temp                #
 # --------------------------------------------------------------------------- #
+
+warning('check here what s going on with NS')
 
 # need to understand how temp evolves
 # rain_temp <- merge(rain, temp, by = 'year')
@@ -188,12 +179,17 @@ rain_temp <- X[complete.cases(X),]
 
 hist(rain_temp$rain) # approximately normal
 
-fit_rain <- lm(rain ~ temp, data = rain_temp) # fit model
+fit_rain <- lm(rain ~ splines::ns(temp, 2), data = rain_temp) # fit model
+BIC(fit_rain)
+summary(fit_rain)
+par(mfrow = c(1,2))
+plot(fitted(fit_rain), residuals(fit_rain), main = 'ordinary')
 
 temp_seq <- seq(min(rain_temp$temp), max(rain_temp$temp), length.out = 100)
 fitteds <- predict(fit_rain, newdata = data.frame(temp = temp_seq))
 
-par(mfrow = c(1,1))
+par(mfrow = c(1,2))
+plot(rain_temp$time, rain_temp$rain)
 plot(rain_temp$temp, rain_temp$rain)
 lines(temp_seq, fitteds, lwd = 2, col = 'red')
 
@@ -203,7 +199,7 @@ plot(fitted(fit_rain), residuals(fit_rain), main = 'ordinary')
 
 # extract wi
 wi <- 1 / residuals(fit_rain)**2
-fit_rain_wi <- lm(rain ~ temp, data = rain_temp, weights = wi)
+fit_rain_wi <- lm(rain ~ splines::ns(temp,2), data = rain_temp, weights = wi)
 plot(fitted(fit_rain_wi), residuals(fit_rain_wi), main = 'weighted')
 summary(fit_rain_wi)
 
