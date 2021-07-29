@@ -85,7 +85,7 @@ rainchange <- function(t, state, parms) {
     delta <- as.numeric(parms["delta"])
     gamma <- as.numeric(parms["gamma"])
     
-    dR = (beta * temp + delta)*rain
+    dR = (beta * rain + delta)*temp
     dT = gamma * temp 
 #    dT = gamma * temp + alpha * rain
     

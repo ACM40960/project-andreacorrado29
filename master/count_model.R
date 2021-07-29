@@ -220,6 +220,7 @@ fit_glm <- glm(individualCount ~ ns(syear, q_temp) * stemp + ns(syear, q_temp) *
 summary(fit_glm)
 plot(fitted(fit_glm), residuals(fit_glm))
 
+
 # preprocess X
 head(X)
 tail(X)
@@ -233,32 +234,37 @@ X$stemp_ub <- (X$temp_pred_ub - m_temp) / sd_temp
 X <- X[X$year >= 1975,]
 
 
-pred_lb <- predict(fit_glm, newdata = data.frame(syear = X$syear,
-                                                 stemp = X$stemp_lb,
-                                                 srain = X$srain_lb)
+# predict upper and lower bound
+pred_lb <- predict(fit_glm, se.fit = TRUE,
+                   newdata = data.frame(syear = X$syear,
+                                        stemp = X$stemp_lb,
+                                        srain = X$srain_lb)
 )
-pred_ub <- predict(fit_glm, newdata = data.frame(syear = X$syear,
-                                                 stemp = X$stemp_ub,
-                                                 srain = X$srain_ub)
+pred_ub <- predict(fit_glm, se.fit = TRUE,
+                   newdata = data.frame(syear = X$syear,
+                                        stemp = X$stemp_ub,
+                                        srain = X$srain_ub)
 )
+# compute lower and upper bound
+pred_lb <- pred_lb$fit - qnorm(.975) * pred_lb$se.fit
+pred_ub <- pred_ub$fit + qnorm(.975) * pred_ub$se.fit
+
+# apply g transformation
+g_pred_lb <- exp(pred_lb)
+g_pred_ub <- exp(pred_ub)
+
+
+newX <- merge(cbind(year = X$year, g_pred_lb, g_pred_ub), 
+              Y1[,c('year','individualCount')], 
+              by = 'year',
+              all.x = TRUE)
 
 par(mfrow = c(1,1))
-plot(Y1$year, Y1$individualCount, type = 'l', ylim = c(0, 30))
-polygon(c(X$year, rev(X$year)),
-        c(pred_lb, rev(pred_ub)))
+plot(newX$year, newX$individualCount, type = 'l')
+polygon(c(newX$year, rev(newX$year)), c(newX$g_pred_lb, rev(newX$g_pred_ub)),
+        border = NA, col = ggplot2::alpha('red', .2))
 
-
-
-##
-plot(Y1$year, Y1$srain, type = 'l')
-lines(X$year, X$srain_lb, type = 'l')
-lines(X$year, X$srain_ub, type = 'l')
-
-plot(Y1$year, Y1$stemp, type = 'l')
-lines(X$year, X$stemp_lb, type = 'l')
-lines(X$year, X$stemp_ub, type = 'l')
-
-stop('arrivede here 20210725 1150')
+stop('arrivede here 20210729 2140')
 
 # 
 # 
