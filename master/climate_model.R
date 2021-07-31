@@ -70,8 +70,8 @@ cor(X)
 #                      model rain data with differential eq                   #
 # --------------------------------------------------------------------------- #
 
-# rain
-rainchange <- function(t, state, parms) {
+# temp change -> change function name and its occourrence
+tempchange <- function(t, state, parms) {
   
   # browser()
   
@@ -89,7 +89,7 @@ rainchange <- function(t, state, parms) {
 t <- X$time <- X$year - min(X$year, na.rm = TRUE)
 yini <- c(temp = mean(X$temp[1:5]))
 parms <- c(gamma = 1e-3) #, alpha = 1e-3)
-out <- deSolve::ode(y = yini, time = t, func = rainchange, parms = as.list(parms))
+out <- deSolve::ode(y = yini, time = t, func = tempchange, parms = as.list(parms))
 
 # function that calculates residual sum of squares
 ssq_rain <- function(parms){
@@ -103,7 +103,7 @@ ssq_rain <- function(parms){
   t <- sort( unique( c(seq(0,5,0.1), t ) ))
   
   # solve ODE for a given set of parameters
-  out=ode(y=cinit,times=t,func=rainchange,parms=as.list(parms))
+  out=ode(y=cinit,times=t,func=tempchange,parms=as.list(parms))
   
   # Filter data that contains time points where data is available
   outdf=data.frame(out)
@@ -131,33 +131,27 @@ parest_rain <- c(fitval_rain$par - qnorm(.975) * se,
 # estimate scenarios
 # cinit <- c(rain = Y1$rain[1], temp = Y1$temp[1])
 cinit <- c(temp = mean(X$temp[1:5]))
-out_rain <- ode(y=cinit,times=t,func=rainchange,parms=as.list(parest_rain[2]))
+out_rain <- ode(y=cinit,times=t,func=tempchange,parms=as.list(parest_rain[2]))
 out_rain <- data.frame(out_rain)
 # 
 # propose longer data 
 t_long <- 0:150
 X <- merge(X, data.frame(time = t_long), all.y = TRUE)
-out_rain_long <- ode(y=cinit,times=t_long,func=rainchange,parms=as.list(parest_rain))
+out_rain_long <- ode(y=cinit,times=t_long,func=tempchange,parms=as.list(parest_rain))
 out_rain_long <- data.frame(out_rain_long)
 
 # predict longer data
-out_rain_lb = ode(y=cinit,times=t_long,func=rainchange,parms=as.list(parest_rain[1]))
-out_rain_pe = ode(y=cinit,times=t_long,func=rainchange,parms=as.list(parest_rain[2]))
-out_rain_ub = ode(y=cinit,times=t_long,func=rainchange,parms=as.list(parest_rain[3]))
+out_rain_lb = ode(y=cinit,times=t_long,func=tempchange,parms=as.list(parest_rain[1]))
+out_rain_pe = ode(y=cinit,times=t_long,func=tempchange,parms=as.list(parest_rain[2]))
+out_rain_ub = ode(y=cinit,times=t_long,func=tempchange,parms=as.list(parest_rain[3]))
 out_rain_par <- merge(merge(out_rain_lb, out_rain_pe, by = 'time'), out_rain_ub, by = 'time')
 names(out_rain_par) <- c('time', 'lb', 'pe', 'ub')
 
 out_rain_par_only <- out_rain_par[out_rain_par$time > max(out_rain$time),]
 
-par(mfrow = c(1,2))
-# plot(Y1$time, Y1$rain, type = 'b')
-# points(out_rain$time, out_rain$rain, col = 'red')
+par(mfrow = c(1,1))
 
 ylim <- range(out_rain_par[,-1], X$temp, na.rm = TRUE)
-plot(X$time, X$temp, type = 'l', ylim = ylim, xaxt = 'n')
-lines(out_rain$time, out_rain$temp, col = 'red')
-axis(1, at = X$time, labels = X$year)
-
 plot(t_long, X$temp, type = 'l', ylim = ylim, xaxt = 'n')
 lines(out_rain_par$time, out_rain_par$pe, col = 'red')
 polygon(c(out_rain_par_only$time, rev(out_rain_par_only$time)),
@@ -165,7 +159,56 @@ polygon(c(out_rain_par_only$time, rev(out_rain_par_only$time)),
         col = ggplot2::alpha('red', .2), border = NA)
 axis(1, at = X$time, labels = X$time + min(X$year, na.rm = 1))
 
-stop('after temp model')
+# stop('after temp model')
+
+
+# --------------------------------------------------------------------------- #
+#               local sensitivity analysis of temperature evolution           #
+# --------------------------------------------------------------------------- #
+
+
+tempsens <- function(t, state, parms) {
+  
+  with(as.list(c(state,parms)), {
+    
+    gamma <- as.numeric(parms["gamma"])
+    RHS1 <- gamma * temp 
+    RHS2 <- gamma * s + temp # derive sensitivity equation
+    
+    return(list(c(RHS2, RHS2)))
+  })
+}
+
+
+# sensitivity: being only one parameter LSA is OK
+# very solid estimation up to 100 SE
+for(q in c(10 ** (1:4))){
+  
+  sens <- c(cinit, s = 0)
+  pe0 <- parest_rain[2]
+  pe1 <- pe0 + q * se
+  pe2 <- pe0 - q * se
+  out_rain_sens1 <- ode(y=sens,times=t,func=tempsens,parms=list(gamma = pe0))
+  out_rain_sens2 <- ode(y=sens,times=t,func=tempsens,parms=list(gamma = pe1))
+  out_rain_sens3 <- ode(y=sens,times=t,func=tempsens,parms=list(gamma = pe2))
+  
+  f <- function(x) log(x)
+  ylim <- f(range(out_rain_sens1[,2], out_rain_sens2[,2], out_rain_sens3[,2]))
+  par(mfrow = c(1,2))
+  plot(out_rain_sens1[,1],  f(out_rain_sens1[,2]), type = 'l', xlab = 'time',
+       ylab = '', main = paste('temp vs time \\pm', q,'se'), ylim = ylim)
+  lines(out_rain_sens2[,1], f(out_rain_sens2[,2]), type = 'l', col = 'red')
+  lines(out_rain_sens3[,1], f(out_rain_sens3[,2]), type = 'l', col = 'blue')
+  
+  ylim <- f(range(out_rain_sens1[,3], out_rain_sens2[,3], out_rain_sens3[,3]) + 1)
+  plot(out_rain_sens1[,1],  f(out_rain_sens1[,3]),
+       main = paste('wrt gamma \\pm', q, 'se'), ylab = '', 
+       xlab = 'time', type = 'l', ylim = ylim)
+  lines(out_rain_sens2[,1], f(out_rain_sens2[,3]), col  = 'red')
+  lines(out_rain_sens3[,1], f(out_rain_sens3[,3]), col  = 'blue')
+}
+par(mfrow = c(1,1))
+
 
 # --------------------------------------------------------------------------- #
 #                   propose a model for rain evolution by temp                #
@@ -209,6 +252,30 @@ rain_pred_pe <- predict(fit_rain_wi, newdata = data.frame(temp = out_rain_par$pe
 rain_pred_lb <- predict(fit_rain_wi, newdata = data.frame(temp = out_rain_par$lb), interval = pred_type)[,'lwr']
 rain_pred_ub <- predict(fit_rain_wi, newdata = data.frame(temp = out_rain_par$ub), interval = pred_type)[,'upr']
 
+
+# sensitivity
+# try to impute different values
+q <- 4
+summary(fit_rain_wi)
+fit_rain_wi_edit <- fit_rain_wi
+fit_rain_wi_edit$coefficients[2] <-  -8.962673 + q *  1.0267
+fit_rain_wi_edit$coefficients[3] <-  -8.6207 + q *  0.3338
+pred_type <- 'prediction'
+rain_pred_pe_e <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_rain_par$pe), interval = pred_type)[,'fit']
+rain_pred_lb_e <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_rain_par$lb), interval = pred_type)[,'lwr']
+rain_pred_ub_e <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_rain_par$ub), interval = pred_type)[,'upr']
+
+fit_rain_wi_edit$coefficients[2] <-  -8.962673 - q *  1.0267
+fit_rain_wi_edit$coefficients[3] <-  -8.6207 - q *  0.3338
+pred_type <- 'prediction'
+rain_pred_pe_f <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_rain_par$pe), interval = pred_type)[,'fit']
+rain_pred_lb_f <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_rain_par$lb), interval = pred_type)[,'lwr']
+rain_pred_ub_f <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_rain_par$ub), interval = pred_type)[,'upr']
+
+
+--
+
+# viz result
 par(mfrow = c(1,2))
 # plot temp as well
 plot(rain_temp$time, rain_temp$temp, type = 'l', xlim = range(out_rain_par$time), xaxt = 'n')
@@ -220,8 +287,6 @@ polygon(c(out_rain_par$time[idx], rev(out_rain_par$time[idx])),
         c(out_rain_par$lb[idx], rev(out_rain_par$ub[idx])),
         border = NA, col = ggplot2::alpha('red', .2))
 
-
-
 plot(rain_temp$time, rain_temp$rain, type = 'l', xlim = range(out_rain_par$time), xaxt = 'n')
 axis(1, at = out_rain_par$time, labels = out_rain_par$time + min(X$year, na.rm = TRUE))
 title('Rain vs Time')
@@ -230,7 +295,19 @@ idx <- out_rain_par$time > max(rain_temp$time)
 polygon(c(out_rain_par$time[idx], rev(out_rain_par$time[idx])),
         c(rain_pred_lb[idx], rev(rain_pred_ub[idx])),
         border = NA, col = ggplot2::alpha('red', .2))
+# other scenario + se
+lines(out_rain_par$time, rain_pred_pe_e, lwd = 2, col = 'blue')
+polygon(c(out_rain_par$time[idx], rev(out_rain_par$time[idx])),
+        c(rain_pred_lb_e[idx], rev(rain_pred_ub_e[idx])),
+        border = NA, col = ggplot2::alpha('blue', .2))
+# other scenario - se
+lines(out_rain_par$time, rain_pred_pe_f, lwd = 2, col = 'green')
+polygon(c(out_rain_par$time[idx], rev(out_rain_par$time[idx])),
+        c(rain_pred_lb_f[idx], rev(rain_pred_ub_f[idx])),
+        border = NA, col = ggplot2::alpha('green', .2))
 
+
+stop('check sensitivity for rain ~ temp model')
 
 # attach new data to X
 X_pred <- cbind(X, rain_pred_lb, rain_pred_pe, rain_pred_ub, out_rain_par[,-1])
