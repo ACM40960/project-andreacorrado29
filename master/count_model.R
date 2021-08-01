@@ -183,6 +183,10 @@ fit_year_temp <- lme4::glmer(
 )
 summary(fit_year_temp)
 
+# year        -> negative sign
+# year * temp -> negative sign
+# year * rain -> negative sign
+
 # less pronounced but still some structure 
 par(mfrow = c(1,2))
 plot(fitted(fit_year), residuals(fit_year))
@@ -209,22 +213,19 @@ to_sub <- names(
 Y1 <- Y[Y$species == to_sub & complete.cases(Y),] # remove NA obs
 dim(Y1)
 
-par(mfrow = c(1,3))
+par(mfrow = c(1,1))
 plot(Y1$year, Y1$individualCount, type = 'l')
-plot(Y1$year, Y1$srain, type = 'l')
-plot(Y1$year, Y1$stemp, type = 'l')
+# plot(Y1$year, Y1$srain, type = 'l')
+# plot(Y1$year, Y1$stemp, type = 'l')
 
 # fit glm
+formula(fit_year_temp)
 fit_glm <- glm(individualCount ~ ns(syear, q_temp) * stemp + ns(syear, q_temp) * srain,
                data = Y1, family = 'poisson')
-summary(fit_glm)
+summary(fit_glm) # approximately same result
 plot(fitted(fit_glm), residuals(fit_glm))
 
-
-# preprocess X
-head(X)
-tail(X)
-
+# pre-process X
 X$year <- X$time + 1901
 X$syear <- X$year - cyear
 X$srain_lb <- (X$rain_pred_lb - m_rain) / sd_rain
@@ -232,7 +233,6 @@ X$srain_ub <- (X$rain_pred_ub - m_rain) / sd_rain
 X$stemp_lb <- (X$temp_pred_lb - m_temp) / sd_temp
 X$stemp_ub <- (X$temp_pred_ub - m_temp) / sd_temp
 X <- X[X$year >= 1975,]
-
 
 # predict upper and lower bound
 pred_lb <- predict(fit_glm, se.fit = TRUE,
@@ -263,6 +263,8 @@ par(mfrow = c(1,1))
 plot(newX$year, newX$individualCount, type = 'l')
 polygon(c(newX$year, rev(newX$year)), c(newX$g_pred_lb, rev(newX$g_pred_ub)),
         border = NA, col = ggplot2::alpha('red', .2))
+
+round(newX)
 
 stop('arrivede here 20210729 2140')
 

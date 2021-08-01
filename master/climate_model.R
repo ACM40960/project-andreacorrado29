@@ -36,26 +36,10 @@ temp <- data.frame(year = names(temp_mean), temp = temp_mean, temp_sd = temp_sd)
 plot_lowess(temp$year, temp$temp, f = .75, main = 'yearly temp', ax = temp$year)
 
 # --------------------------------------------------------------------------- #
-#                               co2 emissions                                 #
-# --------------------------------------------------------------------------- #
-
-
-# co2 <- read.csv("./data/co2_raw.txt")
-# co2 <- co2[co2$country == 'South Africa',c('year','co2')]
-# co2$co2_change <- c(NA, diff(co2$co2))
-# co2 <- co2[co2$year > 1901,]
-# par(mfrow = c(1,2))
-# plot_lowess(co2$year, co2$co2, f = .75, main = 'yearly co2 cumulative', ax = co2$year)
-# plot_lowess(co2$year, co2$co2_change, f = .75, main = 'yearly co2 change', ax = co2$year)
-# par(mfrow = c(1,1))
-
-# --------------------------------------------------------------------------- #
 #                            join data together                               #
 # --------------------------------------------------------------------------- #
 
-# X <- merge(merge(rain, temp, by = 'year'), co2, by = 'year') # join data
 X <- merge(rain, temp, by = 'year')
-# X <- X[, c('year','rain','temp','co2')]
 X <- X[, c('year','rain','temp')]
 pairs(X)
 cor(X)
@@ -86,12 +70,13 @@ tempchange <- function(t, state, parms) {
 
 #stop('0839 20210723')
 
+# numerically integrate ODE
 t <- X$time <- X$year - min(X$year, na.rm = TRUE)
 yini <- c(temp = mean(X$temp[1:5]))
 parms <- c(gamma = 1e-3) #, alpha = 1e-3)
 out <- deSolve::ode(y = yini, time = t, func = tempchange, parms = as.list(parms))
 
-# function that calculates residual sum of squares
+# function that calculates residual sum of squares for LM algorithm
 ssq_rain <- function(parms){
   
   #browser()
@@ -135,7 +120,7 @@ out_rain <- ode(y=cinit,times=t,func=tempchange,parms=as.list(parest_rain[2]))
 out_rain <- data.frame(out_rain)
 # 
 # propose longer data 
-t_long <- 0:150
+t_long <- 0:170
 X <- merge(X, data.frame(time = t_long), all.y = TRUE)
 out_rain_long <- ode(y=cinit,times=t_long,func=tempchange,parms=as.list(parest_rain))
 out_rain_long <- data.frame(out_rain_long)
@@ -182,7 +167,9 @@ tempsens <- function(t, state, parms) {
 
 # sensitivity: being only one parameter LSA is OK
 # very solid estimation up to 100 SE
-for(q in c(10 ** (1:4))){
+qs <- 10 ** (1:4)
+par(mfrow = c(length(qs), 2))
+for(q in qs){
   
   sens <- c(cinit, s = 0)
   pe0 <- parest_rain[2]
@@ -194,7 +181,6 @@ for(q in c(10 ** (1:4))){
   
   f <- function(x) log(x)
   ylim <- f(range(out_rain_sens1[,2], out_rain_sens2[,2], out_rain_sens3[,2]))
-  par(mfrow = c(1,2))
   plot(out_rain_sens1[,1],  f(out_rain_sens1[,2]), type = 'l', xlab = 'time',
        ylab = '', main = paste('temp vs time \\pm', q,'se'), ylim = ylim)
   lines(out_rain_sens2[,1], f(out_rain_sens2[,2]), type = 'l', col = 'red')
@@ -213,8 +199,6 @@ par(mfrow = c(1,1))
 # --------------------------------------------------------------------------- #
 #                   propose a model for rain evolution by temp                #
 # --------------------------------------------------------------------------- #
-
-warning('check here what s going on with NS')
 
 # need to understand how temp evolves
 # rain_temp <- merge(rain, temp, by = 'year')
@@ -255,7 +239,7 @@ rain_pred_ub <- predict(fit_rain_wi, newdata = data.frame(temp = out_rain_par$ub
 
 # sensitivity
 # try to impute different values
-q <- 4
+q <- qnorm(.995)
 summary(fit_rain_wi)
 fit_rain_wi_edit <- fit_rain_wi
 fit_rain_wi_edit$coefficients[2] <-  -8.962673 + q *  1.0267
@@ -272,9 +256,6 @@ rain_pred_pe_f <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_rain
 rain_pred_lb_f <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_rain_par$lb), interval = pred_type)[,'lwr']
 rain_pred_ub_f <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_rain_par$ub), interval = pred_type)[,'upr']
 
-
---
-
 # viz result
 par(mfrow = c(1,2))
 # plot temp as well
@@ -286,6 +267,8 @@ idx <- out_rain_par$time > max(rain_temp$time)
 polygon(c(out_rain_par$time[idx], rev(out_rain_par$time[idx])),
         c(out_rain_par$lb[idx], rev(out_rain_par$ub[idx])),
         border = NA, col = ggplot2::alpha('red', .2))
+legend('topleft', col = 'red', lwd = 2, bty = 'n',
+       legend = 'Estimated par')
 
 plot(rain_temp$time, rain_temp$rain, type = 'l', xlim = range(out_rain_par$time), xaxt = 'n')
 axis(1, at = out_rain_par$time, labels = out_rain_par$time + min(X$year, na.rm = TRUE))
@@ -299,15 +282,18 @@ polygon(c(out_rain_par$time[idx], rev(out_rain_par$time[idx])),
 lines(out_rain_par$time, rain_pred_pe_e, lwd = 2, col = 'blue')
 polygon(c(out_rain_par$time[idx], rev(out_rain_par$time[idx])),
         c(rain_pred_lb_e[idx], rev(rain_pred_ub_e[idx])),
-        border = NA, col = ggplot2::alpha('blue', .2))
+        border = NA, col = ggplot2::alpha('blue', .1))
 # other scenario - se
 lines(out_rain_par$time, rain_pred_pe_f, lwd = 2, col = 'green')
 polygon(c(out_rain_par$time[idx], rev(out_rain_par$time[idx])),
         c(rain_pred_lb_f[idx], rev(rain_pred_ub_f[idx])),
-        border = NA, col = ggplot2::alpha('green', .2))
-
-
-stop('check sensitivity for rain ~ temp model')
+        border = NA, col = ggplot2::alpha('green', .1))
+legend('topright', col = c('red','blue','green'), bty = 'n', lty = 1, lwd = 2,
+       legend = c('Estimated pars',
+                  paste('est +', round(q, 2), 'SE'),
+                  paste('est -', round(q, 2), 'SE')
+                  )
+)
 
 # attach new data to X
 X_pred <- cbind(X, rain_pred_lb, rain_pred_pe, rain_pred_ub, out_rain_par[,-1])

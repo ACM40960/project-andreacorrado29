@@ -1,0 +1,93 @@
+---
+title: "South Africa drought and wildlife survival"
+author: "Andrea Corrado 20205529"
+bibliography: sample.bib
+biblio-style: apalike
+natbiboptions: round
+header-includes:
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dpi = 600)
+```
+
+\twocolumn
+\tableofcontents
+<!-- citation example: \cite{first_line_after_bracket} -->
+
+
+<!-- ------------------------------------------------------------------------------------------------------------ -->
+\section*{Abstract}
+
+
+
+
+
+
+
+
+
+
+<!-- ------------------------------------------------------------------------------------------------------------ -->
+\section{Introduction}
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ------------------------------------------------------------------------------------------------------------ -->
+\section{Climate Modeling}
+
+
+
+
+
+
+
+
+
+<!-- ------------------------------------------------------------------------------------------------------------ -->
+\section{Species count Modelling}
+
+
+
+
+
+
+
+
+
+
+<!-- ------------------------------------------------------------------------------------------------------------ -->
+\section{Conclusion}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ------------------------------------------------------------------------------------------------------------ -->
+\bibliography{sample.bib} <!-- print references -->
+\bibliographystyle{ieeetr} <!-- bibl style -->
