@@ -5,17 +5,32 @@ bibliography: sample.bib
 biblio-style: apalike
 natbiboptions: round
 header-includes:
-output: pdf_document
+  - \usepackage[hypcap=true]{caption}
+output: bookdown::pdf_document2
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dpi = 600)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', dpi = 600)
+
+rm(list = ls()) # clean env
+gc() # clean memory
+
+source('functions.R') # load useful functions  
+source('pacakges_install.R') # install libraries if not available
+
+# load useful libraries
+library(ggplot2) 
+library(reshape2) 
+library(deSolve) 
+library(minpack.lm)
+
 ```
 
-\twocolumn
-\tableofcontents
-<!-- citation example: \cite{first_line_after_bracket} -->
 
+\tableofcontents
+\clearpage
+<!-- citation example: \cite{first_line_after_bracket} -->
+\twocolumn
 
 <!-- ------------------------------------------------------------------------------------------------------------ -->
 \section*{Abstract}
@@ -32,21 +47,179 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dpi = 600)
 <!-- ------------------------------------------------------------------------------------------------------------ -->
 \section{Introduction}
 
+<!-- intro to the topic -->
+During last decades, interest and awareness about the climate change has steeply increased. There have been several studies examining and reporting the potential consequences of these phenomenon. For instance, the temperature and rainfall change has been of particular interest. Since last century, we have witnessed a increasing frequency in the number and severity of droughts in particular territories such as South Africa \textit{SA} \cite{SA_drought_decades}. The consequences here can be very dramatic. Due to the fact that area such as \textit{SA} suffer from low economic power, a drought may drive towards dramatic consequences It can affect either agriculture, for a period that lasts up to 6 months, either hydrological up to 24 months \cite{SA_drought_decades}. 
+
+<!-- studies on the topic -->
+There have been several studies showing how to reduce the impact of drought on the agriculture field by growing restraint to higher temperature and computational model to predict droughts \cite{drought_asgriculture}.
+
+<!-- shortly talk about agriculture conseuquences -->
+
+
+<!-- the data -->
+However, in this paper, we wish to focus our attention on the drought consequences on wildlife population evolution. For instance, different studies have shown as animals mortality grows during the highest temperature period within the driest areas \cite{drought_wildlife_mortality_1990}. We will expand this idea to more recent data about waterbirds \cite{waterbirds_data}. This data set will provide the number of individual for different species in each year within the last 45 years. By doing so, we are able to track the evolution of the species during time. However, the data set will not provide the number of new death, new born and the relative causes. It will be our job to build a model which allows us to investigate the relation other factors. In particular the data we are going to analyse regard the global temperature and rain fall amount \cite{rain_temp_data} from 1901 up to 2020 which would give a foundation to build on the model of interest.
+
+<!-- our goal -->
+Having access to this information, our goal is to build a model which relates the climate change to the number of individual for each species and predict how, following the current trend, these would evolve over time and the potential consequences these could drive towards.
+
+
+In section \ref{sec:techback} we give a brief introduction to the methodology used within this research project. In section \ref{sec:eda} we present the data with an exploratory data analysis. In section \ref{sec:climate} we model the climate data and provide prediction on a possible future scenario. In section \ref{sec:population} we model the species count in relation to the climate data and provide prediction about the future number of individuals. In section \ref{sec:conclusion} we discuss the finding of the project.
+
+
+<!-- the methods to be used -->
+\section{Technical Background}
+\label{sec:techback}
+
+\subsection{Generalized Lienar Model}
+
+<!-- statistics generalized linear model -->
+In order to achieve the goal, we are going to employ different methodology which would allow us to model the data of interest. In particular, first of all we will related the temperature data to the rain fall amount. In order to do so, we will employ the Generalized Linear Model \cite{glm_intro} which theory would allow to establish a linear relationship between the quantity of interest (rain) and a set of covariates (temperature) plush a stochastic term which models the uncertainty about the random variable realisation
+
+$$g(\mathbf{Y})  = \mathbf{X \beta} + \mathbf{\epsilon} $$
+where we define a distribution $\mathcal{D}$ of interest on the stochastic term $\epsilon$
+$$ \epsilon \sim \mathcal{D}(\theta)$$
+and a link function $g(.)$ which is distribution dependent. 
+
+The model will be validate by a set of diagnostic on the residuals $\mathbf{Y} - \mathbf{\hat{Y}}$ which provide meaningful insight on the goodness of fitness.
+
+\subsection{Generalized Additive Model}
+
+We will further extend the \textit{GLM} \cite{glm_intro} theory to allow for non-linear relationship between the predictors $\mathbf{X}$ and the response $\mathbf{Y}$ exploiting the \textit{Generalized Additive Model} theory \cite{gam_intro} while maintining the model linear in the parameters
+
+$$g(\mathbf{Y})  = f(\mathbf{X}) + \mathbf{\epsilon} $$
+where we define a distribution $\mathcal{D}$ of interest on the stochastic term $\epsilon$
+$$ \epsilon \sim \mathcal{D}(\theta)$$
+and a link function $g(.)$ which is distribution dependent. Moreover, we will define a function $f(.)$ which usually is a non linear function such as a \textit{spline} \cite{spline_intro}.
+
+
+<!-- weighted least square -->
+\subsection{Weighted Least Square}
+During the research project, we perform different model estimation and to remedy to inadequate diagnostics, such as those violating the homoskedasticity assumption, we will employ \textit{Weighted Least Square} estimation theory \cite{wls_intro} which allows us to iteratively estimate a weight matrix $\mathbf{W}$ to be employed in the model estimation as a measure of the importance for each unit $\mathbf{x}_i\ i = \{1, \dots, N\}$ where $N$ is the total number of observations.
+
+<!-- non parametric estiamtion: lowess -->
+\subsection{Local Regression}
+
+
+
+<!-- ode  -->
+\subsection{Ordinary Differential Equation}
+To track the evolution of a phenomenon over time, it is natural to think about \textit{Oridnary Differential Equation (ODE)} theory \cite{ode} which allows us to keep track of the change of a quantity in continuous time $$ \frac{d}{dt} x = f(x) $$ given initial condition $f(x, t = 0) = x_0$
+
+<!-- LM algorithm for parameters finding -->
+\subsection{Levenberg-Marquardt algorithm}
+Very often, the function defined within an ODE is characterized by a set of parameters $\mathbf{\beta}$. In empirical studies,we often have access to data realization $\{(y_i, \mathbf{x}_i, )\}_{i=1}^n$ we want to find the parameters $\mathbf{\beta}$ so that $y = f(\mathbf{x}, \mathbf{\beta})$ best fits the data of interest.  The \textit{Levenberg-Marquardt} \cite{lm_algo} provide a useful and efficient solution to the problem by making smart combination of \textit{Gauss-Newton} and \textit{Gradien Descend} theory.
+
+<!-- sensitivity analysis for model validation -->
+\subsection{Sensitivity Analysis}
+Mathematical modeling is often subject to very strong assumption which may be difficult to evaluate. In order to provide a robust framework, it is necessary to validate the model under perturbations on the findings. This is why, we will exploit \textit{Local Sensitivity Analysis} theory \cite{lsa_intro} to evaluate the robustness of the estimated models.
+
+
+<!-- ------------------------------------------------------------------------------------------------------------ -->
+\section{Exploratory Data Analysis}
+\label{sec:eda}
+
+\subsection{Rain fall amount}
+
+During this exploratory data analysis context, we apply some pre-processing to the data do not impose any distribution on it. However, we make use of non parametric model, such as local regression presented in section \ref{sec:techback}, to get an idea of the overall trend. 
+
+In the first place, we investigate the rainfall data. We have access to the information between January 1901 up to December 2020. For simplicity, we decide to compute an annual average and keep track of it over time. 
+
+\begin{figure}
+```{r esa_rain_preview}
+rain <- read.csv('../data/pr_1901_2020_ZAF.csv') # load rain data
+names(rain)[1] <- 'rain' # assign name to data set
+rain_mean <- tapply(rain$rain, rain$Year, mean) # compute annual mean
+rain_sd <- tapply(rain$rain, rain$Year, sd) # compute annual standard deviation
+# collect data in a easy to handle data set
+rain <- data.frame(year = as.numeric(names(rain_mean)), rain = rain_mean)
+
+# plot histogram
+hist(rain$rain, xlab = 'rain', main = 'Rain distribution', 
+     col = 'grey90', border = 'white', breaks = 10)
+```
+\caption{Yearly rainfall distribution}
+\label{fig:esa_rain_hist}
+\end{figure}
+
+
+From figure \ref{fig:esa_rain_hist} we can see that the data distribution looks approximately \textit{Normal}. However, we can easily notice that the distribution is right skewed. For instance, the \textit{Skewness} index result to be `r round(e1071::skewness(rain$rain), 2)`.
+
+To track the evolution of the phenomenon we fit a local regression models with different values of the span. In particular:
+
+- $100\%$ of the neighbor data to take into account a global context
+
+- $50\%$ of the neighbor data to allow for a more local structure 
+
+
+In despite of the fact that different values of the span were used, in figure \ref{fig:esa_rain} we can observe a similar trend, indicating a constant trend for the first half of the last century. Afterwards, depending on the model fitted, we can observe a linearly decreasing trend which result in nowadays lower amount of rainfall
+
+
+\begin{figure}
+```{r eda_rainfall}
+# plot non parametric local regression to the data of interest + graphics parameter
+
+# span value: 1
+plot_lowess(rain$year, rain$rain, f = 1, 
+            main = 'Average rain fall amount per year', ax = rain$year,
+            xlab = 'year', ylab = 'rain fall amount', type = 'l')
+
+# span value: .5
+plot_lowess(rain$year, rain$rain, f = .5, 
+            main = 'Average rain fall amount per year', ax = rain$year,
+            xlab = 'year', ylab = 'rain fall amount', type = 'l',
+            add = 1, fit.col = 'royalblue')
+
+# add legend
+legend('topright', legend = c('span 100%', 'span  50%'), lty = 1, lwd = 2,
+       bty = 'n', col = c('violetred', 'royalblue'))
+```
+\label{fig:esa_rain}
+\caption{Annual rainfall}
+\end{figure}
+
+```{r eda_temp}
+temp <- read.csv('../data/tas_1901_2020_ZAF.csv') # load temp data
+names(temp)[1] <- 'temp' # assign name to data set
+temp_mean <-tapply(temp$temp, temp$Year, mean) # compute average year temp
+# assign to an handy data set
+temp <- data.frame(year = names(temp_mean), temp = temp_mean)
+# fit local regression and produce plot of the result
+
+# span 100%
+plot_lowess(temp$year, temp$temp, f = 1, ax = temp$year,
+            xlab = 'year', ylab = 'temperature', type = 'l',
+            main = 'Annual temperature over year')
+
+# span 50%
+plot_lowess(temp$year, temp$temp, f = .5, main = 'yearly temp', ax = temp$year,
+            xlab = 'year', ylab = 'temperature', type = 'l',
+            add = 1, fit.col = 'blue')
+
+# add legend
+legend('topleft', legend = c('span 100%', 'span  50%'), lty = 1, lwd = 2,
+       bty = 'n', col = c('violetred', 'royalblue'))
+```
 
 
 
 
-
-
-
-
-
-
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrr}
+  \hline
+ & year & rain & temp \\ 
+  \hline
+year & 1.00 & -0.06 & 0.82 \\ 
+  rain & -0.06 & 1.00 & -0.33 \\ 
+  temp & 0.82 & -0.33 & 1.00 \\ 
+   \hline
+\end{tabular}
+\end{table}
 
 
 <!-- ------------------------------------------------------------------------------------------------------------ -->
 \section{Climate Modeling}
-
+\label{sec:climate}
 
 
 
@@ -57,7 +230,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dpi = 600)
 
 <!-- ------------------------------------------------------------------------------------------------------------ -->
 \section{Species count Modelling}
-
+\label{sec:population}
 
 
 
@@ -69,6 +242,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', dpi = 600)
 
 <!-- ------------------------------------------------------------------------------------------------------------ -->
 \section{Conclusion}
+\label{sec:conclusion}
 
 
 
