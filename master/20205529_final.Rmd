@@ -142,7 +142,7 @@ hist(rain$rain, xlab = 'rain', main = 'Rain distribution',
 \end{figure}
 
 
-From figure \ref{fig:esa_rain_hist} we can see that the data distribution looks approximately \textit{Normal}. However, we can easily notice that the distribution is right skewed. For instance, the \textit{Skewness} index result to be `r round(e1071::skewness(rain$rain), 2)`.
+From figure \ref{fig:esa_rain_hist} we can see that the data distribution looks approximately \textit{Normal}. However, we can easily notice that the distribution is right skewed meaning that we can rarely observe very extreme event such as very heavy rain. We can quantify the amount of skewness by computing the data moments ratio known as the \textit{Skewness} index which result to be `r round(e1071::skewness(rain$rain, type = 1), 2)`.
 
 To track the evolution of the phenomenon we fit a local regression models with different values of the span. In particular:
 
