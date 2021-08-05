@@ -140,14 +140,23 @@ parest_temp <- c(fitval_temp$par - qnorm(.975) * se,
 
 # estimate scenarios with point estimate
 out_temp <- ode(y=yini,times=t,func=tempchange,parms=as.list(parest_temp[2]))
+out_temp_l <- ode(y=yini,times=t,func=tempchange,parms=as.list(parest_temp[1]))
+out_temp_u <- ode(y=yini,times=t,func=tempchange,parms=as.list(parest_temp[3]))
 
 # plot point estimate
 ylim <- range(X$temp)
-plot(out_temp, ylim = ylim, main = 'Annual temperature evolution',
+plot(out_temp, ylim = ylim, main = 'Annual temperature ODE evolution',
      xlab = 'year', ylab = 'temperature', lwd = 2, col = 'violetred')
 points(X$year - min(X$year), X$temp, col = 'grey70')
+polygon(c(out_temp_l[,1], rev(out_temp_u[,1])),
+        c(out_temp_l[,2], rev(out_temp_u[,2])), 
+        border = NA, col = ggplot2::alpha('red', .1)
+)
 legend('topleft', col = 'violetred', lwd = 2, lty = 1, 
        legend = 'ODE estimation', bty = 'n')
+
+
+stop('arrived here')
 
 # propose longer data for future prediction
 t_long <- 0:170

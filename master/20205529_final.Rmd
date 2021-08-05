@@ -6,6 +6,7 @@ biblio-style: apalike
 natbiboptions: round
 header-includes:
   - \usepackage[hypcap=true]{caption}
+  - \usepackage{amsmath}
 output: bookdown::pdf_document2
 ---
 
@@ -118,11 +119,9 @@ Mathematical modeling is often subject to very strong assumption which may be di
 \section{Exploratory Data Analysis}
 \label{sec:eda}
 
-\subsection{Rain fall amount}
+\subsection{Rainfall amount}
 
-During this exploratory data analysis context, we apply some pre-processing to the data do not impose any distribution on it. However, we make use of non parametric model, such as local regression presented in section \ref{sec:techback}, to get an idea of the overall trend. 
-
-In the first place, we investigate the rainfall data. We have access to the information between January 1901 up to December 2020. For simplicity, we decide to compute an annual average and keep track of it over time. 
+Within this exploratory data analysis context, we give a short introduction to the data by illustrating some characteristics. In the first place, we investigate the rainfall data set. We have access to the information between January 1901 up to December 2020. For simplicity, we decide to compute an annual average and inspect the resulting distribution.
 
 \begin{figure}
 ```{r esa_rain_preview}
@@ -134,25 +133,49 @@ rain_sd <- tapply(rain$rain, rain$Year, sd) # compute annual standard deviation
 rain <- data.frame(year = as.numeric(names(rain_mean)), rain = rain_mean)
 
 # plot histogram
-hist(rain$rain, xlab = 'rain', main = 'Rain distribution', 
+hist(rain$rain, xlab = 'rain', main = 'Annual rain distribution', 
      col = 'grey90', border = 'white', breaks = 10)
 ```
 \caption{Yearly rainfall distribution}
 \label{fig:esa_rain_hist}
 \end{figure}
 
-
-From figure \ref{fig:esa_rain_hist} we can see that the data distribution looks approximately \textit{Normal}. However, we can easily notice that the distribution is right skewed meaning that we can rarely observe very extreme event such as very heavy rain. We can quantify the amount of skewness by computing the data moments ratio known as the \textit{Skewness} index which result to be `r round(e1071::skewness(rain$rain, type = 1), 2)`.
-
-To track the evolution of the phenomenon we fit a local regression models with different values of the span. In particular:
-
-- $100\%$ of the neighbor data to take into account a global context
-
-- $50\%$ of the neighbor data to allow for a more local structure 
+From figure \ref{fig:esa_rain_hist} we can observe that the data distribution is somewhat bell-shaped. However, we can easily notice that the distribution is right skewed.  Clearly, the phenomenon is left bounded by 0 $x \in \mathbb{R}_+$ and we can rarely observe very extreme event such as very heavy precipitation. We are able to quantify the amount of skewness by computing the data sample moments ratio known as the \textit{Skewness} index which result to be `r round(e1071::skewness(rain$rain, type = 1), 2)`, agreeing with the histogram depicted.
 
 
-In despite of the fact that different values of the span were used, in figure \ref{fig:esa_rain} we can observe a similar trend, indicating a constant trend for the first half of the last century. Afterwards, depending on the model fitted, we can observe a linearly decreasing trend which result in nowadays lower amount of rainfall
+<!-- introduce to temperature data -->
+Afterwards, we investigate the temperature data. As for the rain data set, we have availability of the information from 1901 up to 2020. In figure \ref{fig:esa_temp_hist} we depict the annual temperature distribution. 
 
+\begin{figure}
+```{r eda_temp}
+temp <- read.csv('../data/tas_1901_2020_ZAF.csv') # load temp data
+names(temp)[1] <- 'temp' # assign name to data set
+temp_mean <-tapply(temp$temp, temp$Year, mean) # compute average year temp
+# assign to an handy data set
+temp <- data.frame(year = names(temp_mean), temp = temp_mean)
+# plot histogram
+hist(temp$temp, xlab = 'temperature', main = 'Annual temperature distribution', 
+     col = 'grey90', border = 'white', breaks = 10)
+```
+\label{fig:esa_temp_hist}
+\caption{Annual temperature distribution}
+\end{figure}
+
+We can clearly observe a fairly strong right skeweness indicating more extreme events such as sweltering days than very cold days. The phenomenon now takes values in the real domain $x \in \mathbb{R}$ and present a skewness index of `r round(e1071::skewness(temp$temp, type = 1), 2)`.
+
+
+
+<!-- move to lowess -->
+In order to give track the evolution of the phenomenon over time and to give an idea of the overall trend we make use of non parametric model, meaning that we do not assume anything but a relation between $\mathbf{x}$ and $\mathbf{x}$ governed by a function $f(.)$. The method employed is the locally weighted regression discussed in section \ref{sec:techback}. 
+
+
+Therefore, to track the evolution of the phenomenon we fit the model for different values of the span. In particular:
+
+- $100\%$ of the neighbor data to take into account the global context (violet)
+
+- $50\%$ of the neighbor data to allow for a more local structure (blue)
+
+By investigating the results in \ref{fig:esa_rain} we can notice how the global fit to the rain data shows a constant trend up to the 1950 which evolves in a slightly linear decreasing trend onward. On the other hand, the local fit shows a constant trend up to the 1980s which evolves in a steeper decrease for the later year. Nevertheless, both the models suggest an evolution of the amount of rainfall which changes over time.
 
 \begin{figure}
 ```{r eda_rainfall}
@@ -177,13 +200,12 @@ legend('topright', legend = c('span 100%', 'span  50%'), lty = 1, lwd = 2,
 \caption{Annual rainfall}
 \end{figure}
 
-```{r eda_temp}
-temp <- read.csv('../data/tas_1901_2020_ZAF.csv') # load temp data
-names(temp)[1] <- 'temp' # assign name to data set
-temp_mean <-tapply(temp$temp, temp$Year, mean) # compute average year temp
-# assign to an handy data set
-temp <- data.frame(year = names(temp_mean), temp = temp_mean)
+
+Afterwards, we fit a the same two models for the temperature data. Here the relation with time is much clearer. For instance, we can observe how the global fit shows a linearly increasing trend over time, with constant velocity. On the other hand, the local fit shows an increasing trend with different intensities in different period allowing for non linear relationship. Nevertheless, the overall trend does not change dramatically. Annual temperature has clearly been increasing over the last century.
+
+```{r eda_temp_fit}
 # fit local regression and produce plot of the result
+
 
 # span 100%
 plot_lowess(temp$year, temp$temp, f = 1, ax = temp$year,
@@ -199,9 +221,9 @@ plot_lowess(temp$year, temp$temp, f = .5, main = 'yearly temp', ax = temp$year,
 legend('topleft', legend = c('span 100%', 'span  50%'), lty = 1, lwd = 2,
        bty = 'n', col = c('violetred', 'royalblue'))
 ```
-
-
-
+```{r esa_loadX}
+X <- merge(rain, temp, by = 'year') # join data in a dataset by year 
+```
 
 \begin{table}[ht]
 \centering
@@ -214,14 +236,234 @@ year & 1.00 & -0.06 & 0.82 \\
   temp & 0.82 & -0.33 & 1.00 \\ 
    \hline
 \end{tabular}
+\label{esa:cor_matrix}
+\caption{Correlation table}
 \end{table}
+
+
+<!-- pairs plot and correlation -->
+In order to give a global idea of the data we are investigating we would like to present the pairs plot showing each pair combination plus the estimated correlation matrix $\mathbf{R}$ in table \ref{esa:cor_matrix}. As mentioned earlier, in figure \ref{fig:esa_pairs} we can notice the strong relationship between temperature and year $\hat{\rho}_{t,y} =$ `r round(cor(X[,-2])[2], 2)` and a weaker relationship between rain and year $\hat{\rho}_{r,y} =$ `r round(cor(X[,-3])[2], 2)` . However, we can see a clear relationship between year and rain $\hat{\rho}_{r,t}=$ `r round(cor(X[,-1])[2], 2)` which may be worth further investigation.
+
+\begin{figure}
+```{r esa_pairs_plot, fig.width= 3, fig.height=3}
+par(mar = rep(0, 4))
+X <- merge(rain, temp, by = 'year') # join data in a dataset by year 
+# pairs(X, col = 'grey60') # shows pairs plot to give an idea of the relationship
+plot(X[-3], xlab = 'year', ylab = 'rain', col = 'grey60', xaxt = 'n')
+plot(X[-1], xlab = 'rain', ylab = 'temp', col = 'grey60', xaxt = 'n')
+plot(X[-2], xlab = 'year', ylab = 'temp', col = 'grey60', xaxt = 'n')
+# cor(X) # output correlation table
+# xtable(cor(X), type = "latex") # output table for latex
+```
+\label{fig:esa_pairs}
+\caption{Year, Rain, Temperature scatterplot}
+\end{figure}
 
 
 <!-- ------------------------------------------------------------------------------------------------------------ -->
 \section{Climate Modeling}
 \label{sec:climate}
 
+We are now going to propose a very simple physical model to describe the temperature behavior. Ascertained that temperature heavily evolves over time, we present a very simple ordinary different equation given the temperature $\tau$ and time $t$
 
+$$ \frac{d}{d t}\ \tau = \gamma\ \tau $$
+which posit a linear evolution of the phenomenon over time. Moreover, we add initial condition equal to the average temperature values of the first 5 year. The reason behind this choice is that, within this project, we do not have access to older data and during the exploratory data analysis in section ref{sec:eda} we have seen how the phenomenon is highly variable. Therefore, we choose the mean as initial condition
+$$f(\tau, t = 0) = \tau_0 =16.8 $$
+
+Then we need to tune the parameter $\gamma$ and we are going to do so exploiting the Levenberg-Marquardt algorithm discussed in section \ref{sec:techback}.
+
+
+```{r climate_model_temp_ode}
+# model temperature in time with gamma parameter
+tempchange <- function(t, state, parms) {
+  
+  with(as.list(c(state,parms)), {
+    
+    gamma <- as.numeric(parms["gamma"]) # gamma parameter
+    dtemp <- gamma * temp  # temperature evolution dxdt = gamma x 
+    
+    return(list(c(dtemp))) # return object as a list
+  })
+}
+
+# numerically integrate ODE
+t <- X$time <- X$year - min(X$year, na.rm = TRUE) # extract time from t = 0 for ODE
+yini <- c(temp = mean(X$temp[1:5])) # assign initial condition as the average of the first 5y
+parms <- c(gamma = 1e-3) # give initial guess for the parametrs
+
+# function that calculates residual sum of squares for LM algorithm
+ssq_temp <- function(parms){
+  
+  # inital temperature as 5y average
+  cinit <- c(temp = mean(X$temp[1:5]))
+  
+  # time points for which temperature is reported
+  t <- sort( unique( c(seq(0,5,0.1), t ) ))
+  
+  # solve ODE for a given set of parameters
+  out=ode(y=cinit,times=t,func=tempchange,parms=as.list(parms))
+  
+  # Filter data that contains time points where data is available
+  outdf=data.frame(out)
+  outdf=outdf[outdf$time %in% X$time,]
+  # Evaluate predicted vs experimental residual
+  ssqres <- outdf$temp - X$temp
+  
+  return(ssqres) # return predicted vs experimental residual
+}
+
+
+# fitting LM algorithm to the residual sum of square returned by the function ssq_temp
+fitval_temp <- nls.lm(par = parms, fn = ssq_temp)
+fit_pe <- fitval_temp$par
+se <- summary(fitval_temp)$coefficients[1, 'Std. Error']
+parest_temp <- c(fitval_temp$par - qnorm(.975) * se,
+                 fitval_temp$par,
+                 fitval_temp$par + qnorm(.975) * se)
+```
+The algorithm applied to the data set of interest returns a point estimate of $\hat{\gamma}=$`r round(parest_temp[2], 8)` and an estimated standard error of $\hat{SE}(\hat{\gamma})=$`r round(se, 8)`, resulting in the $95\%$ confidence interval
+
+\begin{equation}
+P(\gamma \in [0.00071764, 0.00081291]) = 0.95
+\label{eq:gamma_ci}
+\end{equation}
+
+Overall, we can claim that, according to the model of interest, the global temperature increases over time by a factor within the region in (\ref{eq:gamma_ci}). We graphically present the estimated model in figure \ref{fig:temp_ode_evolution}. From the plot we can easily notice how the mean temperature increases over time. It also very noticeable how the model may underfit the data. It could be worth trying to fit a more complex model including higher order terms to address a certain amount of non-linearity. However, while these models may outperform the current in the data representation, they may be very unstable when employed in extrapolation task. The final goal here is to produce prediction about the future and a non-linear model may lead to very erratic conclusion. Therefore, we decide that this simple model fairly represents the phenomenon of interest.
+
+\begin{figure}
+```{r ode_temp_low_upp}
+# estimate scenarios with point estimate
+out_temp <- ode(y=yini,times=t,func=tempchange,parms=as.list(parest_temp[2]))
+out_temp_l <- ode(y=yini,times=t,func=tempchange,parms=as.list(parest_temp[1]))
+out_temp_u <- ode(y=yini,times=t,func=tempchange,parms=as.list(parest_temp[3]))
+
+# plot point estimate
+ylim <- range(X$temp)
+plot(out_temp, ylim = ylim, main = 'Annual temperature ODE evolution',
+     xlab = 'year', ylab = 'temperature', lwd = 2, col = 'violetred')
+points(X$year - min(X$year), X$temp, col = 'grey70', type = 'l')
+polygon(c(out_temp_l[,1], rev(out_temp_u[,1])),
+        c(out_temp_l[,2], rev(out_temp_u[,2])), 
+        border = NA, col = ggplot2::alpha('red', .1)
+)
+legend('topleft', col = c('violetred',ggplot2::alpha('red', .1)),
+       lty = 1, lwd = c(2, 10), 
+       legend = c('ODE estimation', '95% CI'), bty = 'n')
+```
+\caption{Annual temperature modeled by Ordinary Differential Equation}
+\label{fig:temp_ode_evolution}
+\end{figure}
+
+We have now available a model which may lead us to future prediction. In particular, we are interested in what would happen in a 50 years time following the current trend. According to the estimated model and depicted in figure \ref{fig:temp_prediction}, the global temperature may continue to rise up to reaching $19$ Celcius average degree in 50 years time, with a reasonably tight confidence interval.
+
+\begin{figure}
+```{r temp_long_data}
+# propose longer data for future prediction
+t_long <- 0:170
+X <- merge(X, data.frame(time = t_long), all.y = TRUE) # join data with future years
+out_temp_long <- ode(y=yini,times=t_long,func=tempchange,parms=as.list(parest_temp))
+out_temp_long <- data.frame(out_temp_long)
+
+# predict longer data with lower, upper bound + point estimate
+out_temp_lb = ode(y=yini,times=t_long,func=tempchange,parms=as.list(parest_temp[1]))
+out_temp_pe = ode(y=yini,times=t_long,func=tempchange,parms=as.list(parest_temp[2]))
+out_temp_ub = ode(y=yini,times=t_long,func=tempchange,parms=as.list(parest_temp[3]))
+out_temp_par <- merge(merge(out_temp_lb, out_temp_pe, by = 'time'), out_temp_ub, by = 'time')
+names(out_temp_par) <- c('time', 'lb', 'pe', 'ub') # assign name to data set 
+
+# subset only out of sample year, those to be predicted
+out_temp_par_only <- out_temp_par[out_temp_par$time > max(out_temp[,'time']),]
+
+# plot result
+par(mfrow = c(1,1), las = 2)
+ylim <- range(out_temp_par[,-1], X$temp, na.rm = TRUE)
+plot(t_long, X$temp, type = 'l', ylim = ylim, xaxt = 'n',
+     xlab = 'year', ylab = 'temperature', col = 'grey70')
+lines(out_temp_par$time, out_temp_par$pe, col = 'red')
+polygon(c(out_temp_par_only$time, rev(out_temp_par_only$time)),
+        c(out_temp_par_only$lb, rev(out_temp_par_only$ub)),
+        col = ggplot2::alpha('red', .2), border = NA)
+axis(1, at = X$time, labels = X$time + min(X$year, na.rm = 1), tick = FALSE)
+legend('topleft', col = c('violetred',ggplot2::alpha('red', .1)),
+       lty = 1, lwd = c(2, 10), 
+       legend = c('ODE estimation', '95% CI'), bty = 'n')
+```
+
+\caption{50 out of sample years temperature prediction}
+\label{fig:temp_prediction}
+\end{figure}
+
+
+<!-- local sensitivity analysis -->
+A fundamental requisite for a mathematical model is the robustness to its input. Here, the data is empirically observed and the parameter $\gamma$ is estimated from it. The question we want to address is whether we can rely on this parameter and whether the model output would change if the parameters in input changed. In order to tackle this question, a common and reliable choice is local sensitivity analysis discussed in section \ref{sec:techback}. Given the model $$f(\tau) = \gamma\ \tau $$ the method allow us to derive the sensitivity equation as 
+
+\begin{equation}
+\begin{split}
+\frac{d}{dt} s & = \frac{d}{d\gamma} f\  s + \frac{d}{d \gamma} f  \\
+& = \gamma s + \tau
+\end{split}
+\end{equation}
+
+Therefore, we will need to deal with the system of ordinary differential equation
+
+\begin{equation}
+\begin{cases}
+\frac{d}{dt}\tau = \gamma \tau \\
+\frac{d}{dt}s = \gamma s + \tau 
+\end{cases}
+\end{equation}
+
+
+
+\begin{figure}
+```{r temp_lsa}
+tempsens <- function(t, state, parms) {
+  
+  with(as.list(c(state,parms)), {
+    
+    gamma <- as.numeric(parms["gamma"])
+    RHS1 <- gamma * temp 
+    RHS2 <- gamma * s + temp # derive sensitivity equation
+    
+    return(list(c(RHS2, RHS2)))
+  })
+}
+
+
+# sensitivity: being only one parameter LSA is OK
+# very solid estimation up to 100 SE
+
+# increase qs if you want to investigate more extreme scenario
+
+qs <- 10 ** (1:1) 
+for(q in qs){
+  
+  sens <- c(yini, s = 0)
+  pe0 <- parest_temp[2]
+  pe1 <- pe0 + q * se
+  pe2 <- pe0 - q * se
+  out_temp_sens1 <- ode(y=sens,times=t,func=tempsens,parms=list(gamma = pe0))
+  out_temp_sens2 <- ode(y=sens,times=t,func=tempsens,parms=list(gamma = pe1))
+  out_temp_sens3 <- ode(y=sens,times=t,func=tempsens,parms=list(gamma = pe2))
+  
+  f <- function(x) log(x)
+  ylim <- f(range(out_temp_sens1[,2], out_temp_sens2[,2], out_temp_sens3[,2]))
+  plot(out_temp_sens1[,1],  f(out_temp_sens1[,2]), type = 'l', xlab = 'time',
+       ylab = '', ylim = ylim)
+  lines(out_temp_sens2[,1], f(out_temp_sens2[,2]), type = 'l', col = 'red')
+  lines(out_temp_sens3[,1], f(out_temp_sens3[,2]), type = 'l', col = 'blue')
+  
+  ylim <- f(range(out_temp_sens1[,3], out_temp_sens2[,3], out_temp_sens3[,3]) + 1)
+  plot(out_temp_sens1[,1],  f(out_temp_sens1[,3]),
+       ylab = '', 
+       xlab = 'time', type = 'l', ylim = ylim)
+  lines(out_temp_sens2[,1], f(out_temp_sens2[,3]), col  = 'red')
+  lines(out_temp_sens3[,1], f(out_temp_sens3[,3]), col  = 'blue')
+}
+```
+\caption{a) evolution of temperature in time with input parameter $\pm$ 10 $SE$; b) evolution of $\gamma$ parameter in time $pm$ 10 $SE$}
+\label{fig:temp_sens}
+\end{figure}
 
 
 
