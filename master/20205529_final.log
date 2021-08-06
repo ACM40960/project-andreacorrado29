@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=pdflatex 2021.8.5)  5 AUG 2021 22:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=pdflatex 2021.8.5)  6 AUG 2021 22:12
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -364,6 +364,13 @@ Package graphics Info: Driver file: pdftex.def on input line 107.
 )
 \Gin@req@height=\dimen179
 \Gin@req@width=\dimen180
+) (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count294
+\float@exts=\toks27
+\float@box=\box60
+\@float@everytoks=\toks28
+\@floatcapt=\box61
 ) (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/caption/caption.sty
 Package: caption 2020/10/26 v3.5g Customizing captions (AR)
 (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/caption/caption3.sty
@@ -377,37 +384,111 @@ Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
 \caption@hangindent=\dimen187
 Package caption Info: Standard document class detected.
 )
-\c@caption@flags=\count294
-\c@continuedfloat=\count295
+\c@caption@flags=\count295
+\c@continuedfloat=\count296
+Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: longtable package is loaded.
 (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/caption/ltcaption.sty
 Package: ltcaption 2020/05/30 v1.4b longtable captions (AR)
-)) (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+)) (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/tools/multicol.sty
+Package: multicol 2019/12/09 v1.8y multicolumn formatting (FMi)
+\c@tracingmulticols=\count297
+\mult@box=\box62
+\multicol@leftmargin=\dimen188
+\c@unbalance=\count298
+\c@collectmore=\count299
+\doublecol@number=\count300
+\multicoltolerance=\count301
+\multicolpretolerance=\count302
+\full@width=\dimen189
+\page@free=\dimen190
+\premulticols=\dimen191
+\postmulticols=\dimen192
+\multicolsep=\skip62
+\multicolbaselineskip=\skip63
+\partial@page=\box63
+\last@line=\box64
+\maxbalancingoverflow=\dimen193
+\mult@rightbox=\box65
+\mult@grightbox=\box66
+\mult@gfirstbox=\box67
+\mult@firstbox=\box68
+\@tempa=\box69
+\@tempa=\box70
+\@tempa=\box71
+\@tempa=\box72
+\@tempa=\box73
+\@tempa=\box74
+\@tempa=\box75
+\@tempa=\box76
+\@tempa=\box77
+\@tempa=\box78
+\@tempa=\box79
+\@tempa=\box80
+\@tempa=\box81
+\@tempa=\box82
+\@tempa=\box83
+\@tempa=\box84
+\@tempa=\box85
+\@tempa=\box86
+\@tempa=\box87
+\@tempa=\box88
+\@tempa=\box89
+\@tempa=\box90
+\@tempa=\box91
+\@tempa=\box92
+\@tempa=\box93
+\@tempa=\box94
+\@tempa=\box95
+\@tempa=\box96
+\@tempa=\box97
+\@tempa=\box98
+\@tempa=\box99
+\@tempa=\box100
+\@tempa=\box101
+\@tempa=\box102
+\@tempa=\box103
+\@tempa=\box104
+\@tempa=\box105
+\c@minrows=\count303
+\c@columnbadness=\count304
+\c@finalcolumnbadness=\count305
+\last@try=\dimen194
+\multicolovershoot=\dimen195
+\multicolundershoot=\dimen196
+\mult@nat@firstbox=\box106
+\colbreak@box=\box107
+\mc@col@check@num=\count306
+) (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2021-08-04 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count296
-\l__pdf_internal_box=\box60
-) (./20205529_final.aux)
+\l__color_backend_stack_int=\count307
+\l__pdf_internal_box=\box108
+) (./20205529_final.aux
+
+LaTeX Warning: Label `fig:species_barplot' multiply defined.
+
+)
 \openout1 = `20205529_final.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 84.
+LaTeX Font Info:    ... okay on input line 84.
 (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -416,7 +497,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 82.
+Package hyperref Info: Link coloring OFF on input line 84.
 (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
 (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty
@@ -426,11 +507,11 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 ty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count297
+\c@section@level=\count308
 )
-LaTeX Info: Redefining \ref on input line 82.
-LaTeX Info: Redefining \pageref on input line 82.
-LaTeX Info: Redefining \nameref on input line 82.
+LaTeX Info: Redefining \ref on input line 84.
+LaTeX Info: Redefining \pageref on input line 84.
+LaTeX Info: Redefining \nameref on input line 84.
 (./20205529_final.out) (./20205529_final.out)
 \@outlinefile=\write3
 \openout3 = `20205529_final.out'.
@@ -472,37 +553,37 @@ LaTeX Info: Redefining \nameref on input line 82.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 8
-4.
+6.
 (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 8
-4.
+6.
 (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-84.
+86.
 (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-84.
+86.
 (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 84.
+(Font)              <12> on input line 86.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 84.
+(Font)              <8> on input line 86.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 84.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 84.
+(Font)              <6> on input line 86.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 86.
 
 (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 84.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 86.
 
 (/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -523,208 +604,324 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 
 [1
 
-{/home/ndrecord/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2
+{/home/ndrecord/.TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
+LaTeX Warning: Citation `SA_drought_decades' on page 2 undefined on input line 
+108.
+
+
+LaTeX Warning: Citation `SA_drought_decades' on page 2 undefined on input line 
+108.
+
+
+LaTeX Warning: Citation `drought_asgriculture' on page 2 undefined on input lin
+e 110.
+
+
+LaTeX Warning: Citation `drought_wildlife_mortality_1990' on page 2 undefined o
+n input line 112.
+
+
+LaTeX Warning: Citation `waterbirds_data' on page 2 undefined on input line 112
+.
+
+
+LaTeX Warning: Citation `rain_temp_data' on page 2 undefined on input line 112.
+
+
+
+LaTeX Warning: Citation `glm_intro' on page 2 undefined on input line 125.
+
+
+LaTeX Warning: Citation `glm_intro' on page 2 undefined on input line 136.
+
+
+LaTeX Warning: Citation `gam_intro' on page 2 undefined on input line 136.
+
+
+LaTeX Warning: Citation `spline_intro' on page 2 undefined on input line 141.
+
+
+LaTeX Warning: Citation `wls_intro' on page 2 undefined on input line 145.
+
+[2
 
 ]
-Underfull \hbox (badness 1137) in paragraph at lines 147--148
-\T1/lmr/m/n/10 Mathematical mod-el-ing is of-ten sub-ject to very
- []
+
+LaTeX Warning: Citation `ode' on page 3 undefined on input line 152.
 
 
-Underfull \hbox (badness 1715) in paragraph at lines 147--148
-\T1/lmr/m/it/10 Sen-si-tiv-ity Anal-y-sis \T1/lmr/m/n/10 the-ory [[]] to eval-u
--ate the
- []
+LaTeX Warning: Citation `lm_algo' on page 3 undefined on input line 155.
 
-<20205529_final_files/figure-latex/esa_rain_preview-1.pdf, id=123, 427.5975pt x
+
+LaTeX Warning: Citation `lsa_intro' on page 3 undefined on input line 158.
+
+<20205529_final_files/figure-latex/esa_rain_preview-1.pdf, id=101, 427.5975pt x
  283.0575pt>
 File: 20205529_final_files/figure-latex/esa_rain_preview-1.pdf Graphic file (ty
 pe pdf)
 <use 20205529_final_files/figure-latex/esa_rain_preview-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/esa_rain_preview-1.p
-df  used on input line 158.
+df  used on input line 170.
 (pdftex.def)             Requested size: 229.87485pt x 152.17065pt.
 
-Package caption Warning: \label without proper reference on input line 170.
+Package caption Warning: \label without proper reference on input line 183.
 See the caption package documentation for explanation.
 
 
 LaTeX Warning: Reference `fig:esa_temp_hist' on page 3 undefined on input line 
-165.
+178.
 
-<20205529_final_files/figure-latex/eda_temp-1.pdf, id=126, 432.61626pt x 285.06
+<20205529_final_files/figure-latex/eda_temp-1.pdf, id=104, 432.61626pt x 285.06
 5pt>
 File: 20205529_final_files/figure-latex/eda_temp-1.pdf Graphic file (type pdf)
 <use 20205529_final_files/figure-latex/eda_temp-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/eda_temp-1.pdf  used
- on input line 169.
+ on input line 182.
 (pdftex.def)             Requested size: 229.87962pt x 151.4752pt.
 [3 <./20205529_final_files/figure-latex/esa_rain_preview-1.pdf>]
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
-82.
-(/home/ndrecord/.TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
 
-Package caption Warning: \label without proper reference on input line 192.
+Package caption Warning: \label without proper reference on input line 205.
 See the caption package documentation for explanation.
 
 
-LaTeX Warning: Reference `fig:esa_rain' on page 4 undefined on input line 187.
+LaTeX Warning: Reference `fig:esa_rain' on page 4 undefined on input line 200.
 
-<20205529_final_files/figure-latex/eda_rainfall-1.pdf, id=150, 440.64626pt x 28
+<20205529_final_files/figure-latex/eda_rainfall-1.pdf, id=124, 440.64626pt x 28
 5.065pt>
 File: 20205529_final_files/figure-latex/eda_rainfall-1.pdf Graphic file (type p
 df)
 <use 20205529_final_files/figure-latex/eda_rainfall-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/eda_rainfall-1.pdf  
-used on input line 191.
+used on input line 204.
 (pdftex.def)             Requested size: 229.87697pt x 148.71312pt.
-<20205529_final_files/figure-latex/eda_temp_fit-1.pdf, id=151, 436.63126pt x 28
+<20205529_final_files/figure-latex/eda_temp_fit-1.pdf, id=125, 436.63126pt x 28
 5.065pt>
 File: 20205529_final_files/figure-latex/eda_temp_fit-1.pdf Graphic file (type p
 df)
 <use 20205529_final_files/figure-latex/eda_temp_fit-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/eda_temp_fit-1.pdf  
-used on input line 198.
+used on input line 213.
 (pdftex.def)             Requested size: 229.87444pt x 150.07893pt.
 
-Package caption Warning: \label without proper reference on input line 211.
-See the caption package documentation for explanation.
+Package multicol Warning: Floats and marginpars not allowed inside `multicols' 
+environment!.
 
 
-LaTeX Warning: Reference `esa:cor_matrix' on page 4 undefined on input line 215
+Package multicol Warning: Floats and marginpars not allowed inside `multicols' 
+environment!.
+
+
+LaTeX Warning: Reference `esa:cor_matrix' on page 4 undefined on input line 232
 .
 
 
-Package caption Warning: \label without proper reference on input line 228.
+Package caption Warning: \label without proper reference on input line 238.
 See the caption package documentation for explanation.
 
 
-LaTeX Warning: Reference `fig:esa_pairs' on page 4 undefined on input line 215.
+LaTeX Warning: Reference `fig:esa_pairs' on page 4 undefined on input line 232.
 
-
-<20205529_final_files/figure-latex/esa_pairs_plot-1.pdf, id=154, 216.81pt x 216
-.81pt>
-File: 20205529_final_files/figure-latex/esa_pairs_plot-1.pdf Graphic file (type
- pdf)
-<use 20205529_final_files/figure-latex/esa_pairs_plot-1.pdf>
-Package pdftex.def Info: 20205529_final_files/figure-latex/esa_pairs_plot-1.pdf
-  used on input line 219.
-(pdftex.def)             Requested size: 216.81938pt x 216.81938pt.
-<20205529_final_files/figure-latex/esa_pairs_plot-2.pdf, id=155, 216.81pt x 216
-.81pt>
-File: 20205529_final_files/figure-latex/esa_pairs_plot-2.pdf Graphic file (type
- pdf)
-<use 20205529_final_files/figure-latex/esa_pairs_plot-2.pdf>
-Package pdftex.def Info: 20205529_final_files/figure-latex/esa_pairs_plot-2.pdf
-  used on input line 223.
-(pdftex.def)             Requested size: 216.81938pt x 216.81938pt.
-<20205529_final_files/figure-latex/esa_pairs_plot-3.pdf, id=156, 216.81pt x 216
-.81pt>
-File: 20205529_final_files/figure-latex/esa_pairs_plot-3.pdf Graphic file (type
- pdf)
-<use 20205529_final_files/figure-latex/esa_pairs_plot-3.pdf>
-Package pdftex.def Info: 20205529_final_files/figure-latex/esa_pairs_plot-3.pdf
-  used on input line 227.
-(pdftex.def)             Requested size: 216.81938pt x 216.81938pt.
-
-LaTeX Warning: Float too large for page by 54.02814pt on input line 230.
 
 [4 <./20205529_final_files/figure-latex/eda_temp-1.pdf> <./20205529_final_files
 /figure-latex/eda_rainfall-1.pdf> <./20205529_final_files/figure-latex/eda_temp
 _fit-1.pdf>]
-<20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf, id=193, 436.63126pt 
+<20205529_final_files/figure-latex/esa_pairs_plot-1.pdf, id=158, 419.5675pt x 2
+75.0275pt>
+File: 20205529_final_files/figure-latex/esa_pairs_plot-1.pdf Graphic file (type
+ pdf)
+<use 20205529_final_files/figure-latex/esa_pairs_plot-1.pdf>
+Package pdftex.def Info: 20205529_final_files/figure-latex/esa_pairs_plot-1.pdf
+  used on input line 237.
+(pdftex.def)             Requested size: 419.56647pt x 275.02682pt.
+<20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf, id=162, 436.63126pt 
 x 285.065pt>
 File: 20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf Graphic file (ty
 pe pdf)
 <use 20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/ode_temp_low_upp-1.p
-df  used on input line 254.
+df  used on input line 268.
 (pdftex.def)             Requested size: 229.87444pt x 150.07893pt.
-<20205529_final_files/figure-latex/temp_long_data-1.pdf, id=195, 436.63126pt x 
+[5 <./20205529_final_files/figure-latex/esa_pairs_plot-1.pdf>]
+<20205529_final_files/figure-latex/temp_long_data-1.pdf, id=178, 436.63126pt x 
 250.9375pt>
 File: 20205529_final_files/figure-latex/temp_long_data-1.pdf Graphic file (type
  pdf)
 <use 20205529_final_files/figure-latex/temp_long_data-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/temp_long_data-1.pdf
-  used on input line 263.
+  used on input line 277.
 (pdftex.def)             Requested size: 229.87444pt x 132.11172pt.
-[5 <./20205529_final_files/figure-latex/esa_pairs_plot-1.pdf> <./20205529_final
-_files/figure-latex/esa_pairs_plot-2.pdf> <./20205529_final_files/figure-latex/
-esa_pairs_plot-3.pdf>]
-<20205529_final_files/figure-latex/temp_lsa-1.pdf, id=226, 407.5225pt x 248.93p
+<20205529_final_files/figure-latex/temp_lsa-1.pdf, id=181, 407.5225pt x 248.93p
 t>
 File: 20205529_final_files/figure-latex/temp_lsa-1.pdf Graphic file (type pdf)
 <use 20205529_final_files/figure-latex/temp_lsa-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/temp_lsa-1.pdf  used
- on input line 289.
+ on input line 306.
 (pdftex.def)             Requested size: 229.87753pt x 140.4178pt.
-<20205529_final_files/figure-latex/temp_lsa-2.pdf, id=227, 407.5225pt x 248.93p
+<20205529_final_files/figure-latex/temp_lsa-2.pdf, id=182, 407.5225pt x 248.93p
 t>
 File: 20205529_final_files/figure-latex/temp_lsa-2.pdf Graphic file (type pdf)
 <use 20205529_final_files/figure-latex/temp_lsa-2.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/temp_lsa-2.pdf  used
- on input line 293.
+ on input line 310.
 (pdftex.def)             Requested size: 229.87753pt x 140.4178pt.
-(./20205529_final.bbl [6 <./20205529_final_files/figure-latex/ode_temp_low_upp-
-1.pdf> <./20205529_final_files/figure-latex/temp_long_data-1.pdf> <./20205529_f
-inal_files/figure-latex/temp_lsa-1.pdf> <./20205529_final_files/figure-latex/te
-mp_lsa-2.pdf>]
-Underfull \hbox (badness 2384) in paragraph at lines 22--24
-[]\T1/lmr/m/n/10 W. B. Group, ``Cli-mate change knowl-edge
+[6 <./20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf> <./20205529_fin
+al_files/figure-latex/temp_long_data-1.pdf>]
+
+Package caption Warning: \label without proper reference on input line 323.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:res_fit_ols' on page 7 undefined on input line 31
+8.
+
+
+Package caption Warning: \label without proper reference on input line 331.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:res_fit_wls' on page 7 undefined on input line 31
+8.
+
+<20205529_final_files/figure-latex/temp_rain_model_data-1.pdf, id=217, 436.6312
+6pt x 283.0575pt>
+File: 20205529_final_files/figure-latex/temp_rain_model_data-1.pdf Graphic file
+ (type pdf)
+<use 20205529_final_files/figure-latex/temp_rain_model_data-1.pdf>
+Package pdftex.def Info: 20205529_final_files/figure-latex/temp_rain_model_data
+-1.pdf  used on input line 322.
+(pdftex.def)             Requested size: 229.87444pt x 149.02203pt.
+<20205529_final_files/figure-latex/rain_temp_wls-1.pdf, id=218, 436.63126pt x 2
+83.0575pt>
+File: 20205529_final_files/figure-latex/rain_temp_wls-1.pdf Graphic file (type 
+pdf)
+<use 20205529_final_files/figure-latex/rain_temp_wls-1.pdf>
+Package pdftex.def Info: 20205529_final_files/figure-latex/rain_temp_wls-1.pdf 
+ used on input line 330.
+(pdftex.def)             Requested size: 229.87444pt x 149.02203pt.
+
+LaTeX Warning: Reference `tab:wls_model_summary' on page 7 undefined on input l
+ine 335.
+
+[7 <./20205529_final_files/figure-latex/temp_lsa-1.pdf> <./20205529_final_files
+/figure-latex/temp_lsa-2.pdf> <./20205529_final_files/figure-latex/temp_rain_mo
+del_data-1.pdf> <./20205529_final_files/figure-latex/rain_temp_wls-1.pdf>]
+
+Package caption Warning: \label without proper reference on input line 361.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:rain_time_sens_5se' on page 8 undefined on input 
+line 354.
+
+<20205529_final_files/figure-latex/rain_temp_prediction-1.pdf, id=257, 436.6312
+6pt x 285.065pt>
+File: 20205529_final_files/figure-latex/rain_temp_prediction-1.pdf Graphic file
+ (type pdf)
+<use 20205529_final_files/figure-latex/rain_temp_prediction-1.pdf>
+Package pdftex.def Info: 20205529_final_files/figure-latex/rain_temp_prediction
+-1.pdf  used on input line 360.
+(pdftex.def)             Requested size: 229.87444pt x 150.07893pt.
+
+Overfull \hbox (54.67796pt too wide) in paragraph at lines 365--366
+[]\T1/lmr/m/n/10 ************** write con-clu-sion here ***********************
+* 
  []
 
 
+Package caption Warning: \label without proper reference on input line 385.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:species_barplot' on page 8 undefined on input lin
+e 370.
+
+<20205529_final_files/figure-latex/pop_data_viz-1.pdf, id=259, 407.5225pt x 265
+.99374pt>
+File: 20205529_final_files/figure-latex/pop_data_viz-1.pdf Graphic file (type p
+df)
+<use 20205529_final_files/figure-latex/pop_data_viz-1.pdf>
+Package pdftex.def Info: 20205529_final_files/figure-latex/pop_data_viz-1.pdf  
+used on input line 375.
+(pdftex.def)             Requested size: 229.87753pt x 150.04321pt.
+
+Package caption Warning: \label without proper reference on input line 385.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:species_barplot' on page 8 undefined on input lin
+e 380.
+
+<20205529_final_files/figure-latex/y_wide-1.pdf, id=261, 440.64626pt x 285.065p
+t>
+File: 20205529_final_files/figure-latex/y_wide-1.pdf Graphic file (type pdf)
+<use 20205529_final_files/figure-latex/y_wide-1.pdf>
+Package pdftex.def Info: 20205529_final_files/figure-latex/y_wide-1.pdf  used o
+n input line 384.
+(pdftex.def)             Requested size: 229.87697pt x 148.71312pt.
+
+Package caption Warning: \label without proper reference on input line 394.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:counts_hist' on page 8 undefined on input line 38
+9.
+
+[8 <./20205529_final_files/figure-latex/rain_temp_prediction-1.pdf> <./20205529
+_final_files/figure-latex/pop_data_viz-1.pdf> <./20205529_final_files/figure-la
+tex/y_wide-1.pdf>]
+<20205529_final_files/figure-latex/count_hist-1.pdf, id=302, 427.5975pt x 283.0
+575pt>
+File: 20205529_final_files/figure-latex/count_hist-1.pdf Graphic file (type pdf
+)
+<use 20205529_final_files/figure-latex/count_hist-1.pdf>
+Package pdftex.def Info: 20205529_final_files/figure-latex/count_hist-1.pdf  us
+ed on input line 393.
+(pdftex.def)             Requested size: 229.87485pt x 152.17065pt.
+(./20205529_final.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 22--24
 \T1/lmr/m/n/10 por-tal.'' []$https : / / climateknowledgeportal .
  []
 
-
-Underfull \hbox (badness 1661) in paragraph at lines 45--47
-[]\T1/lmr/m/n/10 G. Gbur, \T1/lmr/m/it/10 Math-e-mat-i-cal meth-ods for op-ti-c
-al
- []
-
-) [7
-
-] (./20205529_final.aux)
+) [9 <./20205529_final_files/figure-latex/count_hist-1.pdf>] (./20205529_final.
+aux)
 
 LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `20205529_final.out' has not changed.
 (rerunfilecheck)             Checksum: 755CE9F35F652FDC12D26630F496097D;2208.
  ) 
 Here is how much of TeX's memory you used:
- 12132 strings out of 480502
- 185301 string characters out of 5899349
- 493577 words of memory out of 5000000
- 29545 multiletter control sequences out of 15000+600000
- 462164 words of font info for 70 fonts, out of 8000000 for 9000
+ 12337 strings out of 480502
+ 189495 string characters out of 5899349
+ 500572 words of memory out of 5000000
+ 29731 multiletter control sequences out of 15000+600000
+ 473751 words of font info for 73 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,15n,66p,1017b,457s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,15n,66p,1017b,480s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/home/ndrecord/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{/home/n
 drecord/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/home/ndrecord/.T
-inyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/home/ndrecord/.TinyTeX/texmf-
-dist/fonts/enc/dvips/lm/lm-rm.enc}{/home/ndrecord/.TinyTeX/texmf-dist/fonts/enc
-/dvips/lm/lm-mathit.enc}{/home/ndrecord/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/
-lm-ec.enc}</home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb>
-</home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></home/ndr
-ecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb></home/ndrecord/.Tin
-yTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></home/ndrecord/.TinyTeX/texmf
--dist/fonts/type1/public/lm/lmmi7.pfb></home/ndrecord/.TinyTeX/texmf-dist/fonts
-/type1/public/lm/lmr10.pfb></home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/publ
-ic/lm/lmr12.pfb></home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17
-.pfb></home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></home/
-ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/ndrecord/.
-TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></home/ndrecord/.TinyTeX/te
-xmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/ndrecord/.TinyTeX/texmf-dist/fo
-nts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on 20205529_final.pdf (7 pages, 320322 bytes).
+inyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/home/ndrecord/.TinyTeX/texmf-d
+ist/fonts/enc/dvips/lm/lm-mathit.enc}{/home/ndrecord/.TinyTeX/texmf-dist/fonts/
+enc/dvips/lm/lm-ec.enc}</home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/l
+m/lmbx10.pfb></home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.p
+fb></home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmex10.pfb></home/
+ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></home/ndrecord/.
+TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></home/ndrecord/.TinyTeX/tex
+mf-dist/fonts/type1/public/lm/lmr10.pfb></home/ndrecord/.TinyTeX/texmf-dist/fon
+ts/type1/public/lm/lmr12.pfb></home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/pu
+blic/lm/lmr17.pfb></home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr
+7.pfb></home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></ho
+me/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></home/ndrecor
+d/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/ndrecord/.TinyTeX/
+texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on 20205529_final.pdf (9 pages, 389660 bytes).
 PDF statistics:
- 364 PDF objects out of 1000 (max. 8388607)
- 290 compressed objects within 3 object streams
- 49 named destinations out of 1000 (max. 500000)
- 168 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 413 PDF objects out of 1000 (max. 8388607)
+ 325 compressed objects within 4 object streams
+ 57 named destinations out of 1000 (max. 500000)
+ 188 words of extra memory for PDF output out of 10000 (max. 10000000)
 
