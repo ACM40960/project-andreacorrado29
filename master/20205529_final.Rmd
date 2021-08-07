@@ -89,6 +89,8 @@ During the research project, we perform different model estimation and to remedy
 
 \subsection{Local Regression}
 
+\subsection{Mixed Effect models}
+
 
 
 \subsection{Ordinary Differential Equation}
@@ -712,8 +714,23 @@ hist(Y$individualCount[Y$individualCount < 50], main= 'Count distribution',
 \caption{Distribution for animal counts}
 \end{figure}
 
-Afterwards, we are going to estimate a mixed-effect model 
-*****************************
+We now want to estimate a model describing the evolution of the population w.r.t. the climate input feature. In order to do so, we need to employ mixed-effect models since its theory allows us to include data from different class, namely their species, and thus taking account for the within correlation. The model to be estimated is of the form 
+$$ \mathbf{count}_i = \mathbf{\alpha}_i\ \mathbf{Z}_i + f(\mathbf{X}) + \mathbf{\epsilon}$$
+where $\epsilon \sim Poi(\lambda)$ and the term $\alpha$ indicates a random intercept whose contribution depends on the $\mathbf{Z} \in \mathbb{N}$ matrix which indicates the species belonging
+
+\begin{equation}
+z_{ij}= 
+\begin{cases}
+1 \text{ if observation i is in species j } \\
+0 \text{ otherwise }
+\end{cases}
+\end{equation}
+
+thus varying the intercept of the model according to the species of interest. The function $f()$ employed in the estimation is, as usual, a set of spline which have empirically proven to be optimal for their high flexibility and low computational cost. The related degree has been chosen by making usage of the $BIC$ measure which aims to maximize the likelihood while taking into account a penalization for the number of parameters estimated. The optimal value has empirically shown to be $K= 4$.
+
+As we are including different predictors in the model, in order to get stable results we apply a pre-processing step which standardize the variables to have mean zero and variance one 
+$$ Z = \frac{X-\mu}{\sigma} $$
+
 
 ```{r glmer_model_fit}
 # center data -----------------------------------------------------------------
@@ -787,13 +804,177 @@ fit_year_temp <- lme4::glmer(
   individualCount ~ ns(syear, q_temp) * stemp + ns(syear, q_temp) * srain + (1 | species), 
   family = 'poisson', data = Y
 )
+
+# model_res <- summary(fit_year_temp)
+# xtable(model_res$coefficients, type = 'latex')
 ```
 
 
+From the model results presented in table \ref{tab:glmer_model_res}, we can observe how the coefficients related to the $year$ marginal term $\hat{\beta}_{i,year}$ are all negative. Moreover, the coefficients related to its interaction terms $\hat{\beta}_{i,year, j}$ are negative as well. On the other hand, we can easily identify positive coefficients for the marginal terms $\hat{\beta}_{temp}$ and $\hat{\beta}_{rain}$. However, their magnitude is relatively small compared to the terms effect they interact with $\hat{\beta}_{i,year, temp}$ and $\hat{\beta}_{i,year, rain}$, therefore, we expect an overall negative effect. 
+
+\end{multicols}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{crrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
+  \hline
+$\hat{\beta}_0$ & 4.21 & 0.30 & 13.89 & 0.00 \\ 
+  $\hat{\beta}_{1, year}$ & -2.36 & 0.03 & -71.72 & 0.00 \\ 
+  $\hat{\beta}_{2, year}$ & -0.40 & 0.04 & -10.50 & 0.00 \\ 
+  $\hat{\beta}_{3, year}$ & -1.17 & 0.08 & -14.77 & 0.00 \\ 
+  $\hat{\beta}_{4, year}$ & -2.71 & 0.05 & -56.05 & 0.00 \\ 
+  $\hat{\beta}_{temp}$ & 0.75 & 0.04 & 20.37 & 0.00 \\ 
+  $\hat{\beta}_{rain}$ & 0.68 & 0.02 & 30.32 & 0.00 \\ 
+  $\hat{\beta}_{1, year, temp}$ & -0.08 & 0.04 & -2.17 & 0.03 \\ 
+  $\hat{\beta}_{2, year, temp}$ & -1.06 & 0.04 & -24.22 & 0.00 \\ 
+  $\hat{\beta}_{3, year, temp}$ & -1.85 & 0.09 & -20.58 & 0.00 \\ 
+  $\hat{\beta}_{4, year, temp}$ & 0.08 & 0.04 & 1.95 & 0.05 \\ 
+  $\hat{\beta}_{1, year, rain}$ & -0.30 & 0.03 & -11.41 & 0.00 \\ 
+  $\hat{\beta}_{2, year, rain}$ & -0.85 & 0.04 & -23.99 & 0.00 \\ 
+  $\hat{\beta}_{3, year, rain}$ & -2.00 & 0.06 & -33.35 & 0.00 \\ 
+  $\hat{\beta}_{4, year, rain}$ & -0.59 & 0.06 & -10.40 & 0.00 \\ 
+   \hline
+\end{tabular}
+\label{tab:glmer_model_res}
+\caption{Mixed effects model of the individual count on the temperature and rainfall data results}
+\end{table}
+
+\begin{multicols}{2}
+
+
+For the model of interest, we have assumed the error distributed as a \textit{Poisson} distribution, therefore, in the fitted vs residuals inspection, we run into a different behavior. In particular, in figure \ref{fig:glmer_res_fitted} we can observe how the majority of the fitted values of very small number close to zero with very few extreme values. Nevertheless, we can still see some structure in the data. For instance, below a 500 values for the fitted values, we can clearly see that the majority of the residuals are below the zero, while fewer are above zero. This diagnostic indicates that the model may be further improved by the inclusion of other predictors which, for this particular study, haven't been included.
+
+\begin{figure}[H]
+```{r glmer_diagnostic_res}
+plot(fitted(fit_year_temp), residuals(fit_year_temp),
+     xlab = 'fitted values', ylab = 'residuals')
+abline(v = 500, lty = 2, col = 'red', lwd = .5)
+```
+\label{fig:glmer_res_fitted}
+\caption{Distribution for animal counts}
+\end{figure}
+
+To make easier, the model comprehension, we will now subset the data to one of the species with the highest numerousness and focus the model analysis exclusively on it. In particular, we extract the data about the \textit{Charadriidae} specie. This specie in particular is at high risk \ref{fig:species_count} a), reporting very low number in the last years, as per figure \ref{fig:species_count} b).
+
+\begin{figure}[H]
+```{r glm_sub_one}
+# --------------------------------------------------------------------------- #
+#                     focus on subset for further analysis                   #
+# --------------------------------------------------------------------------- #
+
+
+# species count subset: take the one with most observations
+to_sub <- names(
+  sort(table(Y[!is.na(Y$individualCount),'species']), decreasing = TRUE)[1]
+)
+Y1 <- Y[Y$species == to_sub & complete.cases(Y),] # remove NA obs
+
+par(mfrow = c(1,1), mar = c(0, 5, 5, 0))
+layout(matrix(c(1,1,1,1,2,2), ncol = 2, byrow = TRUE))
+plot(Y1$year, Y1$individualCount, type = 'l', xlab = '', xaxt = 'n')
+plot(Y1$year, Y1$individualCount, type = 'l', ylim = c(0, 50),
+     xlab = 'year', ylab = 'individual count')
+```
+\caption{Charadriidae species count a) with focus on last years b)}
+\label{fig:species_count}
+\end{figure}
+
+To establish the relationship between the predictors and the response, we are going to make use of the \textit{GLM} theory assuming, as we did previously, a \textit{Poisson distribution}
+$$ \mathbf{count} = f(\mathbf{X}) + \epsilon\ \text{    where } \epsilon \sim Poi(\lambda)$$
+where $f()$ is a set if splines. The model results shown in table \ref{tab:glm_res} tell how some of the parameters are not statistically significant at a $5\%$ level. Nevertheless, they are part of the estimated spline and need to be kept in the other to correctly estimate the model function. In this subset of the data modeled via a \textit{GLM} we can see approximately the same result as per the mixed-effect model. Almost all the coefficient for the marginal term of $year$ and its interactions are estimated to be negative, indicating a decreasing trend over time. The marginal coefficients for rainfall and temperature are positive, but very close to zero and their magnitude will be easily outclassed by their interactions effect which, overall, are statistically significant. 
+
+\end{multicols}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lrrrr}
+  \hline
+ & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
+  \hline
+ $\hat{\beta}_0$ & 5.31 & 0.09 & 60.03 & 0.00 \\ 
+  $\hat{\beta}_{1, year}$ & -2.48 & 0.10 & -23.80 & 0.00 \\ 
+  $\hat{\beta}_{2, year}$ & -2.71 & 0.19 & -14.36 & 0.00 \\ 
+  $\hat{\beta}_{3, year}$ & -0.40 & 0.24 & -1.63 & 0.10 \\ 
+  $\hat{\beta}_{4, year}$ & -3.31 & 0.26 & -12.56 & 0.00 \\ 
+  $\hat{\beta}_{temp}$ & 0.22 & 0.09 & 2.48 & 0.01 \\ 
+  $\hat{\beta}_{rain}$ & 0.42 & 0.06 & 7.40 & 0.00 \\ 
+  $\hat{\beta}_{1, year, temp}$ & -0.65 & 0.13 & -5.13 & 0.00 \\ 
+  $\hat{\beta}_{2, year, temp}$ & 0.47 & 0.24 & 1.99 & 0.05 \\ 
+  $\hat{\beta}_{3, year, temp}$ & -0.04 & 0.26 & -0.14 & 0.89 \\ 
+  $\hat{\beta}_{4, year, temp}$ & -0.56 & 0.23 & -2.50 & 0.01 \\ 
+  $\hat{\beta}_{1, year, rain}$ & -0.67 & 0.09 & -7.21 & 0.00 \\ 
+  $\hat{\beta}_{2, year, rain}$ & -0.01 & 0.19 & -0.07 & 0.95 \\ 
+  $\hat{\beta}_{3, year, rain}$ & -0.66 & 0.22 & -2.96 & 0.00 \\ 
+  $\hat{\beta}_{4, year, rain}$ & -0.67 & 0.30 & -2.22 & 0.03 \\ 
+   \hline
+\end{tabular}
+\end{table}
+
+\begin{multicols}{2}
+
+Inspecting the model fitted vs residuals \ref{fig:glm_res_fit}, we can observe some structure. In particular, in the left range of the domain, we see some of the fitted values whose residuals are very similar each other, creating a sort of line. Recall that we have already observed this pattern in the mixed-effects model.
+
+\begine{figure}[H]
+```{r glm_one}
+# fit glm
+# formula(fit_year_temp)
+fit_glm <- glm(individualCount ~ ns(syear, q_temp) * stemp + ns(syear, q_temp) * srain,
+               data = Y1, family = 'poisson')
+# xtable::xtable(summary(fit_glm)$coefficients, type = 'latex')
+# summary(fit_glm) # approximately same result
+plot(fitted(fit_glm), residuals(fit_glm), xlab= 'fitted', ylab = 'residuals')
+```
+\caption{Fitted vs residuals plot for the GLM model}
+\label{fig:glm_res_fit}
+\end{figure}
 
 
 
 
+```{r goomn}
+# pre-process X
+X$year <- X$time + 1901
+X$syear <- X$year - cyear
+X$srain_lb <- (X$rain_pred_lb - m_rain) / sd_rain
+X$srain_ub <- (X$rain_pred_ub - m_rain) / sd_rain
+X$stemp_lb <- (X$temp_pred_lb - m_temp) / sd_temp
+X$stemp_ub <- (X$temp_pred_ub - m_temp) / sd_temp
+X <- X[X$year >= 1975,]
+
+# predict upper and lower bound
+pred_lb <- predict(fit_glm, se.fit = TRUE,
+                   newdata = data.frame(syear = X$syear,
+                                        stemp = X$stemp_lb,
+                                        srain = X$srain_lb)
+)
+pred_ub <- predict(fit_glm, se.fit = TRUE,
+                   newdata = data.frame(syear = X$syear,
+                                        stemp = X$stemp_ub,
+                                        srain = X$srain_ub)
+)
+# compute lower and upper bound
+pred_lb <- pred_lb$fit - qnorm(.975) * pred_lb$se.fit
+pred_ub <- pred_ub$fit + qnorm(.975) * pred_ub$se.fit
+
+# apply g transformation
+g_pred_lb <- exp(pred_lb)
+g_pred_ub <- exp(pred_ub)
+
+
+newX <- merge(cbind(year = X$year, g_pred_lb, g_pred_ub), 
+              Y1[,c('year','individualCount')], 
+              by = 'year',
+              all.x = TRUE)
+
+par(mfrow = c(1,1))
+plot(newX$year, newX$individualCount, type = 'l')
+polygon(c(newX$year, rev(newX$year)), c(newX$g_pred_lb, rev(newX$g_pred_ub)),
+        border = NA, col = ggplot2::alpha('red', .2))
+
+# round(newX)
+```
 
 
 \section{Conclusion}

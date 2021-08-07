@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=pdflatex 2021.8.5)  6 AUG 2021 22:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=pdflatex 2021.8.5)  7 AUG 2021 14:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -648,60 +648,60 @@ LaTeX Warning: Citation `wls_intro' on page 2 undefined on input line 145.
 
 ]
 
-LaTeX Warning: Citation `ode' on page 3 undefined on input line 152.
+LaTeX Warning: Citation `ode' on page 3 undefined on input line 154.
 
 
-LaTeX Warning: Citation `lm_algo' on page 3 undefined on input line 155.
+LaTeX Warning: Citation `lm_algo' on page 3 undefined on input line 157.
 
 
-LaTeX Warning: Citation `lsa_intro' on page 3 undefined on input line 158.
+LaTeX Warning: Citation `lsa_intro' on page 3 undefined on input line 160.
 
-<20205529_final_files/figure-latex/esa_rain_preview-1.pdf, id=101, 427.5975pt x
+<20205529_final_files/figure-latex/esa_rain_preview-1.pdf, id=106, 427.5975pt x
  283.0575pt>
 File: 20205529_final_files/figure-latex/esa_rain_preview-1.pdf Graphic file (ty
 pe pdf)
 <use 20205529_final_files/figure-latex/esa_rain_preview-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/esa_rain_preview-1.p
-df  used on input line 170.
+df  used on input line 172.
 (pdftex.def)             Requested size: 229.87485pt x 152.17065pt.
 
-Package caption Warning: \label without proper reference on input line 183.
+Package caption Warning: \label without proper reference on input line 185.
 See the caption package documentation for explanation.
 
 
 LaTeX Warning: Reference `fig:esa_temp_hist' on page 3 undefined on input line 
-178.
+180.
 
-<20205529_final_files/figure-latex/eda_temp-1.pdf, id=104, 432.61626pt x 285.06
+<20205529_final_files/figure-latex/eda_temp-1.pdf, id=109, 432.61626pt x 285.06
 5pt>
 File: 20205529_final_files/figure-latex/eda_temp-1.pdf Graphic file (type pdf)
 <use 20205529_final_files/figure-latex/eda_temp-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/eda_temp-1.pdf  used
- on input line 182.
+ on input line 184.
 (pdftex.def)             Requested size: 229.87962pt x 151.4752pt.
 [3 <./20205529_final_files/figure-latex/esa_rain_preview-1.pdf>]
 
-Package caption Warning: \label without proper reference on input line 205.
+Package caption Warning: \label without proper reference on input line 207.
 See the caption package documentation for explanation.
 
 
-LaTeX Warning: Reference `fig:esa_rain' on page 4 undefined on input line 200.
+LaTeX Warning: Reference `fig:esa_rain' on page 4 undefined on input line 202.
 
-<20205529_final_files/figure-latex/eda_rainfall-1.pdf, id=124, 440.64626pt x 28
+<20205529_final_files/figure-latex/eda_rainfall-1.pdf, id=129, 440.64626pt x 28
 5.065pt>
 File: 20205529_final_files/figure-latex/eda_rainfall-1.pdf Graphic file (type p
 df)
 <use 20205529_final_files/figure-latex/eda_rainfall-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/eda_rainfall-1.pdf  
-used on input line 204.
+used on input line 206.
 (pdftex.def)             Requested size: 229.87697pt x 148.71312pt.
-<20205529_final_files/figure-latex/eda_temp_fit-1.pdf, id=125, 436.63126pt x 28
+<20205529_final_files/figure-latex/eda_temp_fit-1.pdf, id=130, 436.63126pt x 28
 5.065pt>
 File: 20205529_final_files/figure-latex/eda_temp_fit-1.pdf Graphic file (type p
 df)
 <use 20205529_final_files/figure-latex/eda_temp_fit-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/eda_temp_fit-1.pdf  
-used on input line 213.
+used on input line 215.
 (pdftex.def)             Requested size: 229.87444pt x 150.07893pt.
 
 Package multicol Warning: Floats and marginpars not allowed inside `multicols' 
@@ -712,179 +712,223 @@ Package multicol Warning: Floats and marginpars not allowed inside `multicols'
 environment!.
 
 
-LaTeX Warning: Reference `esa:cor_matrix' on page 4 undefined on input line 232
+LaTeX Warning: Reference `esa:cor_matrix' on page 4 undefined on input line 234
 .
 
 
-Package caption Warning: \label without proper reference on input line 238.
+Package caption Warning: \label without proper reference on input line 240.
 See the caption package documentation for explanation.
 
 
-LaTeX Warning: Reference `fig:esa_pairs' on page 4 undefined on input line 232.
+LaTeX Warning: Reference `fig:esa_pairs' on page 4 undefined on input line 234.
 
 
 [4 <./20205529_final_files/figure-latex/eda_temp-1.pdf> <./20205529_final_files
 /figure-latex/eda_rainfall-1.pdf> <./20205529_final_files/figure-latex/eda_temp
 _fit-1.pdf>]
-<20205529_final_files/figure-latex/esa_pairs_plot-1.pdf, id=158, 419.5675pt x 2
+<20205529_final_files/figure-latex/esa_pairs_plot-1.pdf, id=163, 419.5675pt x 2
 75.0275pt>
 File: 20205529_final_files/figure-latex/esa_pairs_plot-1.pdf Graphic file (type
  pdf)
 <use 20205529_final_files/figure-latex/esa_pairs_plot-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/esa_pairs_plot-1.pdf
-  used on input line 237.
+  used on input line 239.
 (pdftex.def)             Requested size: 419.56647pt x 275.02682pt.
-<20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf, id=162, 436.63126pt 
+<20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf, id=167, 436.63126pt 
 x 285.065pt>
 File: 20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf Graphic file (ty
 pe pdf)
 <use 20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/ode_temp_low_upp-1.p
-df  used on input line 268.
+df  used on input line 270.
 (pdftex.def)             Requested size: 229.87444pt x 150.07893pt.
 [5 <./20205529_final_files/figure-latex/esa_pairs_plot-1.pdf>]
-<20205529_final_files/figure-latex/temp_long_data-1.pdf, id=178, 436.63126pt x 
+<20205529_final_files/figure-latex/temp_long_data-1.pdf, id=183, 436.63126pt x 
 250.9375pt>
 File: 20205529_final_files/figure-latex/temp_long_data-1.pdf Graphic file (type
  pdf)
 <use 20205529_final_files/figure-latex/temp_long_data-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/temp_long_data-1.pdf
-  used on input line 277.
+  used on input line 279.
 (pdftex.def)             Requested size: 229.87444pt x 132.11172pt.
-<20205529_final_files/figure-latex/temp_lsa-1.pdf, id=181, 407.5225pt x 248.93p
+<20205529_final_files/figure-latex/temp_lsa-1.pdf, id=186, 407.5225pt x 248.93p
 t>
 File: 20205529_final_files/figure-latex/temp_lsa-1.pdf Graphic file (type pdf)
 <use 20205529_final_files/figure-latex/temp_lsa-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/temp_lsa-1.pdf  used
- on input line 306.
+ on input line 308.
 (pdftex.def)             Requested size: 229.87753pt x 140.4178pt.
-<20205529_final_files/figure-latex/temp_lsa-2.pdf, id=182, 407.5225pt x 248.93p
+<20205529_final_files/figure-latex/temp_lsa-2.pdf, id=187, 407.5225pt x 248.93p
 t>
 File: 20205529_final_files/figure-latex/temp_lsa-2.pdf Graphic file (type pdf)
 <use 20205529_final_files/figure-latex/temp_lsa-2.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/temp_lsa-2.pdf  used
- on input line 310.
+ on input line 312.
 (pdftex.def)             Requested size: 229.87753pt x 140.4178pt.
 [6 <./20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf> <./20205529_fin
 al_files/figure-latex/temp_long_data-1.pdf>]
 
-Package caption Warning: \label without proper reference on input line 323.
+Package caption Warning: \label without proper reference on input line 325.
 See the caption package documentation for explanation.
 
 
-LaTeX Warning: Reference `fig:res_fit_ols' on page 7 undefined on input line 31
-8.
+LaTeX Warning: Reference `fig:res_fit_ols' on page 7 undefined on input line 32
+0.
 
 
-Package caption Warning: \label without proper reference on input line 331.
+Package caption Warning: \label without proper reference on input line 333.
 See the caption package documentation for explanation.
 
 
-LaTeX Warning: Reference `fig:res_fit_wls' on page 7 undefined on input line 31
-8.
+LaTeX Warning: Reference `fig:res_fit_wls' on page 7 undefined on input line 32
+0.
 
-<20205529_final_files/figure-latex/temp_rain_model_data-1.pdf, id=217, 436.6312
+<20205529_final_files/figure-latex/temp_rain_model_data-1.pdf, id=222, 436.6312
 6pt x 283.0575pt>
 File: 20205529_final_files/figure-latex/temp_rain_model_data-1.pdf Graphic file
  (type pdf)
 <use 20205529_final_files/figure-latex/temp_rain_model_data-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/temp_rain_model_data
--1.pdf  used on input line 322.
+-1.pdf  used on input line 324.
 (pdftex.def)             Requested size: 229.87444pt x 149.02203pt.
-<20205529_final_files/figure-latex/rain_temp_wls-1.pdf, id=218, 436.63126pt x 2
+<20205529_final_files/figure-latex/rain_temp_wls-1.pdf, id=223, 436.63126pt x 2
 83.0575pt>
 File: 20205529_final_files/figure-latex/rain_temp_wls-1.pdf Graphic file (type 
 pdf)
 <use 20205529_final_files/figure-latex/rain_temp_wls-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/rain_temp_wls-1.pdf 
- used on input line 330.
+ used on input line 332.
 (pdftex.def)             Requested size: 229.87444pt x 149.02203pt.
 
 LaTeX Warning: Reference `tab:wls_model_summary' on page 7 undefined on input l
-ine 335.
+ine 337.
 
 [7 <./20205529_final_files/figure-latex/temp_lsa-1.pdf> <./20205529_final_files
 /figure-latex/temp_lsa-2.pdf> <./20205529_final_files/figure-latex/temp_rain_mo
 del_data-1.pdf> <./20205529_final_files/figure-latex/rain_temp_wls-1.pdf>]
 
-Package caption Warning: \label without proper reference on input line 361.
+Package caption Warning: \label without proper reference on input line 363.
 See the caption package documentation for explanation.
 
 
 LaTeX Warning: Reference `fig:rain_time_sens_5se' on page 8 undefined on input 
-line 354.
+line 356.
 
-<20205529_final_files/figure-latex/rain_temp_prediction-1.pdf, id=257, 436.6312
+<20205529_final_files/figure-latex/rain_temp_prediction-1.pdf, id=262, 436.6312
 6pt x 285.065pt>
 File: 20205529_final_files/figure-latex/rain_temp_prediction-1.pdf Graphic file
  (type pdf)
 <use 20205529_final_files/figure-latex/rain_temp_prediction-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/rain_temp_prediction
--1.pdf  used on input line 360.
+-1.pdf  used on input line 362.
 (pdftex.def)             Requested size: 229.87444pt x 150.07893pt.
 
-Overfull \hbox (54.67796pt too wide) in paragraph at lines 365--366
+Overfull \hbox (54.67796pt too wide) in paragraph at lines 367--368
 []\T1/lmr/m/n/10 ************** write con-clu-sion here ***********************
 * 
  []
 
 
-Package caption Warning: \label without proper reference on input line 385.
+Package caption Warning: \label without proper reference on input line 387.
 See the caption package documentation for explanation.
 
 
 LaTeX Warning: Reference `fig:species_barplot' on page 8 undefined on input lin
-e 370.
+e 372.
 
-<20205529_final_files/figure-latex/pop_data_viz-1.pdf, id=259, 407.5225pt x 265
+<20205529_final_files/figure-latex/pop_data_viz-1.pdf, id=264, 407.5225pt x 265
 .99374pt>
 File: 20205529_final_files/figure-latex/pop_data_viz-1.pdf Graphic file (type p
 df)
 <use 20205529_final_files/figure-latex/pop_data_viz-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/pop_data_viz-1.pdf  
-used on input line 375.
+used on input line 377.
 (pdftex.def)             Requested size: 229.87753pt x 150.04321pt.
 
-Package caption Warning: \label without proper reference on input line 385.
+Package caption Warning: \label without proper reference on input line 387.
 See the caption package documentation for explanation.
 
 
 LaTeX Warning: Reference `fig:species_barplot' on page 8 undefined on input lin
-e 380.
+e 382.
 
-<20205529_final_files/figure-latex/y_wide-1.pdf, id=261, 440.64626pt x 285.065p
+<20205529_final_files/figure-latex/y_wide-1.pdf, id=266, 440.64626pt x 285.065p
 t>
 File: 20205529_final_files/figure-latex/y_wide-1.pdf Graphic file (type pdf)
 <use 20205529_final_files/figure-latex/y_wide-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/y_wide-1.pdf  used o
-n input line 384.
+n input line 386.
 (pdftex.def)             Requested size: 229.87697pt x 148.71312pt.
 
-Package caption Warning: \label without proper reference on input line 394.
+Package caption Warning: \label without proper reference on input line 396.
 See the caption package documentation for explanation.
 
 
-LaTeX Warning: Reference `fig:counts_hist' on page 8 undefined on input line 38
-9.
+LaTeX Warning: Reference `fig:counts_hist' on page 8 undefined on input line 39
+1.
 
 [8 <./20205529_final_files/figure-latex/rain_temp_prediction-1.pdf> <./20205529
 _final_files/figure-latex/pop_data_viz-1.pdf> <./20205529_final_files/figure-la
 tex/y_wide-1.pdf>]
-<20205529_final_files/figure-latex/count_hist-1.pdf, id=302, 427.5975pt x 283.0
+<20205529_final_files/figure-latex/count_hist-1.pdf, id=307, 427.5975pt x 283.0
 575pt>
 File: 20205529_final_files/figure-latex/count_hist-1.pdf Graphic file (type pdf
 )
 <use 20205529_final_files/figure-latex/count_hist-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/count_hist-1.pdf  us
-ed on input line 393.
+ed on input line 395.
 (pdftex.def)             Requested size: 229.87485pt x 152.17065pt.
+
+Package caption Warning: \label without proper reference on input line 448.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `tab:glmer_model_res' on page 9 undefined on input lin
+e 421.
+
+[9 <./20205529_final_files/figure-latex/count_hist-1.pdf>]
+
+Package caption Warning: \label without proper reference on input line 460.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:glmer_res_fitted' on page 10 undefined on input l
+ine 455.
+
+<20205529_final_files/figure-latex/glmer_diagnostic_res-1.pdf, id=326, 436.6312
+6pt x 251.94125pt>
+File: 20205529_final_files/figure-latex/glmer_diagnostic_res-1.pdf Graphic file
+ (type pdf)
+<use 20205529_final_files/figure-latex/glmer_diagnostic_res-1.pdf>
+Package pdftex.def Info: 20205529_final_files/figure-latex/glmer_diagnostic_res
+-1.pdf  used on input line 459.
+(pdftex.def)             Requested size: 229.87444pt x 132.64018pt.
+<20205529_final_files/figure-latex/glm_sub_one-1.pdf, id=329, 462.72874pt x 278
+.03876pt>
+File: 20205529_final_files/figure-latex/glm_sub_one-1.pdf Graphic file (type pd
+f)
+<use 20205529_final_files/figure-latex/glm_sub_one-1.pdf>
+Package pdftex.def Info: 20205529_final_files/figure-latex/glm_sub_one-1.pdf  u
+sed on input line 468.
+(pdftex.def)             Requested size: 229.88106pt x 138.1281pt.
+
+LaTeX Warning: Reference `tab:glm_res' on page 10 undefined on input line 475.
+
+[10 <./20205529_final_files/figure-latex/glmer_diagnostic_res-1.pdf> <./2020552
+9_final_files/figure-latex/glm_sub_one-1.pdf>]
+<20205529_final_files/figure-latex/goomn-1.pdf, id=350, 437.635pt x 250.9375pt>
+
+File: 20205529_final_files/figure-latex/goomn-1.pdf Graphic file (type pdf)
+<use 20205529_final_files/figure-latex/goomn-1.pdf>
+Package pdftex.def Info: 20205529_final_files/figure-latex/goomn-1.pdf  used on
+ input line 511.
+(pdftex.def)             Requested size: 229.882pt x 131.81306pt.
 (./20205529_final.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 22--24
 \T1/lmr/m/n/10 por-tal.'' []$https : / / climateknowledgeportal .
  []
 
-) [9 <./20205529_final_files/figure-latex/count_hist-1.pdf>] (./20205529_final.
-aux)
+) [11 <./20205529_final_files/figure-latex/goomn-1.pdf>] (./20205529_final.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -892,13 +936,13 @@ LaTeX Warning: There were undefined references.
 LaTeX Warning: There were multiply-defined labels.
 
 Package rerunfilecheck Info: File `20205529_final.out' has not changed.
-(rerunfilecheck)             Checksum: 755CE9F35F652FDC12D26630F496097D;2208.
+(rerunfilecheck)             Checksum: 46BE8E3C012901396E4A739E6D83ABA1;2367.
  ) 
 Here is how much of TeX's memory you used:
- 12337 strings out of 480502
- 189495 string characters out of 5899349
- 500572 words of memory out of 5000000
- 29731 multiletter control sequences out of 15000+600000
+ 12377 strings out of 480502
+ 191171 string characters out of 5899349
+ 506832 words of memory out of 5000000
+ 29760 multiletter control sequences out of 15000+600000
  473751 words of font info for 73 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  60i,15n,66p,1017b,480s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -918,10 +962,10 @@ blic/lm/lmr17.pfb></home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmr
 me/ndrecord/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></home/ndrecor
 d/.TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy7.pfb></home/ndrecord/.TinyTeX/
 texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on 20205529_final.pdf (9 pages, 389660 bytes).
+Output written on 20205529_final.pdf (11 pages, 468033 bytes).
 PDF statistics:
- 413 PDF objects out of 1000 (max. 8388607)
- 325 compressed objects within 4 object streams
- 57 named destinations out of 1000 (max. 500000)
- 188 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 461 PDF objects out of 1000 (max. 8388607)
+ 362 compressed objects within 4 object streams
+ 65 named destinations out of 1000 (max. 500000)
+ 211 words of extra memory for PDF output out of 10000 (max. 10000000)
 

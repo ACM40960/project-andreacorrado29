@@ -11,7 +11,8 @@ useful <- c(
   'gam',
   'xtable',
   'e1071',
-  'viridis'
+  'viridis',
+  'performance'
   )
 # install those not available
 for (p in useful) if (!(p %in% pkgs)) install.packages(p)
