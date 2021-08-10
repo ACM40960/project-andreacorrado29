@@ -22,11 +22,59 @@ library(minpack.lm)
 # --------------------------------------------------------------------------- #
 #                                   rain                                      #
 # --------------------------------------------------------------------------- #
+ 
 
 rain <- read.csv('../data/pr_1901_2020_ZAF.csv') # load rain data
 names(rain)[1] <- 'rain' # assign name to data set
 rain_mean <- tapply(rain$rain, rain$Year, mean) # compute annual mean
 # collect data in a easy to handle data set
+
+
+# rain sd ---------------------------------------------------------------------
+rain_sd <- tapply(rain$rain, rain$Year, sd) # compute annual mean
+ylim <- range(rain_sd, rain_mean)
+plot(as.numeric(names(rain_sd)), rain_sd, type = 'l', ylim = ylim, lwd = .5,
+     xlab = 'year')
+lines(as.numeric(names(rain_mean)), rain_mean, type = 'l', lwd = .5, col = 'red')
+
+lines(
+  as.numeric(names(rain_sd)),
+  fitted(loess(rain_sd ~ as.numeric(names(rain_sd)))),
+  lwd = 2
+)
+
+lines(
+  as.numeric(names(rain_mean)),
+  fitted(loess(rain_mean ~ as.numeric(names(rain_mean)))),
+  lwd = 2,
+  col = 'red'
+)
+
+# legend
+legend('topleft', col = 1:2, lty = 1, lwd = 2, bty = 'n',
+       legend = c('Rainfall sd', 'Rainfall mean'))
+
+
+# fit a model
+hist(rain_sd)
+rain_mean_sd <- lm(rain_sd ~ rain_mean)
+summary(rain_mean_sd)
+plot(fitted(rain_mean_sd), residuals(rain_mean_sd))
+
+lines(
+  as.numeric(names(rain_sd)),
+  fitted(loess(rain_sd ~ as.numeric(names(rain_sd)))),
+  col = 'red'
+)
+
+
+
+
+
+
+
+
+
 rain <- data.frame(year = as.numeric(names(rain_mean)), rain = rain_mean)
 # plot non parametric local regression to the data of interest + graphics parameter
 
@@ -51,7 +99,21 @@ legend('topright', legend = c('span 100%', 'span  50%'), lty = 1, lwd = 2,
 
 temp <- read.csv('../data/tas_1901_2020_ZAF.csv') # load temp data
 names(temp)[1] <- 'temp' # assign name to data set
-temp_mean <-tapply(temp$temp, temp$Year, mean) # compute average year temp
+temp_mean <- tapply(temp$temp, temp$Year, mean) # compute average year temp
+temp_sd <- tapply(temp$temp, temp$Year, sd) # compute average year temp
+
+years <- as.numeric(names(temp_sd)) 
+temp_sd <- scale(temp_sd)
+temp_mean <- scale(temp_mean)
+
+plot(years, temp_sd, type = 'l',  lwd = .5, xlab = 'year')
+lines(years, c(0, diff(temp_mean)), type = 'l',  lwd = .5, xlab = 'year', col = 'red')
+
+summary(lm(temp_sd ~ c(0, diff(temp_mean))))
+
+
+
+
 # assign to an handy data set
 temp <- data.frame(year = names(temp_mean), temp = temp_mean)
 # fit local regression and produce plot of the result
