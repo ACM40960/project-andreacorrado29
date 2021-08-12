@@ -464,8 +464,6 @@ We have now available a model which let us understand the evolution of the tempe
 # propose longer data for future prediction
 t_long <- 0:170
 X <- merge(X, data.frame(time = t_long), all.y = TRUE) # join data with future years
-out_temp_long <- ode(y=yini,times=t_long,func=tempchange,parms=as.list(parest_temp))
-out_temp_long <- data.frame(out_temp_long)
 
 # predict longer data with lower, upper bound + point estimate
 out_temp_lb = ode(y=yini,times=t_long,func=tempchange,parms=as.list(parest_temp[1]))
@@ -1108,8 +1106,9 @@ dotplot_ranef$species
 
 \section{Species application}
 
-To make easier, the model comprehension, we will now subset the data to one of the species with the highest numerousness and focus the model analysis exclusively on it. 
+In the previous section, we have estimated a random effect model to allow for the prediction of the response variable, individual count, by making usage of non-linear relationships with the climate phenomenon.
 
+We now want to present these result for each of the species-genes pairs and compare them with the observed values. Moreover, we provide estimated confidence interval for the next 50 years and what might happen to these species, following the current trend. All the results we are going to describe are depicted in figure \ref{fig:species_applciation_3}. In particular, we can observe that for some of these, the model fits very well the observed data and its trend evolution, see species-pairs $\{4, 6, 19, 25, 36, 38  \}$, while for others, the fit is not suitable at all, see species-genes $\{24, 39, 45 \}$. Nevertheless, excluded the most extreme cases, we can see that the model predicted trends agree with the overall wildlife evolution. In particular, for each of these species, we can notice how easy it is, according to the estimated model, to reach one individual left, in the lower bound, which would not allow for the species survival. According to the estimated model, which has shown to capture the overall data structure, this might happen as soon as in ten years time.  
 
 ```{r rmse_barplot}
 # fit model
@@ -1118,10 +1117,10 @@ spec_tab <- table(Y$species)
 rmse <- rep(NA, length(spec_tab))
 for(i in 1:length(spec_tab)){
 
-  # subset  
+  # subset
   ispec <- names(spec_tab[i])
   iy <- Y[Y$species == names(spec_tab[i]),]
-  
+
   # compute rmse
   rmse[i] <- median(
     ( (iy$individualCount - iy$fitted) / iy$individualCount )^2,
@@ -1131,8 +1130,8 @@ for(i in 1:length(spec_tab)){
 rmse <- sqrt(rmse)
 names(rmse) <- names(spec_tab)
 order_idx <- order(rmse, decreasing = 1)
-par(las = 2, mar = c(14, 4, 2, 2), mfrow = c(1,1))
-barplot(rmse[order_idx], main = 'median RMSE', border = NA)
+# par(las = 2, mar = c(14, 4, 2, 2), mfrow = c(1,1))
+# barplot(rmse[order_idx], main = 'median RMSE', border = NA)
 ```
 
 \end{multicols}
@@ -1259,6 +1258,7 @@ for(i in 1:18){
   
   # indentify 0 cases
   zero_case <- which(round(pred_lb) == 0)
+  zero_case <- zero_case[zero_case > 2021-1975]
   if(length(zero_case) > 0) {
     abline(v = X$year[zero_case[1]], lty = 2)
     legend('topright', col = 'grey', lty = 2, legend = X$year[zero_case[1]], bty = 'n')
@@ -1348,6 +1348,7 @@ for(i in 19:36){
   
   # indentify 0 cases
   zero_case <- which(round(pred_lb) == 0)
+  zero_case <- zero_case[zero_case > 2021-1975]
   if(length(zero_case) > 0) {
     abline(v = X$year[zero_case[1]], lty = 2)
     legend('topright', col = 'grey', lty = 2, legend = X$year[zero_case[1]], bty = 'n')
@@ -1436,13 +1437,14 @@ for(i in 37:length(spec)){
   
   # indentify 0 cases
   zero_case <- which(round(pred_lb) == 0)
+  zero_case <- zero_case[zero_case > 2021-1975]
   if(length(zero_case) > 0) {
     abline(v = X$year[zero_case[1]], lty = 2)
     legend('topright', col = 'grey', lty = 2, legend = X$year[zero_case[1]], bty = 'n')
   }
 }
 ```
-\label{fig:species_applciation_2}
+\label{fig:species_applciation_3}
 \end{figure}
 
 \clearpage

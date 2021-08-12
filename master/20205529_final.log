@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=pdflatex 2021.8.5)  12 AUG 2021 10:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=pdflatex 2021.8.5)  12 AUG 2021 18:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -467,9 +467,6 @@ File: l3backend-pdftex.def 2021-08-04 L3 backend support: PDF output (pdfTeX)
 ) (./20205529_final.aux
 
 LaTeX Warning: Label `fig:species_barplot' multiply defined.
-
-
-LaTeX Warning: Label `fig:species_applciation_2' multiply defined.
 
 )
 \openout1 = `20205529_final.aux'.
@@ -1028,14 +1025,14 @@ Package pdftex.def Info: 20205529_final_files/figure-latex/ranef_dotplot-1.pdf
 l_files/figure-latex/ranef_estimate-2.pdf> <./20205529_final_files/figure-latex
 /ranef_var-1.pdf>] [14 <./20205529_final_files/figure-latex/ranef_dotplot-1.pdf
 >]
-<20205529_final_files/figure-latex/rmse_barplot-1.pdf, id=460, 401.5pt x 290.08
-376pt>
-File: 20205529_final_files/figure-latex/rmse_barplot-1.pdf Graphic file (type p
-df)
-<use 20205529_final_files/figure-latex/rmse_barplot-1.pdf>
-Package pdftex.def Info: 20205529_final_files/figure-latex/rmse_barplot-1.pdf  
-used on input line 664.
-(pdftex.def)             Requested size: 229.88048pt x 166.08864pt.
+
+Package caption Warning: \label without proper reference on input line 697.
+See the caption package documentation for explanation.
+
+
+LaTeX Warning: Reference `fig:species_applciation_3' on page 15 undefined on in
+put line 662.
+
 <20205529_final_files/figure-latex/species_18-1.pdf, id=461, 460.72125pt x 293.
 095pt>
 File: 20205529_final_files/figure-latex/species_18-1.pdf Graphic file (type pdf
@@ -1054,10 +1051,9 @@ ed on input line 674.
 (pdftex.def)             Requested size: 465.73886pt x 319.19171pt.
 [15
 
- <./20205529_final_files/figure-latex/rmse_barplot-1.pdf>] [16 <./20205529_fina
-l_files/figure-latex/species_18-1.pdf> <./20205529_final_files/figure-latex/spe
-cies_18-2.pdf>]
-<20205529_final_files/figure-latex/species_36-1.pdf, id=502, 464.73625pt x 293.
+] [16 <./20205529_final_files/figure-latex/species_18-1.pdf> <./20205529_final_
+files/figure-latex/species_18-2.pdf>]
+<20205529_final_files/figure-latex/species_36-1.pdf, id=495, 464.73625pt x 293.
 095pt>
 File: 20205529_final_files/figure-latex/species_36-1.pdf Graphic file (type pdf
 )
@@ -1065,7 +1061,7 @@ File: 20205529_final_files/figure-latex/species_36-1.pdf Graphic file (type pdf
 Package pdftex.def Info: 20205529_final_files/figure-latex/species_36-1.pdf  us
 ed on input line 682.
 (pdftex.def)             Requested size: 464.7351pt x 293.09427pt.
-<20205529_final_files/figure-latex/species_36-2.pdf, id=503, 464.73625pt x 319.
+<20205529_final_files/figure-latex/species_36-2.pdf, id=496, 464.73625pt x 319.
 1925pt>
 File: 20205529_final_files/figure-latex/species_36-2.pdf Graphic file (type pdf
 )
@@ -1073,7 +1069,7 @@ File: 20205529_final_files/figure-latex/species_36-2.pdf Graphic file (type pdf
 Package pdftex.def Info: 20205529_final_files/figure-latex/species_36-2.pdf  us
 ed on input line 686.
 (pdftex.def)             Requested size: 464.7351pt x 319.19171pt.
-<20205529_final_files/figure-latex/species_50-1.pdf, id=504, 465.74pt x 293.095
+<20205529_final_files/figure-latex/species_50-1.pdf, id=497, 465.74pt x 293.095
 pt>
 File: 20205529_final_files/figure-latex/species_50-1.pdf Graphic file (type pdf
 )
@@ -1081,7 +1077,7 @@ File: 20205529_final_files/figure-latex/species_50-1.pdf Graphic file (type pdf
 Package pdftex.def Info: 20205529_final_files/figure-latex/species_50-1.pdf  us
 ed on input line 692.
 (pdftex.def)             Requested size: 465.73886pt x 293.09427pt.
-<20205529_final_files/figure-latex/species_50-2.pdf, id=505, 465.74pt x 184.69p
+<20205529_final_files/figure-latex/species_50-2.pdf, id=498, 465.74pt x 184.69p
 t>
 File: 20205529_final_files/figure-latex/species_50-2.pdf Graphic file (type pdf
 )
@@ -1112,10 +1108,10 @@ Package rerunfilecheck Info: File `20205529_final.out' has not changed.
 (rerunfilecheck)             Checksum: 2CE58F53397747858E64BC980F4BFF5E;2603.
  ) 
 Here is how much of TeX's memory you used:
- 12569 strings out of 480502
- 199339 string characters out of 5899349
- 503437 words of memory out of 5000000
- 29914 multiletter control sequences out of 15000+600000
+ 12561 strings out of 480502
+ 198873 string characters out of 5899349
+ 503526 words of memory out of 5000000
+ 29907 multiletter control sequences out of 15000+600000
  474116 words of font info for 74 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  60i,15n,66p,1419b,484s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1137,10 +1133,10 @@ inyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/ndrecord/.TinyTeX/tex
 mf-dist/fonts/type1/public/lm/lmsy10.pfb></home/ndrecord/.TinyTeX/texmf-dist/fo
 nts/type1/public/lm/lmsy7.pfb></home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/p
 ublic/amsfonts/symbols/msbm10.pfb>
-Output written on 20205529_final.pdf (19 pages, 770953 bytes).
+Output written on 20205529_final.pdf (19 pages, 767387 bytes).
 PDF statistics:
- 677 PDF objects out of 1000 (max. 8388607)
- 523 compressed objects within 6 object streams
+ 669 PDF objects out of 1000 (max. 8388607)
+ 518 compressed objects within 6 object streams
  85 named destinations out of 1000 (max. 500000)
- 297 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 292 words of extra memory for PDF output out of 10000 (max. 10000000)
 
