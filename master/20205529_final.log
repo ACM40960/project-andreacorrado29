@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=pdflatex 2021.8.5)  14 AUG 2021 21:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021) (preloaded format=pdflatex 2021.8.5)  14 AUG 2021 22:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -650,7 +650,9 @@ File: 20205529_final_files/figure-latex/esa_pairs_plot-1.pdf Graphic file (type
 Package pdftex.def Info: 20205529_final_files/figure-latex/esa_pairs_plot-1.pdf
   used on input line 296.
 (pdftex.def)             Requested size: 419.56647pt x 275.02682pt.
-[7 <./20205529_final_files/figure-latex/esa_pairs_plot-1.pdf>]
+[7
+
+ <./20205529_final_files/figure-latex/esa_pairs_plot-1.pdf>]
 <20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf, id=271, 436.63126pt 
 x 285.065pt>
 File: 20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf Graphic file (ty
@@ -668,7 +670,6 @@ Package pdftex.def Info: 20205529_final_files/figure-latex/temp_long_data-1.pdf
   used on input line 331.
 (pdftex.def)             Requested size: 229.87444pt x 132.11172pt.
 [8
-
 
  <./20205529_final_files/figure-latex/ode_temp_low_upp-1.pdf> <./20205529_final
 _files/figure-latex/temp_long_data-1.pdf>]
@@ -726,7 +727,9 @@ File: 20205529_final_files/figure-latex/count_hist-1.pdf Graphic file (type pdf
 Package pdftex.def Info: 20205529_final_files/figure-latex/count_hist-1.pdf  us
 ed on input line 445.
 (pdftex.def)             Requested size: 229.87926pt x 140.11687pt.
-[12 <./20205529_final_files/figure-latex/count_hist-1.pdf>] [13]
+[12 <./20205529_final_files/figure-latex/count_hist-1.pdf>] [13
+
+]
 <20205529_final_files/figure-latex/glmer_diagnostic_res-1.pdf, id=406, 439.6425
 pt x 251.94125pt>
 File: 20205529_final_files/figure-latex/glmer_diagnostic_res-1.pdf Graphic file
@@ -735,6 +738,11 @@ File: 20205529_final_files/figure-latex/glmer_diagnostic_res-1.pdf Graphic file
 Package pdftex.def Info: 20205529_final_files/figure-latex/glmer_diagnostic_res
 -1.pdf  used on input line 516.
 (pdftex.def)             Requested size: 229.87659pt x 131.73293pt.
+
+Underfull \hbox (badness 2103) in paragraph at lines 526--527
+\T1/lmr/m/n/10 the em-pir-i-cal dis-tri-bu-tion agrees with the
+ []
+
 <20205529_final_files/figure-latex/ranef_estimate-1.pdf, id=413, 440.64626pt x 
 286.06876pt>
 File: 20205529_final_files/figure-latex/ranef_estimate-1.pdf Graphic file (type
@@ -753,7 +761,6 @@ Package pdftex.def Info: 20205529_final_files/figure-latex/ranef_estimate-2.pdf
 (pdftex.def)             Requested size: 229.87697pt x 148.71312pt.
 [14
 
-
  <./20205529_final_files/figure-latex/glmer_diagnostic_res-1.pdf> <./20205529_f
 inal_files/figure-latex/ranef_estimate-1.pdf> <./20205529_final_files/figure-la
 tex/ranef_estimate-2.pdf>]
@@ -763,10 +770,11 @@ File: 20205529_final_files/figure-latex/ranef_dotplot-1.pdf Graphic file (type
 pdf)
 <use 20205529_final_files/figure-latex/ranef_dotplot-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/ranef_dotplot-1.pdf 
- used on input line 558.
+ used on input line 559.
 (pdftex.def)             Requested size: 423.58792pt x 471.76852pt.
-[15 <./20205529_final_files/figure-latex/ranef_dotplot-1.pdf>] [16
+[15
 
+ <./20205529_final_files/figure-latex/ranef_dotplot-1.pdf>] [16
 
 ]
 <20205529_final_files/figure-latex/species_18-1.pdf, id=467, 460.72125pt x 293.
@@ -775,7 +783,7 @@ File: 20205529_final_files/figure-latex/species_18-1.pdf Graphic file (type pdf
 )
 <use 20205529_final_files/figure-latex/species_18-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/species_18-1.pdf  us
-ed on input line 584.
+ed on input line 585.
 (pdftex.def)             Requested size: 460.72012pt x 293.09427pt.
 <20205529_final_files/figure-latex/species_18-2.pdf, id=468, 465.74pt x 319.192
 5pt>
@@ -783,7 +791,7 @@ File: 20205529_final_files/figure-latex/species_18-2.pdf Graphic file (type pdf
 )
 <use 20205529_final_files/figure-latex/species_18-2.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/species_18-2.pdf  us
-ed on input line 588.
+ed on input line 589.
 (pdftex.def)             Requested size: 465.73886pt x 319.19171pt.
 [17 <./20205529_final_files/figure-latex/species_18-1.pdf> <./20205529_final_fi
 les/figure-latex/species_18-2.pdf>]
@@ -793,7 +801,7 @@ File: 20205529_final_files/figure-latex/species_36-1.pdf Graphic file (type pdf
 )
 <use 20205529_final_files/figure-latex/species_36-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/species_36-1.pdf  us
-ed on input line 596.
+ed on input line 597.
 (pdftex.def)             Requested size: 464.7351pt x 293.09427pt.
 <20205529_final_files/figure-latex/species_36-2.pdf, id=496, 464.73625pt x 319.
 1925pt>
@@ -801,7 +809,7 @@ File: 20205529_final_files/figure-latex/species_36-2.pdf Graphic file (type pdf
 )
 <use 20205529_final_files/figure-latex/species_36-2.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/species_36-2.pdf  us
-ed on input line 600.
+ed on input line 601.
 (pdftex.def)             Requested size: 464.7351pt x 319.19171pt.
 <20205529_final_files/figure-latex/species_50-1.pdf, id=497, 465.74pt x 293.095
 pt>
@@ -809,7 +817,7 @@ File: 20205529_final_files/figure-latex/species_50-1.pdf Graphic file (type pdf
 )
 <use 20205529_final_files/figure-latex/species_50-1.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/species_50-1.pdf  us
-ed on input line 606.
+ed on input line 607.
 (pdftex.def)             Requested size: 465.73886pt x 293.09427pt.
 <20205529_final_files/figure-latex/species_50-2.pdf, id=498, 465.74pt x 184.69p
 t>
@@ -817,7 +825,7 @@ File: 20205529_final_files/figure-latex/species_50-2.pdf Graphic file (type pdf
 )
 <use 20205529_final_files/figure-latex/species_50-2.pdf>
 Package pdftex.def Info: 20205529_final_files/figure-latex/species_50-2.pdf  us
-ed on input line 610.
+ed on input line 611.
 (pdftex.def)             Requested size: 465.73886pt x 184.68953pt.
 [18 <./20205529_final_files/figure-latex/species_36-1.pdf> <./20205529_final_fi
 les/figure-latex/species_36-2.pdf>] [19 <./20205529_final_files/figure-latex/sp
@@ -841,7 +849,7 @@ Here is how much of TeX's memory you used:
  28459 multiletter control sequences out of 15000+600000
  474116 words of font info for 74 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 60i,15n,66p,1586b,353s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 60i,15n,66p,1586b,336s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/home/ndrecord/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/home/n
 drecord/.TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/home/ndrecord/.Tiny
 TeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/home/ndrecord/.TinyTeX/texmf-
@@ -860,7 +868,7 @@ inyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb></home/ndrecord/.TinyTeX/tex
 mf-dist/fonts/type1/public/lm/lmsy10.pfb></home/ndrecord/.TinyTeX/texmf-dist/fo
 nts/type1/public/lm/lmsy7.pfb></home/ndrecord/.TinyTeX/texmf-dist/fonts/type1/p
 ublic/amsfonts/symbols/msbm10.pfb>
-Output written on 20205529_final.pdf (21 pages, 770050 bytes).
+Output written on 20205529_final.pdf (21 pages, 770554 bytes).
 PDF statistics:
  655 PDF objects out of 1000 (max. 8388607)
  505 compressed objects within 6 object streams
