@@ -9,13 +9,13 @@ Once the different models validation, we want to make prediction up to a certain
 
 What is happening to the global climate?
 
-
+<br>
 
 <img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/rain.gif", width = 40%">
 
 <img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/temp.gif", width = 40%">
 
-
+<br>
 
 
 
