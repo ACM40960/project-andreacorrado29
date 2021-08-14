@@ -11,6 +11,7 @@ What is happening to the global climate?
 
 <br>
 <img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/rain.gif" width=40%>
+![Demo File](https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/rain.gif)
 
 If you are interested in the full detailed study, check the report out `20205529_final.pdf` 
 
@@ -42,8 +43,7 @@ This script will install all the package need for the project that are not avail
 
 ## Data Source
 
-All the data analysed within this project, are available in this reporsitory at `./data/`.
-
+All the data analysed within this project, are available in this reporsitory at `./data/`. The occourrence data set has been split into 4 subsets to allows for git hub storage. The file `load_occourrence.R` allows to load the data combined into a unique object.
 Those can be downloaded from the following web services, respectively waterbirds data and climate data:
 
 - GBIF - Global Biodiversity Information Facility *Free and open access to biodiversity data* <www.gbif.org/occurrence/>
