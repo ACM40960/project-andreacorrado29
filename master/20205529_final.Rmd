@@ -230,76 +230,11 @@ In order to keep track the evolution of the phenomenon over time and to give an 
 
 By investigating the results in \ref{fig:esa_rain} we can notice how the global fit to the rain data shows a constant trend up to the 1950 which evolves in a slightly linear decreasing trend onward. On the other hand, the local fit shows an overall constant trend up to the 1980s which evolves in a steeper decrease for the later year. Nevertheless, both the models suggest an evolution of the amount of rainfall which negativelt changes over time.
 
-\begin{figure}[hbt]
-```{r eda_rainfall}
-# plot non parametric local regression to the data of interest + graphics parameter
-# span value: 1
-plot_lowess(rain$year, rain$rain, f = 1, 
-            main = 'Average rain fall amount per year', ax = rain$year,
-            xlab = 'year', ylab = 'rain fall amount', type = 'l')
-legend('topright', legend = c('span 100%'), lty = 1, lwd = 2,
-       bty = 'n', col = c('violetred'))
-# span value: .5
-plot_lowess(rain$year, rain$rain, f = .5, 
-            main = 'Average rain fall amount per year', ax = rain$year,
-            xlab = 'year', ylab = 'rain fall amount', type = 'l',
-            add = 0, fit.col = 'royalblue')
-# add legend
-legend('topright', legend = c('span  50%'), lty = 1, lwd = 2,
-       bty = 'n', col = c('royalblue'))
-```
-\caption{Annual rainfall}
-\label{fig:esa_rain}
-\end{figure}
-
-
-
 Afterwards, we fit a the same two models for the temperature data. Here the relation with time is much clearer. For instance, we can observe how the global fit shows a linearly increasing trend over time, with constant velocity. In contrast, the local fit shows an increasing trend with different intensities in different period allowing for non linear relationship. Nevertheless, the overall trend does not change dramatically. The annual average temperature has clearly been increasing over the last century.
-
-\begin{figure}[t]
-```{r eda_temp_fit}
-# fit local regression and produce plot of the result
-# span 100%
-plot_lowess(temp$year, temp$temp, f = 1, ax = temp$year,
-            xlab = 'year', ylab = 'temperature', type = 'l',
-            main = 'Annual temperature over year')
-legend('topleft', legend = c('span  100%'), lty = 1, lwd = 2,
-       bty = 'n', col = c('violetred'))
-# span 50%
-plot_lowess(temp$year, temp$temp, f = .5, ax = temp$year,
-            xlab = 'year', ylab = 'temperature', type = 'l',
-            add = 0, fit.col = 'blue', main = 'Annual temperature over year')
-legend('topleft', legend = c('span  50%'), lty = 1, lwd = 2,
-       bty = 'n', col = c('royalblue'))
-```
-\caption{Annual average temperature}
-\label{fig:esa_temp}
-\end{figure}
 
 
 In figure \ref{fig:esa_rain_diff} we depict what the annual increment is for both span values of $s = \{ 50, 100\}$. In figure a) with span size $s = 100$ we can see a flat trend up to the last half century, and then an increasing trend, indicating more positive values than negative ones. In figure b) with span size $s = 50$ we can see an initial slightly increasing trend, followed by a fairly negative period during the 50s, followed by a clearly steep increasing trend from the 60s onward.
 
-\begin{figure}[hbt]
-```{r temp_difF_evol}
-# 100 % span
-plot_lowess(temp$year, c(0, diff(temp$temp)), f = 1, ax = temp$year,
-            xlab = 'year', ylab = 'temperature', type = 'l',
-            main = 'Annual temperature increment')
-# add legend
-legend('topleft', legend = c('span  100%'), lty = 1, lwd = 2,
-       bty = 'n', col = c('violetred'))
-# 50 % span
-plot_lowess(temp$year, c(0, diff(temp$temp)), f = .5, ax = temp$year,
-            xlab = 'year', ylab = 'temperature', type = 'l',
-            main = 'Annual temperature increment',
-            add = 0, fit.col = 'royalblue')
-# add legend
-legend('topleft', legend = c('span  50%'), lty = 1, lwd = 2,
-       bty = 'n', col = c('royalblue'))
-```
-\caption{Annual temperature increment}
-\label{fig:esa_rain_diff}
-\end{figure}
 
 ```{r esa_loadX}
 X <- merge(rain, temp, by = 'year') # join data in a dataset by year 
@@ -327,6 +262,65 @@ year & 1.00 & -0.06 & 0.82 & -0.09 \\
 In order to give an overall idea of the the data we are investigating we would like to present the pairs plot showing each pair combination plus the estimated correlation matrix $\mathbf{R}$ in table \ref{esa:cor_matrix}. As mentioned earlier, in figure \ref{fig:esa_pairs} we can notice the strong relationship between temperature and year $\hat{\rho}_{t,y} =$ `r round(cor(X[,c(1,3)])[2], 2)` and a weaker relationship between rain and year $\hat{\rho}_{r,y} =$ `r round(cor(X[,c(1,2)])[2], 2)` . However, we can see a clear relationship between year and rain $\hat{\rho}_{r,t}=$ `r round(cor(X[,c(2,3)])[2], 2)` which may be worth further investigation. It is also interesting to notice that the temperature standard deviation is negatively related to the rainfall amount $\hat{\rho}_{r,t_{sd}}=$ `r round(cor(X[,c(2,4)])[2], 2)`, meaning that for a year with low average rainfall, we can expect slightly higher variation in the average temperature.
 
 \onecolumn
+\begin{figure}[hbt]
+```{r eda_rainfall, fig.height=8}
+# plot non parametric local regression to the data of interest + graphics parameter
+# span value: 1
+par(mfrow = c(3, 2))
+plot_lowess(rain$year, rain$rain, f = 1, 
+            main = 'Average rain fall amount per year', ax = NULL,
+            xlab = 'year', ylab = 'rain fall amount', type = 'l', xaxt = 'n')
+legend('topright', legend = c('span 100%'), lty = 1, lwd = 2,
+       bty = 'n', col = c('violetred'))
+
+
+# span value: .5
+plot_lowess(rain$year, rain$rain, f = .5, 
+            main = 'Average rain fall amount per year', ax = NULL,
+            xlab = 'year', ylab = 'rain fall amount', type = 'l',
+            add = 0, fit.col = 'royalblue')
+# add legend
+legend('topright', legend = c('span  50%'), lty = 1, lwd = 2,
+       bty = 'n', col = c('royalblue'))
+
+
+# fit local regression and produce plot of the result
+# span 100%
+plot_lowess(temp$year, temp$temp, f = 1, ax = NULL,
+            xlab = 'year', ylab = 'temperature', type = 'l',
+            main = 'Annual temperature over year', xaxt = 'n')
+legend('topleft', legend = c('span  100%'), lty = 1, lwd = 2,
+       bty = 'n', col = c('violetred'))
+
+# span 50%
+plot_lowess(temp$year, temp$temp, f = .5, ax = NULL,
+            xlab = 'year', ylab = 'temperature', type = 'l',
+            add = 0, fit.col = 'blue', main = 'Annual temperature over year')
+legend('topleft', legend = c('span  50%'), lty = 1, lwd = 2,
+       bty = 'n', col = c('royalblue'))
+
+
+# 100 % span
+plot_lowess(temp$year, c(0, diff(temp$temp)), f = 1, ax = temp$year,
+            xlab = 'year', ylab = 'temperature', type = 'l',
+            main = 'Annual temperature increment', xaxt = 'n')
+# add legend
+legend('topleft', legend = c('span  100%'), lty = 1, lwd = 2,
+       bty = 'n', col = c('violetred'))
+
+# 50 % span
+plot_lowess(temp$year, c(0, diff(temp$temp)), f = .5, ax = temp$year,
+            xlab = 'year', ylab = 'temperature', type = 'l',
+            main = 'Annual temperature increment',
+            add = 0, fit.col = 'royalblue')
+# add legend
+legend('topleft', legend = c('span  50%'), lty = 1, lwd = 2,
+       bty = 'n', col = c('royalblue'))
+```
+\caption{Annual temperature increment}
+\label{fig:esa_rain_diff}
+\end{figure}
+
 \begin{figure}[hbt]
 ```{r esa_pairs_plot}
 par(mar = rep(0, 4))
@@ -898,7 +892,7 @@ From the model results presented in table \ref{tab:glmer_model_res}, we can obse
 \onecolumn
 \begin{table}[hbt]
 \centering
-\begin{tabular}{crrrr}
+\begin{tabular}{lrrrr}
 \hline
 & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
 \hline
@@ -986,7 +980,7 @@ names(vars) <- c('intercept','temperature','residuals')
 
 \begin{table}[ht]
 \centering
-\begin{tabular}{rrrr}
+\begin{tabular}{crrr}
   \hline
  & intercept & temperature & residuals \\ 
   \hline
