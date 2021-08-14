@@ -7,6 +7,18 @@ Once the different models validation, we want to make prediction up to a certain
 
 ## Overview 
 
+What is happening to the global climate?
+
+
+
+<img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/rain.gif", width = 40%">
+
+<img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/temp.gif", width = 40%">
+
+
+
+
+
 If you are interested in the full detailed study, check the report out `20205529_final.pdf` 
 
 ## Installation instruction
