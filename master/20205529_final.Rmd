@@ -30,16 +30,22 @@ library(splines)
 ```
 
 
-\tableofcontents
+\section*{Abstract}
+
+In this short study, we want to investigate the major climate change phenomenons such as a rainfall amount and temperature over the last century. We find a relation between year and temperature and between temperature and rainfall amount which we exploit to make prediction about the future 50 years behavior. Moreover, we focus out attention to species survival in South Africa in relation to the climate phenomenons. We we found is that the temperature is steeply raising over time and, as it is negatively correlated, the rainfall amount is decreasing. These phenomenons are associated to the animals evolution in time which, according the the estimated model, is decreasing as well. After the model validation, we provide a possible estimation of the species reaching only one individual left, as soon as in 15 years time on average.
+
+In section \ref{sec:intro} we introduce the reader to the topic of interest. In section \ref{sec:techback} we briefly introduce the methodology employed in this research and its references for further reading. In section \ref{sec:eda} we perform a data exploratory analysis on the climate phenomenons. In section \ref{sec:climate} we model the climate data and quantify the model uncertainty. In section \ref{sec:population} we model the wildlife count in relation to the climate data and provide a possible scenario for the future 50 years time. In section \ref{sec:conclusion} we summarise the finding of this research.
+
+\thispagestyle{empty}
 \clearpage
 
 \twocolumn
+\setcounter{page}{1}
 
-
-\section*{Abstract}
 
 
 \section{Introduction}
+\label{sec:intro}
 
 During last decades, interest and awareness about the climate change has steeply increased. The Framework Convention on Climate Change (UNFCCC), has as its ultimate objective the stabilization of greenhouse gas concentrations in the atmosphere at a level that would prevent dangerous anthropogenic interference with the climate system. In order to allow for ecosystems to adapt naturally, such a level should be achieved within a time frame which would allow the development to proceed in a suitable manner. However, the amount of evidences clearly indicates that this is not happening and that human society is contributing significantly to worsen the condition the earth has to suffer [@climate_change]. There have been several studies examining and reporting the potential consequences of these phenomenon. For instance, the temperature raising, changes in rainfall amount and greenhouse gases emissions have been of particular interest. Since last century, we have witnessed a increasing frequency in the number and severity of droughts in particular territories such as South Africa \textit{SA}. Due to the fact that area such as \textit{SA} suffer from low economic power, a drought may easily drive towards very dramatic consequences. It can affect either agriculture, for a period that lasts up to 6 months, either hydrological systems up to 24 months [@SA_drought_decades]. 
 
@@ -135,8 +141,6 @@ Mathematical modeling is often subject to very strong assumption which may be di
 \section{Exploratory Data Analysis}
 \label{sec:eda}
 
-\subsection*{Rainfall amount}
-
 Within this exploratory data analysis section, we wish to give a short introduction to the data of interest by illustrating some characteristics. The climate data we have available concern the rainfall amount and global temperature.
 
 In the first place, we investigate the rainfall data set. We have access to the information between January 1901 up to December 2020. For simplicity, we decide to consider the annual granularity and inspect the resulting distribution.
@@ -173,8 +177,8 @@ temp <- data.frame(year = names(temp_mean), temp = temp_mean, temp_sd = temp_sd)
 hist(temp$temp, xlab = 'temperature', main = 'Annual temperature distribution', 
      col = 'grey90', border = 'white', breaks = 10)
 ```
-\label{fig:esa_temp_hist}
 \caption{Annual temperature distribution}
+\label{fig:esa_temp_hist}
 \end{figure}
 
 We can clearly observe a considerable right skeweness indicating more extreme events such as sweltering days than very cold days. The phenomenon now takes values in the real domain, $x \in \mathbb{R}$, and present a skewness index of `r round(e1071::skewness(temp$temp, type = 1), 2)`, again, a right-skewsness indicator.
@@ -190,8 +194,8 @@ plot(rain_mean, rain_sd, xlab = 'rainfall year average',
 legend('topleft', col = 'grey', lty = NA, lwd = NA, bty = 'n', pch = 1,
        legend = paste('sd and mean cor =', round(cor(rain_mean, rain_sd), 2)))
 ```
-\label{fig:rain_mean_sd}
 \caption{Rain average and standard deviation relation. The phenomenons present a correlation of $\hat{\rho} = 0.75$}
+\label{fig:rain_mean_sd}
 \end{figure}
 
 
@@ -209,8 +213,8 @@ plot(c(0, diff(temp_mean)), temp_sd, xlab = 'temperature annual increment',
 legend('topleft', col = 'grey', lty = NA, lwd = NA, bty = 'n', pch = 1,
        legend = paste('sd and mean cor =', round(cor(c(0, diff(temp_mean)), temp_sd), 2)))
 ```
-\label{fig:temp_mean_sd}
 \caption{a) annual average temperature vs temperature  standard devation; b) annual temperature increase vs temperature standard deviation }
+\label{fig:temp_mean_sd}
 \end{figure}
 
 
@@ -244,8 +248,8 @@ plot_lowess(rain$year, rain$rain, f = .5,
 legend('topright', legend = c('span  50%'), lty = 1, lwd = 2,
        bty = 'n', col = c('royalblue'))
 ```
-\label{fig:esa_rain}
 \caption{Annual rainfall}
+\label{fig:esa_rain}
 \end{figure}
 
 
@@ -268,8 +272,8 @@ plot_lowess(temp$year, temp$temp, f = .5, ax = temp$year,
 legend('topleft', legend = c('span  50%'), lty = 1, lwd = 2,
        bty = 'n', col = c('royalblue'))
 ```
-\label{fig:esa_temp}
 \caption{Annual average temperature}
+\label{fig:esa_temp}
 \end{figure}
 
 
@@ -293,8 +297,8 @@ plot_lowess(temp$year, c(0, diff(temp$temp)), f = .5, ax = temp$year,
 legend('topleft', legend = c('span  50%'), lty = 1, lwd = 2,
        bty = 'n', col = c('royalblue'))
 ```
-\label{fig:esa_rain_diff}
 \caption{Annual temperature increment}
+\label{fig:esa_rain_diff}
 \end{figure}
 
 ```{r esa_loadX}
@@ -329,8 +333,8 @@ par(mar = rep(0, 4))
 pairs(X, col = 'grey60') # shows pairs plot to give an idea of the relationship
 # xtable(cor(X), type = "latex") # output table for latex
 ```
-\label{fig:esa_pairs}
 \caption{Year, Rain, Temperature scatterplot}
+\label{fig:esa_pairs}
 \end{figure}
 \twocolumn
 
@@ -574,7 +578,7 @@ $\hat{SE}(\hat{\beta}_0)$ & 1.72897239 & 0.00008380 \\
 The model parameters results are summarised in table \ref{tab:wls_model_summary}. Unsurprisingly, from those we can observe how both the estimated spline coefficients have negative sign with very tiny estimated standard error. Therefore, we can appreciate how, up to 8 decimal precision, the returned P-value is $0$, meaning that we reject the null hypothesis $H_0:\ \beta_i = 0$ in favour of the alternative $H_1:\ \beta_i \neq 0$ for $i = \{0, 1, 2\}$. This means that, according to the estimated model, the relation between temperature and rainfall amount is negative. With higher temperature we can expect to observe lower amount of rainfall and vice versa.
 
 \onecolumn
-\begin{table}[bt]
+\begin{table}[hbt]
 \centering
 \begin{tabular}{rrrrr}
   \hline\
@@ -664,10 +668,12 @@ legend('topright', col = c('red','blue','green'), bty = 'n', lty = 1, lwd = 2,
 
 
 
-\section{Species count Modelling}
+\section{Species count Modeling}
 \label{sec:population}
 
-In the previous section we have presented the data and respective results on the climate phenomenons including temperature and rainfall information from 1901 up to 2021. In this section, we are going to present the waterbirds species count data over time with the goal to identify the relation between its evolution and the covariates explored earlier. In particular, the data set of interest provide the specie individual count per year from 1975 to 2021. Within this data set we observe monthly variation which, for simplicity and consistency with the climate data, will be averaged over the different years. For different species and genes, we have different number of observation and, as we observe up to 103 species and genes combinations, we decide to keep only those whose numerousness might provide robust result, from $n_i =30$ onward, as per figure \ref{fig:species_barplot}.
+\subsection*{Data Pre Processing}
+
+In the previous section we have presented the data and respective results on the climate phenomenons including temperature and rainfall information from 1901 up to 2021. In this section, we are going to present the waterbirds species count data over time with the goal to identify the relation between its evolution and the covariates explored earlier. In particular, the data set of interest provide the specie individual count per year from 1975 to 2021. Within this data set we observe monthly variation which, for simplicity and consistency with the climate data, will be averaged over the different years. For different species and genes, we have different number of observation and, as we observe up to 103 species and genes combinations, we decide to keep only those whose numerousness can provide robust results, from $n_i =30$ onward, as per figure \ref{fig:species_barplot}.
 
 
 \begin{figure}[bt]
@@ -703,17 +709,17 @@ Y <- data.frame(
 # count
 Y <- Y[complete.cases(Y) & Y$year > 1900,] # remove NA cases and start from 1975
 fams_tab <- table(Y$species)
-par(las = 2, mar = c(12, 5, 2, 5))
+par(las = 2)
 barplot(fams_tab[order(fams_tab, decreasing = TRUE)], border = NA,
-        col = 'grey70')
+        col = 'grey70', xaxt = 'n', xlab = 'species-genes pairs', ylab = 'no. of observations')
         #col = ggplot2::alpha(viridis(length(fams_tab), direction = -1), .4) )
 abline(h = 30, col = 'royalblue', lwd = 1, lty = 2)
 # subset observation with n > 40
 obs_30 <- names(fams_tab[which(fams_tab > 30)])
 Y <- Y[Y$species %in% obs_30,]
 ```
+\caption{Yearly number of observations per species-genes pair}
 \label{fig:species_barplot}
-\caption{Years observation per species}
 \end{figure}
 
 
@@ -721,7 +727,7 @@ Y <- Y[Y$species %in% obs_30,]
 
 
 
-Once selected the species of interest, we are interested in the overall trend evolution in time. Beside a descriptive analysis, we provide a non-parametric fit made possible by a local weighted regression to give an idea of the overall trend. As the values variance is appreaciable large, we provide either mean (red line) and median (blue line) value for robust result. Despite  being on different scale, both the results shows similar global trend. The waterbirds individual count has been decreasing over time. This behavior is depicted in figure \ref{fig:species_barplot}. 
+Once selected the species of interest, we are interested in the overall trend evolution in time. Beside a descriptive analysis, we provide a non-parametric fit made possible by a local weighted regression to give an idea of the overall trend. As the values variance is appreaciable large, we provide either mean (red line) and median (blue line) value for robust result. Despite  being on different scales, both the results shows similar global trend. The waterbirds individual count has been decreasing over time. This behavior is depicted in figure \ref{fig:species_barplot}. 
 
 
 
@@ -779,13 +785,16 @@ matplot(Y_wide[,1], Y_wide[,-1], type = 'l', lwd = .1, lty = 1,
         xlab = 'year', ylab = 'individual count', xaxt = 'n')
 lines(Y_wide[,1], wide_mean_fit, lwd = 2, col = 'red')
 lines(Y_wide[,1], wide_median_fit, lwd = 2, col = 'blue')
+legend('topright', lty = 1, lwd = 2, bty = 'n', col = c('red','blue'),
+       legend = c('mean value', 'median value'))
 matplot(Y_wide[,1], Y_wide[,-1], type = 'l', lwd = .1, ylim = c(0, 100),
         xlab = 'year', ylab = 'individual count', xaxt = 'n', lty = 1)
 lines(Y_wide[,1], wide_mean_fit, lwd = 2, col = 'red')
 lines(Y_wide[,1], wide_median_fit, lwd = 2, col = 'blue')
+
 ```
+\caption{Yearly individual count per species-genes pairs plus mean (red) and median (blue)}
 \label{fig:species_barplot}
-\caption{Yearly individual count per species plus mean and median observation}
 \end{figure}
 
 
@@ -816,18 +825,20 @@ barplot(table(Y$individualCount) / nrow(Y), border = NA, col = viridis(600),
 #      border = NA, freq = FALSE)
 #par(mfrow = c(1,1))
 ```
-\label{fig:counts_hist}
 \caption{Distribution for animal counts}
+\label{fig:counts_hist}
 \end{figure}
 
-We now want to estimate a model describing the evolution of the population w.r.t. the climate input feature. In order to do so, we need to employ mixed-effect models, discussed in section \ref{sec:techback}, since its theory allows us to include data from different classes, namely their species, and follow them longitudinally taking account for the within correlation. 
+\subsection*{Data Modeling}
+
+We now want to estimate a model describing the evolution of the population w.r.t. the climate input feature. In order to do so, we need to employ mixed-effect models, discussed in section \ref{sec:techback}, since its theory allows us to include data from different classes, namely their species, and follow them longitudinally taking into account the within correlation. 
 
 The model to be estimated is of the form 
 $$ \mathbf{count}_i = \mathbf{\alpha}_{1,i}\ \mathbf{Z}_i + f(\mathbf{X}) + \mathbf{\epsilon}$$
 where $\epsilon \sim Poi(\lambda)$ and $\alpha_{1,i}$ represents the random intercept. The same can be said for the random slope related to the temperature, In fact
-$$f(\tau) = \sum_{k=1}^{K+M}\beta_k\ g_k(\tau) + \alpha_{2,i}\ Z_{ij}$$
+$$f(\tau) = \sum_{k=1}^{K+M}\beta_k\ g_k(\tau) + \alpha_{2,i}\ Z_{ij}\ \tau$$
 
-And positing a distribution on the random terms $\mathbf{\alpha}_i \sim N(\mu_{\alpha_i}, \sigma_{\alpha_i}^2)$ indicates a random intercept which contribution depends on the $\mathbf{Z} \in \mathbb{N}$ matrix which indicates the species belonging
+And positing a distribution on the random terms $\mathbf{\alpha}_i \sim N(\mu_{\alpha_i}, \sigma_{\alpha_i}^2)$ indicates a random intercept and temperature slope which contribution depends on the $\mathbf{Z} \in \mathbb{N}^{n \times p}$ matrix, where $p$ is the number of species-genes pairs. The matrix indicates the species belonging
 
 \begin{equation}
 z_{ij}= 
@@ -839,10 +850,10 @@ z_{ij}=
 
 thus varying the intercept of the model according to the species of interest. 
 
-The spline degree has been chosen by making usage of the $BIC$ measure which aims to maximize the likelihood while taking into account a penalization for the number of parameters estimated. The optimal value has empirically shown to be $K= 5$ with the following variables: \textit{average rainfall} and \textit{average temperature}.
+The spline degree has been empirically chosen by making usage of the $BIC$ measure which aims to maximize the likelihood while taking into account a penalization for the number of parameters estimated. The optimal value has shown to be $K= 5$ with the following variables: \textit{average rainfall} and \textit{average temperature}. The inclusion of \textit{temperature standard} has not improved the model significantly.
 
-Since we are including different predictors in the model, in order to get stable results we apply a pre-processing step which standardize the variables to have mean zero and variance one 
-$$ Z = \frac{X-\mu}{\sigma}$$
+Since we are including different predictors in the model which vary on different scales, the model estimation may be unstable, therefore, we decide to apply a pre-processing step which standardize the variables to have mean zero and variance one 
+$$ Z_i = \frac{X_i-\mu_i}{\sigma_i}$$
 
 
 ```{r glmer_model_fit}
@@ -881,7 +892,7 @@ model_res <- summary(fit_year_temp)
 ```
 
 
-From the model results presented in table \ref{tab:glmer_model_res}, we can observe how the coefficients related to the $year$, $rain$, and $\tau$  marginal terms $\hat{\beta}_{i,year}$, $\hat{\beta}_{rain}$, $\hat{\beta}_{\tau}$ are mainly positive. However, the model interaction terms, $\hat{\beta}_{i,year \times \omega}$ are mainly negative. Thus, we need to consider all these effects together in order to establish the relationship.
+From the model results presented in table \ref{tab:glmer_model_res}, we can observe how the coefficients related to the $year$, $rain$, and $\tau$  marginal terms $\hat{\beta}_{i,year}$, $\hat{\beta}_{rain}$, $\hat{\beta}_{\tau}$ are mainly positive. However, the model interaction terms, $\hat{\beta}_{i,year \times \omega}$ are mainly negative. Moreover, the majority of the estimated standard error is very small compared to the point estimate. This returns an high value of the $z-score$ which implies the coefficient to be statistically significant. All the estimated coefficients are part of a global non-linear function of the predictors which have been standardized. Hence, in order to comment on the results, we need to be consider the features simultaneously. We will do it later in the report, after the model will have been validated, by showing its practical application to the data of interest.
 
 
 \onecolumn
@@ -916,34 +927,34 @@ From the model results presented in table \ref{tab:glmer_model_res}, we can obse
 \end{table}
 \twocolumn
 
+\subsection*{Model Diagnostics}
 
 
-
-For the model of interest, we have assumed the error distributed as a \textit{Poisson} distribution, therefore, in the fitted vs residuals inspection, we run into a different behavior. In particular, in figure \ref{fig:glmer_res_fitted} we can observe how the majority of the fitted values are very small number close to zero with very few extreme values. Moreover, we can also observe how the variances grows with the magnitude of the fitted values. This diagnostic produce satisfactory results, hence the model is appropriate to describe the data.
+For the model of interest, we have assumed the error distributed as a \textit{Poisson}, therefore, in the fitted vs residuals inspection, we run into a different behavior. In particular, in figure \ref{fig:glmer_res_fitted} we can observe how the majority of the fitted values are very small number close to zero with very few extreme values. Moreover, we can also observe how the variances grows with the magnitude of the fitted values. This behavior is expected and this diagnostic produces a satisfactory results, hence the model is appropriate to describe the data.
 
 \begin{figure}[bt]
 ```{r glmer_diagnostic_res}
 plot(fitted(fit_year_temp), residuals(fit_year_temp),
      xlab = 'fitted values', ylab = 'residuals', col = 'grey40', lwd = .25)
 ```
-\label{fig:glmer_res_fitted}
 \caption{Distribution for animal counts}
+\label{fig:glmer_res_fitted}
 \end{figure}
 
 
 With regard to the random effect, we have assumed a \textit{Normal} distribution for each of these. In figure \ref{fig:ranef_qq} we can inspect the results and notice the following:
 
 \begin{itemize}
-\item for the random intercept the assumption does not hold as we can notice a considerable discrepancy between the observed and theoretical quantiles \ref{fig:ranef_qq}. However, the intercept related variance is $\hat{\sigma}_0 =  1.3586$, which counts for the majority variance as we can see in figure \ref{fig:ranef_qq} c). For instance, in figure \ref{fig:ranef_distr} we can observe a very wide range of variation for the random intercept estimation with very few species around the zero and all the other which confidence interval does not contain the null values.
+\item for the random intercept the assumption does not hold as we can notice a considerable discrepancy between the observed and theoretical quantiles, figure \ref{fig:ranef_qq} a). However, the intercept related variance is $\hat{\sigma}_0 =  1.3586$, which counts for the majority variance as we can see in table \ref{tab:re_var}. For instance, in figure \ref{fig:ranef_distr} we can observe a very wide range of variation for the random intercept estimation with very few species around the zero and all the other with $95\%$ confidence interval which does not contain the null values, hence statistically significant.
 
-\item on the other hand, for the random slope, the empirical distribution agrees with the theoretical one in the central area, but is shows deficiencies in the tail regions, figure \ref{fig:ranef_qq}. Its contribution to the overall variance is much lower than the previous term but still significant, approximately $9\%$, figure \ref{fig:ranef_qq} c). With regard to the single term values, we can observe a much tighter range of variation, approximately $[\pm 1]$. Nevertheless, many species slope is estimated to be singificantly different from zero, hence worth including it.
+\item on the other hand, for the random slope, the empirical distribution agrees with the theoretical one in the central area, but it shows deficiencies in the tail regions, figure \ref{fig:ranef_qq} b). Its contribution to the overall variance is much lower than the previous term but still significant, almost $10\%$, table \ref{tab:re_var}. With regard to the single term values, we can observe a much tighter range of variation, approximately $[\pm 1]$. Nevertheless, many species-genes slope is estimated to be singificantly different from zero, hence worth including it.
 
 \end{itemize}
 
 
 
 
-\begin{figure}[bt]
+\begin{figure}[h]
 ```{r ranef_estimate}
 # extract object
 fit_ranef <- lme4::ranef(fit_year_temp, condVar = TRUE)
@@ -965,28 +976,57 @@ sigma_0 <- 1.3586
 sigma_temp <- 0.2597 
 vars <- c(sigma_0, sigma_temp, sigma_eps)
 names(vars) <- c('intercept','temperature','residuals')
-barplot(vars / sum(vars), border = NA, col = 'grey80',
-        main = 'Random effect variance contribution')
+# barplot(vars / sum(vars), border = NA, col = 'grey80',
+#         main = 'Random effect variance contribution')
 ```
+
+\caption{a) Intercept random terms qqplot; b) temperature slope andom terms qqplot}
 \label{fig:ranef_qq}
-\caption{a) Intercept random terms qqplot; b) temperature slope andom terms qqplot; c) variance components percentage contribution}
 \end{figure}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrr}
+  \hline
+ & intercept & temperature & residuals \\ 
+  \hline
+$\sigma_i^2$ & 0.5189 & 0.0992 & 0.3819 \\ 
+   \hline
+\end{tabular}
+\caption{Random effect variance contribution}
+\label{tab:re_var}
+\end{table}
 
 \onecolumn
 \begin{figure}[bt]
-```{r ranef_dotplot, message=FALSE, fig.height=6}
+```{r ranef_dotplot, message=FALSE, fig.height=7}
 dotplot_ranef <- lattice::dotplot(fit_ranef)
 dotplot_ranef$species
 ```
-\label{fig:ranef_distr}
 \caption{Individual random effect for each specie}
+\label{fig:ranef_distr}
 \end{figure}
 \twocolumn
 
+\subsection*{Future scenario prediction}
 
-In the previous section, we have estimated a random effect model to allow for the prediction of the response variable, individual count, by making usage of non-linear relationships with the climate phenomenon.
+So far, we have estimated a random effect model to allow for the prediction of the response variable, individual count, by making usage of non-linear relationships with the climate phenomenon.
 
-We now want to present these result for each of the species-genes pairs and compare them with the observed values. Moreover, we provide estimated confidence interval for the next 50 years and what might happen to these species, following the current trend. All the results we are going to describe are depicted in figure \ref{fig:species_applciation_3}. In particular, we can observe that for some of these, the model fits very well the observed data and its trend evolution, see species-pairs $\{4, 6, 19, 25, 36, 38  \}$, while for others, the fit is not suitable at all, see species-genes $\{24, 39, 45 \}$. Nevertheless, excluded the most extreme cases, we can see that the model predicted trends agree with the overall wildlife evolution. In particular, for each of these species, we can notice how easy it is, according to the estimated model, to reach one individual left, in the lower bound, which would not allow for the species survival. According to the estimated model, which has shown to capture the overall data structure, this might happen as soon as in 15 years time.  
+We now want to present these result for each of the species-genes pairs and compare them with the observed values. Moreover, we provide estimated confidence interval for the next 50 years and what might happen to these species, following the current trend. All the results we are going to describe are depicted in figure \ref{fig:species_applciation_3}. In particular, we can observe that for some of these, the model fits very well the observed data and its trend evolution, see species-genes pairs $\{4, 6, 19, 25, 36, 38  \}$, while for others, the fit is not suitable at all, see species-genes $\{24, 39, 45 \}$. Nevertheless, excluded the most extreme cases, we can see that the model predicted trends agree with the overall wildlife evolution. Here, it is clear that as time goes on, temperature raises and rainfall decreases, the overall trend, despite some non-linear behavior is clearly decreasing. In particular, for each of these species, we can notice how easy it is, according to the estimated model, to reach the context where only one individual will be left, in the lower bound $CI$, which would not allow for the species reproduction and, consequently, survival. According to the estimated model, which has shown to capture the overall data structure, this might happen as soon as in 15 years time.  
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+During this short study, we have expressed our interest in the climate change phenomenons and its dramatic consequences to the wildlife species survival. In particular, in the first place, we have explored the rainfall amount and temperature trend evolution over the last century, from 1901 up 2020. The data investigated have clearly shown how the time is related to the temperature change and how the temperature is related to the rainfall amount. This has allowed us to model the temperature as an $ODE$ and computationally optimized the parameter which governs the relation. The estimated confidence region has been estimated to be  $P(\gamma \in [0.00071764, 0.00081291]) = 0.95$, which clearly states the temperature raising. Afterwards, the estimated model has been employed to produce estimation for the following next 50 years, up to 2071. This data has been very useful to provide a robust fit of the rainfall amount in relation to the temperature. The result, as expected, have indicated a negative relationship between the two phenomenons. With higher temperature we can expect lower amount of rain, and vice versa. As these computational models mainly depends on the data in input, it is fundamental to run a sensitivity analysis to quantify the uncertainty. Both the models, have shown to be robust and produce a fairly overall similar results up to a perturbation of 5 times the estimated standard error coefficients.
+
+Afterwards, we have focused on many different South Africa waterbirds species-genes pairs and their evolution over time from 1975 up to 2020. Not all of them were observed every year and, since there were many available, we have decided to keep only those which numerousness could provide robust estimations and results, namely those which had more than 30 observations. In contrast to the $rain-temperature$ model, here we have had to deal with multiple input feature which take values on different scales, therefore, we have adopted a standardization of the predictors for a reliable estimation process. In order to allow for the multiple species-genes modelling, we have exploited the mixed-effects model theory, which takes into account for the intra-class correlation. This has allowed to us posit a random effect on either the intercept term and the temperature feature, so that each species-genes pairs has had its own behavior. As previously, the model has been validated by a set of diagnostics on the residuals and the random-effect terms. 
+
+
+In the end, the model has been applied to the data of interest and we have been able to see that in most of the cases, the result approximated the reality in a satisfactory manner. We have also noticed that, in the long term behavior prediction, these species individual count trend is clearly decreasing. This means that, according to the circumstances we have been being in the last 45 years, these species may not survive long. The unit threshold was hit by the lower confidence bound in 15 years time, on average. This means that, according to the estimated model, very soon there will be only one individual left for the species-genes animal and it won't be able to reproduce itself anymore.
+
+\section{Appendices}
+
 
 ```{r rmse_barplot}
 # fit model
@@ -1320,17 +1360,12 @@ for(i in 37:length(spec)){
 ```
 \label{fig:species_applciation_3}
 \end{figure}
-\twocolumn
 
 \clearpage
 
-\section{Conclusion}
-\label{sec:conclusion}
-
-\section{Appendices}
-
+\section*{References}
 \bibliography{sample.bib} 
-\bibliographystyle{ieeetr}
+\bibliographystyle{plain}
 
 
 
