@@ -11,7 +11,7 @@ What is happening to the global climate?
 
 <br>
 <img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/rain.gif" width=40%>
-![Demo File](https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/rain.gif)
+![Demo File](https://figures/rain.gif)
 
 If you are interested in the full detailed study, check the report out `20205529_final.pdf` 
 
