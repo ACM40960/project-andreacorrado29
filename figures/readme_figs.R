@@ -1,7 +1,11 @@
 # readme_figs.R
 
 # script to create png figures
-
+# you can easily merge all the PNG into a unique GIF by running
+# convert -delay 15 -loop 0 *.png <your_gif_name>.gif
+  
+rm(list = ls())
+gc()
 library(gganimate)
 
 # load climate data
@@ -20,7 +24,7 @@ p <-
   labs(x = "Year", y = 'Temperature') # add labels
 p
 
-p + transition_reveal(year) 
+# p + transition_reveal(year) 
 
 # create plot for temperature
 p <-
@@ -31,4 +35,35 @@ p <-
   labs(x = "Year", y = 'Rain') # add labels
 p
 
-p + transition_reveal(year) 
+# p + transition_reveal(year) 
+
+
+# y wide ----------------------------------------------------------------
+
+Y_wide <- read.csv('Y_wide.csv')[,-1]
+X <- melt(Y_wide[1:(P-2)], id.var = 'year')
+X <- melt(Y_wide[,c(1,(P-1):P)], id.var = 'year')
+
+#plot
+p <-
+  ggplot(X, aes(x=year,y=value,group=variable,colour=variable)) +
+  geom_line(size = .5) +
+  geom_line(aes(lty=variable)) +
+  scale_y_log10(breaks=c(1,2,5,10,25)) +
+  labs(x = "Year", y = 'Individual Count') # add labels
+p
+
+p + transition_reveal(year)
+
+
+
+
+
+
+
+
+
+
+
+
+

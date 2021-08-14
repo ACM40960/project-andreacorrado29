@@ -1,19 +1,23 @@
 # SA Drought: consequences on species survival
 
-## Abstract
-Within this project, we explore and model the global temperature and rain over the last century with a system of ODE. Moreover, we keep track of different waterbirds species individual counts in South Africa over time. 
-The interest of the project is to understand what the relation between the global climate change and the animal species count. We make use of the data available to train different models and validate them by specific diagnostic tools.
-Once the different models validation, we want to make prediction up to a certain level of uncertainty. By making prediction for future years, we want to understand whether and when these species will extinguish.
-
 ## Overview 
+Interest to climate change has recently grown considerably. Here, we go through the main phenomenons such as rainfall amount and temperature to understand how their trend is evolving over time.
 
-What is happening to the global climate?
+#### Rain & Temperature over time
 
 <br>
 <img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/rain.gif" width=40%>
-![Demo File](https://figures/rain.gif)
+<img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/rain.gif" width=40%>
+<img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/count.gif" width=40%>
 
-If you are interested in the full detailed study, check the report out `20205529_final.pdf` 
+#### Wildlife species survival 
+
+Moreover, we are interested to the relationship this phenomenon has with the wildife survival. in particular, in *South Africa* there have been severe drought which have shown to considerably influence the animals death. 
+
+*** add image for animals ***
+
+
+What would happen in 50 years time?  check the report  `20205529_final.pdf` to find it out.
 
 ## Installation instruction
 
