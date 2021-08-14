@@ -6,18 +6,18 @@ Interest to climate change has recently grown considerably. Here, we go through 
 #### Rain & Temperature over time
 
 <br>
-<img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/rain.gif" width=40%>
-<img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/rain.gif" width=40%>
-<img src="https://github.com/ACM40960/project-andreacorrado29/tree/master/figures/count.gif" width=40%>
+
+![image here, wi](/home/ndrecord/Dropbox/git_ACM40960/figures/rain.gif)
+
+![image here, wi](/home/ndrecord/Dropbox/git_ACM40960/figures/temp.gif)
 
 #### Wildlife species survival 
 
 Moreover, we are interested to the relationship this phenomenon has with the wildife survival. in particular, in *South Africa* there have been severe drought which have shown to considerably influence the animals death. 
 
-*** add image for animals ***
+![image here, wi](/home/ndrecord/Dropbox/git_ACM40960/figures/count.gif)
 
-
-What would happen in 50 years time?  check the report  `20205529_final.pdf` to find it out.
+According to the current trend, what would happen in 50 years time?  check the report  `20205529_final.pdf` to find it out.
 
 ## Installation instruction
 
@@ -62,3 +62,31 @@ In order to reproduce the analysis and extend the results presented in this stud
 
 The code is clearly commented, therefore, once you have opened the `final_code` into your environment, you can easily change the settings and play with the code according to your interest. Do not forget to contribute with the interesting findings you will have!
 
+## Repository Files
+Within this repository, you will have access to the data folder `data` which includes:
+-  `occourrence<i>.txt` individual count data set been split to allows for git hub storage
+-  `data_split_load.R`  the `R` script used to split the main data set into 4 subsets
+-  `load_occourrence.R` `the R` script to load and combine all the `occourrence<i>.csv` into one data set
+-  `pr_1901_2020_ZAF.csv`, raw precipitation data downloaded from the data source
+-  `tas_1901_2020_ZAF.csv` raw temperature data downloaded from the data source
+-  `Y_wide.csv`, individual count data by column result of the analysis
+-  `climate_pred` climate data result of the analysis
+
+The folder `master` contains:
+
+- `20205529_final.pdf` the final report
+- `20205529_final.Rmd` the `Rmarkdown` script used to produce the final report
+- `sample.bib` the `biblatex` file containing the research references
+- `final_code.R` the `R` source code for reproducibility
+- `functions.R` the `R` script with useful function to be sourced
+- `packages_install.R` the `R` script to install all the useful packages for the analysis
+
+- `git_ACM40960.Rproj` the `RStudio` environment used for the project
+
+The folder `figures` contains:
+
+-  `*.gif` animation used within this documentation 
+
+- `readme_fig.R`  R script to produce the `.png` and instruction to convert into `.gif`
+
+  

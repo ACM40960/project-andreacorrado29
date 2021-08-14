@@ -40,8 +40,8 @@ p
 
 # y wide ----------------------------------------------------------------
 
-Y_wide <- read.csv('Y_wide.csv')[,-1]
-X <- melt(Y_wide[1:(P-2)], id.var = 'year')
+Y_wide <- read.csv('../data/Y_wide.csv')[,-1]
+P <- ncol(Y_wide)
 X <- melt(Y_wide[,c(1,(P-1):P)], id.var = 'year')
 
 #plot
@@ -53,7 +53,7 @@ p <-
   labs(x = "Year", y = 'Individual Count') # add labels
 p
 
-p + transition_reveal(year)
+# p + transition_reveal(year)
 
 
 
