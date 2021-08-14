@@ -2,62 +2,52 @@
 title: "South Africa drought and wildlife survival"
 author: "Andrea Corrado 20205529"
 bibliography: sample.bib
-biblio-style: apalike
-natbiboptions: round
-header-includes:
-  - \usepackage{float}
-  - \usepackage[hypcap=true]{caption}
-  - \usepackage{amsmath}
-  - \usepackage{multicol}
+citation_package: biblatex
+biblio-style: naturemag
+link-citations: yes
 output: bookdown::pdf_document2
 ---
+
 
 ```{r setup, include=FALSE, warning=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
                       fig.align = 'center', dpi = 600)
-
 rm(list = ls()) # clean env
 gc() # clean memory
-
 source('functions.R') # load useful functions  
 source('pacakges_install.R') # install libraries if not available
-
 # load useful libraries
 library(ggplot2) 
 library(reshape2) 
 library(deSolve) 
 library(minpack.lm)
-
+library(gam)
+library(reshape2)
+library(viridis)
+library(xtable)
+library(viridisLite)
+library(splines)
 ```
 
 
 \tableofcontents
 \clearpage
-\begin{multicols}{2}
+
+\twocolumn
+
 
 \section*{Abstract}
 
 
-
-
-
-
-
-
-
-
-
-
-
 \section{Introduction}
 
-During last decades, interest and awareness about the climate change has steeply increased. The Framework Convention on Climate Change (UNFCCC), has as its ultimate objective the stabilization of greenhouse gas concentrations in the atmosphere at a level that would prevent dangerous anthropogenic interference with the climate system. In order to allow for ecosystems to adapt naturally, such a level should be achieved within a time frame which would allow the development to proceed in a suitable manner. However, the amount of evidences clearly indicates that this is not happening and that human society is contributing significantly to worsen the condition the earth has to suffer \cite{climate_change}. There have been several studies examining and reporting the potential consequences of these phenomenon. For instance, the temperature raising, changes in rainfall amount and greenhouse gases emissions have been of particular interest. Since last century, we have witnessed a increasing frequency in the number and severity of droughts in particular territories such as South Africa \textit{SA}. Due to the fact that area such as \textit{SA} suffer from low economic power, a drought may drive towards dramatic consequences. It can affect either agriculture, for a period that lasts up to 6 months, either hydrological up to 24 months \cite{SA_drought_decades}. 
+During last decades, interest and awareness about the climate change has steeply increased. The Framework Convention on Climate Change (UNFCCC), has as its ultimate objective the stabilization of greenhouse gas concentrations in the atmosphere at a level that would prevent dangerous anthropogenic interference with the climate system. In order to allow for ecosystems to adapt naturally, such a level should be achieved within a time frame which would allow the development to proceed in a suitable manner. However, the amount of evidences clearly indicates that this is not happening and that human society is contributing significantly to worsen the condition the earth has to suffer [@climate_change]. There have been several studies examining and reporting the potential consequences of these phenomenon. For instance, the temperature raising, changes in rainfall amount and greenhouse gases emissions have been of particular interest. Since last century, we have witnessed a increasing frequency in the number and severity of droughts in particular territories such as South Africa \textit{SA}. Due to the fact that area such as \textit{SA} suffer from low economic power, a drought may easily drive towards very dramatic consequences. It can affect either agriculture, for a period that lasts up to 6 months, either hydrological systems up to 24 months [@SA_drought_decades]. 
 
-In literature, we can find several different examples of methods to reduce the impact of droughts on the agriculture field ie. by growing plants restraint to higher temperature or computational model to predict droughts and take actions before drastic events \cite{drought_asgriculture}. However, in this study, we wish to focus our attention on the drought consequences on wildlife population evolution. For instance, different studies have shown as animals mortality grows during periods with the highest temperature within the driest areas \cite{drought_wildlife_mortality_1990}. We will expand this idea to more recent data about waterbirds in South Africa \cite{waterbirds_data}. This data set provides the number of individual for different species and genes in each year within the last 45 years. By doing so, we are able to track the evolution of the species during time and study its relation with the climate phenomenons. However, the data set will not provide the number of new death, new born and the relative causes. It will be our job to build a model which allows us to investigate the relation with other factors. In particular the data we are going to analyse concern the global temperature and rain fall amount \cite{rain_temp_data} from 1901 up to 2020 which would give a foundation to build on the mathematical models of interest.
+In literature, we can find several different examples of methods to reduce the impact of droughts on the agriculture field ie. by growing plants restraint to higher temperature or computational model to predict droughts and take actions before drastic events [@drought_asgriculture]. However, in this study, we wish to focus our attention on the drought consequences on wildlife population evolution. For instance, different studies have shown as animals mortality grows during periods with the highest temperature within the driest areas [@drought_wildlife_mortality_1990]. We will expand this idea to more recent data about waterbirds in South Africa [@waterbirds_data]. The data set we are going to present provides the number of individual for different species and genes in each year within the last 45 years. By doing so, we are able to track the evolution of the species during time and to study its relation with the climate phenomenons. However, the data set will not provide the number of new death, new born and the relative causes. It will be our job to build a model which allows us to investigate this particular relation. In particular the data we are going to analyse concern the global temperature and rain fall amount [@rain_temp_data] from 1901 up to 2020 which would give a foundation to build on the mathematical models of interest.
 
-Having access to this information, our goal is to build a model which relates the climate change to the number of individual for each species and genes and predict how, following the current trend, these would evolve over time and the potential consequences these could drive towards.
+Having access to this information, our goal is to build a model which relates the climate change to the number of individual for each species and genes and to predict how, following the current trend, these would evolve over time and the potential consequences these could drive towards.
 
-In section \ref{sec:techback} we give a brief introduction to the methodology used within this research project. In section \ref{sec:eda} we present the climate data with an exploratory data analysis. In section \ref{sec:climate} we model the climate data and provide prediction on a possible future scenario. In section \ref{sec:population} we model the species count in relation to the climate data. In section \ref{sec:practical_example} we employ the estimated model within a specific specie and provide a practical example. In section \ref{sec:conclusion} we discuss the finding of the project.
+In section \ref{sec:techback} we give a brief introduction to the methodology used within this research project. In section \ref{sec:eda} we present the climate data with an exploratory data analysis. In section \ref{sec:climate} we model the climate data and provide prediction on a possible future scenario. In section \ref{sec:population} we model the species count in relation to the climate data and provide prediction for the future 50 years. In section \ref{sec:conclusion} we discuss the finding of the project.
 
 
 
@@ -75,53 +65,53 @@ In section \ref{sec:techback} we give a brief introduction to the methodology us
 \section{Technical Background}
 \label{sec:techback}
 
-\subsection{Generalized Lienar Model}
+\subsection*{Generalized Lienar Model}
 
-For the purpose of the analysis we conduct within this study,we are going to employ different methodologies. In particular, we will related the temperature data to the rain fall amount. In order to do so, we will employ the Generalized Linear Model \cite{glm_intro} which theory would allow to establish a linear relationship between the quantity of interest (rain) $\mathbf{y}$ and a matrix of covariates $\mathbf{X}$ (temperature) related to each other by a vector of parameters $\mathbf{\beta}$ which values will be determined by the data in input and identified by the \textit{ordinary least square} (OLS) theory. In order to do so, the data matrix $\mathbf{X}$ needs to be of full rank $rank(\mathbf{X}) = p$ so that we will be able to identify its inverse which will be used in the model estimation. This deterministic part will be combined to a stochastic component which models the uncertainty about the random variable realisation and whose distribution $\mathcal{D(\theta)}$ will be pre-identified and super-imposed in the model estimation
+During the study we will employ the Generalized Linear Model [@glm_intro] which theory would allow to establish a linear relationship between the quantity of interest $\mathbf{y}$ and a matrix of covariates $\mathbf{X}$ related to each other by a vector of parameters $\mathbf{\beta}$ which values will be determined by the data in input and identified by the \textit{ordinary least square} (OLS) theory. In order to do so, the data matrix $\mathbf{X}$ needs to be of full rank $rank(\mathbf{X}) = p$ so that we will be able to identify its inverse which will be used in the model estimation. This deterministic part will be combined to a stochastic component which models the uncertainty about the random variable realisation and whose distribution $\mathcal{D(\theta)}$ will be pre-identified and super-imposed in the model estimation
 
-$$g(\mathbf{Y})  = \mathbf{X \beta} + \mathbf{\epsilon} $$
+$$g(\mathbf{Y})  = \mathbf{X \beta} + \mathbf{\epsilon}$$
 
 where we define a distribution $\mathcal{D}$ of interest on the stochastic term $\epsilon$
 $$ \epsilon \sim \mathcal{D}(\theta)$$
 and a link function $g(.)$ which is distribution dependent. 
 
-The model will be validate by a set of diagnostic on the residuals $\mathbf{Y} - \mathbf{\hat{Y}}$ which provide meaningful insight on the goodness of fitness.
+The model will be evaluated by a set of diagnostic on the residuals $\mathbf{Y} - \mathbf{\hat{Y}}$ which provide meaningful insight on the goodness of fitness.
 
-\subsection{Generalized Additive Model}
+\subsection*{Generalized Additive Model}
 
-The \textit{GLM} \cite{glm_intro} theory is further extended to allow for non-linear relationship between the predictors $\mathbf{X}$ and the response $\mathbf{Y}$ exploiting the \textit{Generalized Additive Model} theory \cite{gam_intro} while maintaining the model linearity in the parameters. Indeed, the non-linearity is allowed only for the input data $\mathbf{X}$ which will be transformed by the usage of a basis function function $f()$ to optimally match the response value. The expression is the following
+The \textit{GLM} [@glm_intro] theory is further extended to allow for non-linear relationship between the predictors $\mathbf{X}$ and the response $\mathbf{Y}$ exploiting the \textit{Generalized Additive Model} theory [@gam_intro] while maintaining the model linearity in the parameters. Indeed, the non-linearity is allowed only for the input data $\mathbf{X}$ which will be transformed by the usage of a basis function function $f()$ to optimally match the response value. The expression is the following
 
-$$g(\mathbf{Y})  = f(\mathbf{X}) + \mathbf{\epsilon} $$
+$$g(\mathbf{Y})  = f(\mathbf{X}) + \mathbf{\epsilon}$$
 where we define a distribution $\mathcal{D}$ of interest on the stochastic term $\epsilon$
 $$ \epsilon \sim \mathcal{D}(\theta)$$
-and a link function $g(.)$ which is distribution dependent. Here, the choice of the function is completely free and up to the researcher. A very common and flexible choice in \textit{GAMs} is to define the function $f(.)$ to be a spline \textit{spline} \cite{spline_intro}, which can be seen a set of connected piecewise polynomial with additional constraints to allow for a more robust and smooth estimation. Different version of this function have been proposed, we will mainly make use of the \textit{natural spline}.
+and a link function $g(.)$ which is distribution dependent. Here, the choice of the function is completely arbitrary and up to the researcher. A very common and flexible choice in \textit{GAMs} is to define the function $f(.)$ to be a \textit{spline} [@spline_intro], which can be seen a set of connected piecewise polynomial with additional constraints to allow for a more robust and smooth estimation. Different version of this function have been proposed, we will mainly make use of the \textit{natural spline} for its robustness in the out of sample context and computational efficiency.
 
 
-\subsection{Weighted Least Square}
+\subsection*{Weighted Least Square}
 
-\textit{GLMs} are often estimated making use of \textit{OLS} theory. This can be seen as a particular case where the matrix $\mathbf{W}$ employed in the parameters estimation is equal to the identity matrix $\mathbf{W} = \mathbf{I}$. This is not always the case. In fact, during this study we perform different model estimation and will run into different cases where the model diagnostic shows violations of the  homoskedasticity assumption. Therefore, to remedy to inadequate diagnostics, we will employ \textit{Weighted Least Square} estimation theory \cite{wls_intro}. This approach allows us to iteratively estimate a weight matrix $\mathbf{W}$ to be employed in the model estimation as a measure of the importance for each unit $\mathbf{x}_i\ i = \{1, \dots, N\}$ where $N$ is the total number of observations. The weight definition employed in this study is
+\textit{GLMs} are often estimated by making usage of \textit{OLS} theory. This can be seen as a particular case where the matrix $\mathbf{W}$ employed in the parameters estimation is equal to the identity matrix $\mathbf{W} = \mathbf{I}$. This is not always the case. In fact, during this study we perform different model estimation and will run into different cases where the model diagnostic shows violations of the  homoskedasticity assumption. Therefore, to remedy to inadequate diagnostics, we will employ \textit{Weighted Least Square} estimation theory [@wls_intro]. This approach allows us to iteratively estimate a weights matrix $\mathbf{W}$ to be employed in the model estimation as a measure of the importance for each unit $\mathbf{x}_i\ i = \{1, \dots, n\}$ where $n$ is the total number of observations. The weight definition employed in this study is
 
 $$w_{ii} = \frac{1}{(y_i - \hat{y_i})^2} = \frac{1}{\epsilon_i^2}$$
 This definition will allow for different weights in each observations. Those for which the model is unable to represents them in a satisfactory manner will have a large residual, hence a small weight and viceversa. 
 
-\subsection{Local Regression}
+\subsection*{Local Regression}
 
 
-\subsection{Mixed Effect models}
+\subsection*{Mixed Effect models}
 
 
 
-\subsection{Ordinary Differential Equation}
-To track the evolution of a phenomenon over time, it is natural to think about \textit{Oridnary Differential Equation (ODE)} theory \cite{ode} which allows us to keep track of the change of a quantity in continuous time $$ \frac{d}{dt} x = f(x) $$ given initial condition $f(x, t = 0) = x_0$
+\subsection*{Ordinary Differential Equation}
+To track the evolution of a phenomenon over time, it is natural to think about \textit{Oridnary Differential Equation (ODE)} theory [@ode] which allows us to keep track of the change of a quantity in continuous time $$ \frac{d}{dt} x = f(x)$$ given initial condition $f(x, t = 0) = x_0$
 
-\subsection{Levenberg-Marquardt algorithm}
-Very often, the function defined within an ODE is characterized by a set of parameters $\mathbf{\beta}$. In empirical studies, we often have access to data realization of a set of covariates and a response variable $\{(y_i, \mathbf{x}_i, )\}_{i=1}^n$. In this context, we want to find the best parameter estimates $\mathbf{\beta}$ so that $y = f(\mathbf{x}, \mathbf{\beta})$ best fits the data of interest.  The \textit{Levenberg-Marquardt} algorithm \cite{lm_algo} is an optimization technique which provides an useful and efficient solution to the problem. In particular, in this context we wish to minimize the objective function which we define as the sum of residuals squared scaled by the estimated variance at each point
+\subsection*{Levenberg-Marquardt algorithm}
+Very often, the function defined within an ODE is characterized by a set of parameters $\mathbf{\beta}$. In empirical studies, we often have access to data realization of a set of covariates and a response variable $\{(y_i, \mathbf{x}_i, )\}_{i=1}^n$. In this context, we want to find the best parameter estimates $\mathbf{\beta}$ so that $y = f(\mathbf{x}, \mathbf{\beta})$ best fits the data of interest.  The \textit{Levenberg-Marquardt} algorithm [@lm_algo] is an optimization technique which provides an useful and efficient solution to the problem. In particular, in this context we wish to minimize the objective function which we define as the sum of residuals squared scaled by the estimated variance at each point
 
 $$\chi^2(\beta) = \sum_{i=1}^n \left( \frac{y_i - \hat{y}_i}{\sigma_{y_i}} \right)^2$$
 The \textit{LM} algorithm makes smart combination of \textit{Gauss-Newton} and \textit{Gradien Descend} theory. In brief, the method smartly adapt the learning rate $\lambda$ at each iteration $t$ according to the magnitude of the objective function at the previous iteration $t-1$. By doing so, we remedy to the fact that the \textit{GN} needs a starting values close to the true value and we speed up the convergence time. 
 
-\subsection{Sensitivity Analysis}
-Mathematical modeling is often subject to very strong assumption which may be difficult to evaluate. In order to provide a robust framework, it is necessary to validate the model under perturbations on the findings. This is why, we will exploit \textit{Local Sensitivity Analysis} theory \cite{lsa_intro} to evaluate the robustness of the estimated models.
+\subsection*{Sensitivity Analysis}
+Mathematical modeling is often subject to very strong assumption which may be difficult to evaluate. In order to provide a robust framework, it is necessary to validate the model under perturbations on the findings. This is why, we will exploit \textit{Local Sensitivity Analysis} theory [@lsa_intro] to evaluate the robustness of the estimated models.
 
 
 
@@ -145,13 +135,13 @@ Mathematical modeling is often subject to very strong assumption which may be di
 \section{Exploratory Data Analysis}
 \label{sec:eda}
 
-\subsection{Rainfall amount}
+\subsection*{Rainfall amount}
 
 Within this exploratory data analysis section, we wish to give a short introduction to the data of interest by illustrating some characteristics. The climate data we have available concern the rainfall amount and global temperature.
 
 In the first place, we investigate the rainfall data set. We have access to the information between January 1901 up to December 2020. For simplicity, we decide to consider the annual granularity and inspect the resulting distribution.
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r esa_rain_preview}
 rain <- read.csv('../data/pr_1901_2020_ZAF.csv') # load rain data
 names(rain)[1] <- 'rain' # assign name to data set
@@ -159,7 +149,6 @@ rain_mean <- tapply(rain$rain, rain$Year, mean) # compute annual mean
 rain_sd <- tapply(rain$rain, rain$Year, sd) # compute annual standard deviation
 # collect data in a easy to handle data set
 rain <- data.frame(year = as.numeric(names(rain_mean)), rain = rain_mean)
-
 # plot histogram
 hist(rain$rain, xlab = 'rainfall amount', main = 'Annual rain distribution', 
      col = 'grey90', border = 'white', breaks = 10)
@@ -168,11 +157,11 @@ hist(rain$rain, xlab = 'rainfall amount', main = 'Annual rain distribution',
 \label{fig:esa_rain_hist}
 \end{figure}
 
-From figure \ref{fig:esa_rain_hist} we can observe that the data distribution is somewhat bell-shaped. However, we can easily notice that the distribution is also right skewed.  Clearly, due to the nature of phenomenon, the rainfall amount is left bounded by 0, $x \in \mathbb{R}_+$, meaning that we can rarely observe very extreme event such as very heavy precipitation but we cannot observe a negative amount of rainfall. We are able to quantify the amount of skewness by computing the data sample moments ratio known as the \textit{Skewness} index which result to be `r round(e1071::skewness(rain$rain, type = 1), 2)`, agreeing with the histogram depicted.
+From figure \ref{fig:esa_rain_hist} we can observe that the data distribution is somewhat bell-shaped. However, we can easily notice that the distribution is also right skewed.  Clearly, due to the nature of phenomenon, the rainfall amount is left bounded by 0, $x \in \mathbb{R}_+$, meaning that we can rarely observe very extreme event such as very heavy precipitation but we cannot observe a negative amount of rainfall. We are able to quantify the amount of skewness by computing the data sample moments ratio known as the \textit{Skewness} index which result to be `r round(e1071::skewness(rain$rain, type = 1), 2)`, namely a right-skewed distribution, agreeing with the histogram depicted.
 
 Afterwards, we investigate the temperature data. As for the rain data set, we have availability of the information from 1901 up to 2020. In figure \ref{fig:esa_temp_hist} we depict the average annual temperature distribution. 
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r eda_temp}
 temp <- read.csv('../data/tas_1901_2020_ZAF.csv') # load temp data
 names(temp)[1] <- 'temp' # assign name to data set
@@ -188,12 +177,12 @@ hist(temp$temp, xlab = 'temperature', main = 'Annual temperature distribution',
 \caption{Annual temperature distribution}
 \end{figure}
 
-We can clearly observe a considerable right skeweness indicating more extreme events such as sweltering days than very cold days. The phenomenon now takes values in the real domain, $x \in \mathbb{R}$, and present a skewness index of `r round(e1071::skewness(temp$temp, type = 1), 2)`.
+We can clearly observe a considerable right skeweness indicating more extreme events such as sweltering days than very cold days. The phenomenon now takes values in the real domain, $x \in \mathbb{R}$, and present a skewness index of `r round(e1071::skewness(temp$temp, type = 1), 2)`, again, a right-skewsness indicator.
 
 
-Climate change and its related phenomenon is believed not to depend strictly on the annual average value but on its distribution. For instance, we can think to a year which has had the same amount of rainfall as the previous one, but the concentration of the rainfall may assume very different values. We may observe several days with very low precipitation as well as very few days with extreme precipitations. This would result in the same average value \cite{floods_drought_cc}. This is why, in figure \ref{fig:rain_mean_sd} we present the relationship between the two summary statistics, mean and standard deviation, per year. We can clearly see that these are closely and positively related, meaning that for an higher average rainfall amount, we can expect higher variability in the phenomenon, with an estimated correlation of $\hat{\rho}_{sd,mean} = 0.75 $. Therefore, for simplicity of the study, we have decided to use the average values as a proxy measure of the entire rainfall phenomenon. 
+Climate change and its related phenomenon is believed not to depend strictly on the annual average value but on its distribution. For instance, we can think to a year which has had the same amount of rainfall as the previous one, but the concentration of the rainfall may assume very different values. We may observe several days with very low precipitation as well as very few days with extreme precipitations. This would result in the same average value [@floods_drought_cc]. This is why, in figure \ref{fig:rain_mean_sd} we present the relationship between the two summary statistics, mean and standard deviation, per year. We can clearly see that these are closely and positively related, meaning that for an higher average rainfall amount, we can expect higher variability in the phenomenon, with an estimated correlation of $\hat{\rho}_{sd,mean} = 0.75$. Therefore, for simplicity of the study, we have decided to use the average values as a proxy measure of the entire rainfall phenomenon. 
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r rain_mean_sd}
 # rain sd ---------------------------------------------------------------------
 plot(rain_mean, rain_sd, xlab = 'rainfall year average', 
@@ -207,56 +196,50 @@ legend('topleft', col = 'grey', lty = NA, lwd = NA, bty = 'n', pch = 1,
 
 
 
-On the other hand, this does not happen for the temperature value. In particular, in figure \ref{} can observe how the relation between the average annual temperature (a) and the annual increase (b) seem to be randomly related to the annual standard deviation. Therefore, we will investigate both of them.
+On the other hand, this does not happen for the temperature value. In particular, in figure \ref{fig:temp_mean_sd} can observe how the relation between the average annual temperature, figure a), and the annual increase, figure b), seem to be randomly related to the annual standard deviation. Therefore, we will investigate both of them.
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r temp_mean_sd}
 plot(temp_mean, temp_sd, xlab = 'temperature annual average', 
-     ylab ='rainfall year standard deviation', col = 'grey60')
+     ylab ='temperature year standard deviation', col = 'grey60')
 legend('topright', col = 'grey', lty = NA, lwd = NA, bty = 'n', pch = 1,
        legend = paste('sd and mean cor =', round(cor(temp_mean, temp_sd), 2)))
-
 plot(c(0, diff(temp_mean)), temp_sd, xlab = 'temperature annual increment', 
-     ylab ='rainfall year standard deviation', col = 'grey60')
+     ylab ='temperature year standard deviation', col = 'grey60')
 legend('topleft', col = 'grey', lty = NA, lwd = NA, bty = 'n', pch = 1,
        legend = paste('sd and mean cor =', round(cor(c(0, diff(temp_mean)), temp_sd), 2)))
 ```
 \label{fig:temp_mean_sd}
-\caption{Evolution in time of rainfall average value and rainfall standard deviation with a non parametric with. }
+\caption{a) annual average temperature vs temperature  standard devation; b) annual temperature increase vs temperature standard deviation }
 \end{figure}
 
 
 
 
 
-In order to give track the evolution of the phenomenon over time and to give an idea of the overall trend we make use of non parametric model estimation, meaning that we do not assume anything but a relation between $\mathbf{x}$ and $\mathbf{x}$ governed by a function $f(.)$. The method employed is the locally weighted regression discussed in section \ref{sec:techback} for a certain span $s$.
+In order to keep track the evolution of the phenomenon over time and to give an idea of the overall trend we make use of non parametric model estimation, meaning that we do not assume anything but a relation between $\mathbf{x}$ and $\mathbf{y}$ governed by a function $f(.)$. The method employed is the locally weighted regression discussed in section \ref{sec:techback} for a certain value of the span $s$. In particular:
 
+\begin{itemize}
+\item $100\%$ of the neighbor data to take into account the global context (first plot)
+\item $50\%$ of the neighbor data to allow for a more local structure (second plot)
+\end{itemize}
 
-Therefore, to track the evolution of the phenomenon we fit the model for different values of the span. In particular:
+By investigating the results in \ref{fig:esa_rain} we can notice how the global fit to the rain data shows a constant trend up to the 1950 which evolves in a slightly linear decreasing trend onward. On the other hand, the local fit shows an overall constant trend up to the 1980s which evolves in a steeper decrease for the later year. Nevertheless, both the models suggest an evolution of the amount of rainfall which negativelt changes over time.
 
-- $100\%$ of the neighbor data to take into account the global context (violet)
-
-- $50\%$ of the neighbor data to allow for a more local structure (blue)
-
-By investigating the results in \ref{fig:esa_rain} we can notice how the global fit to the rain data shows a constant trend up to the 1950 which evolves in a slightly linear decreasing trend onward. On the other hand, the local fit shows a constant trend up to the 1980s which evolves in a steeper decrease for the later year. Nevertheless, both the models suggest an evolution of the amount of rainfall which changes over time.
-
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r eda_rainfall}
 # plot non parametric local regression to the data of interest + graphics parameter
-
 # span value: 1
 plot_lowess(rain$year, rain$rain, f = 1, 
             main = 'Average rain fall amount per year', ax = rain$year,
             xlab = 'year', ylab = 'rain fall amount', type = 'l')
 legend('topright', legend = c('span 100%'), lty = 1, lwd = 2,
        bty = 'n', col = c('violetred'))
-
 # span value: .5
 plot_lowess(rain$year, rain$rain, f = .5, 
             main = 'Average rain fall amount per year', ax = rain$year,
             xlab = 'year', ylab = 'rain fall amount', type = 'l',
             add = 0, fit.col = 'royalblue')
-
 # add legend
 legend('topright', legend = c('span  50%'), lty = 1, lwd = 2,
        bty = 'n', col = c('royalblue'))
@@ -267,60 +250,48 @@ legend('topright', legend = c('span  50%'), lty = 1, lwd = 2,
 
 
 
-Afterwards, we fit a the same two models for the temperature data. Here the relation with time is much clearer. For instance, we can observe how the global fit shows a linearly increasing trend over time, with constant velocity. On the other hand, the local fit shows an increasing trend with different intensities in different period allowing for non linear relationship. Nevertheless, the overall trend does not change dramatically. Annual temperature has clearly been increasing over the last century.
+Afterwards, we fit a the same two models for the temperature data. Here the relation with time is much clearer. For instance, we can observe how the global fit shows a linearly increasing trend over time, with constant velocity. In contrast, the local fit shows an increasing trend with different intensities in different period allowing for non linear relationship. Nevertheless, the overall trend does not change dramatically. The annual average temperature has clearly been increasing over the last century.
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r eda_temp_fit}
 # fit local regression and produce plot of the result
-
-
 # span 100%
 plot_lowess(temp$year, temp$temp, f = 1, ax = temp$year,
             xlab = 'year', ylab = 'temperature', type = 'l',
             main = 'Annual temperature over year')
-
 legend('topleft', legend = c('span  100%'), lty = 1, lwd = 2,
        bty = 'n', col = c('violetred'))
-
 # span 50%
 plot_lowess(temp$year, temp$temp, f = .5, ax = temp$year,
             xlab = 'year', ylab = 'temperature', type = 'l',
             add = 0, fit.col = 'blue', main = 'Annual temperature over year')
 legend('topleft', legend = c('span  50%'), lty = 1, lwd = 2,
        bty = 'n', col = c('royalblue'))
-
 ```
 \label{fig:esa_temp}
 \caption{Annual average temperature}
 \end{figure}
 
 
-In figure \ref{} we depict what the annual increment is for both span values of $s = \{ 50, 100\}$. In figure n) with span size $s = 100$ we can see a flat trend up to the last half century, and then an increasing trend, indicating more positive values than negative ones. In figure (b) with span size $s = 50$ we can see an initial slightly increasing trend, followed by a fairly negative period during the 50s, followed by a clearly steep increasing trend from the 60s onward.
+In figure \ref{fig:esa_rain_diff} we depict what the annual increment is for both span values of $s = \{ 50, 100\}$. In figure a) with span size $s = 100$ we can see a flat trend up to the last half century, and then an increasing trend, indicating more positive values than negative ones. In figure b) with span size $s = 50$ we can see an initial slightly increasing trend, followed by a fairly negative period during the 50s, followed by a clearly steep increasing trend from the 60s onward.
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r temp_difF_evol}
-
 # 100 % span
 plot_lowess(temp$year, c(0, diff(temp$temp)), f = 1, ax = temp$year,
             xlab = 'year', ylab = 'temperature', type = 'l',
             main = 'Annual temperature increment')
-
 # add legend
 legend('topleft', legend = c('span  100%'), lty = 1, lwd = 2,
        bty = 'n', col = c('violetred'))
-
-
 # 50 % span
 plot_lowess(temp$year, c(0, diff(temp$temp)), f = .5, ax = temp$year,
             xlab = 'year', ylab = 'temperature', type = 'l',
             main = 'Annual temperature increment',
             add = 0, fit.col = 'royalblue')
-
 # add legend
 legend('topleft', legend = c('span  50%'), lty = 1, lwd = 2,
        bty = 'n', col = c('royalblue'))
-
-
 ```
 \label{fig:esa_rain_diff}
 \caption{Annual temperature increment}
@@ -332,7 +303,7 @@ X <- merge(rain, temp, by = 'year') # join data in a dataset by year
 # xtable::xtable(cor(X), type = 'latex')
 ```
 
-\begin{table}[H]
+\begin{table}[bt]
 \centering
 \begin{tabular}{rrrrr}
   \hline
@@ -344,15 +315,15 @@ year & 1.00 & -0.06 & 0.82 & -0.09 \\
   temp\_sd & -0.09 & -0.23 & -0.08 & 1.00 \\ 
    \hline
 \end{tabular}
-\caption{limate correlation table}
+\caption{Climate correlation table}
+\label{esa:cor_matrix}
 \end{table}
 
 
-In order to give an overall idea of the the data we are investigating we would like to present the pairs plot showing each pair combination plus the estimated correlation matrix $\mathbf{R}$ in table \ref{esa:cor_matrix}. As mentioned earlier, in figure \ref{fig:esa_pairs} we can notice the strong relationship between temperature and year $\hat{\rho}_{t,y} =$ `r round(cor(X[,c(1,3)])[2], 2)` and a weaker relationship between rain and year $\hat{\rho}_{r,y} =$ `r round(cor(X[,c(1,2)])[2], 2)` . However, we can see a clear relationship between year and rain $\hat{\rho}_{r,t}=$ `r round(cor(X[,c(2,3)])[2], 2)` which may be worth further investigation. It is also interesting to notice that the temperature standard deviation is negatively related to the rainfall amount $\hat{\rho}_{r,t_{sd}}=$ `r round(cor(X[,c(2,4)])[2], 2)`, meaning that for a year with low average temperature, we can expect higher variation in the average temperature.
+In order to give an overall idea of the the data we are investigating we would like to present the pairs plot showing each pair combination plus the estimated correlation matrix $\mathbf{R}$ in table \ref{esa:cor_matrix}. As mentioned earlier, in figure \ref{fig:esa_pairs} we can notice the strong relationship between temperature and year $\hat{\rho}_{t,y} =$ `r round(cor(X[,c(1,3)])[2], 2)` and a weaker relationship between rain and year $\hat{\rho}_{r,y} =$ `r round(cor(X[,c(1,2)])[2], 2)` . However, we can see a clear relationship between year and rain $\hat{\rho}_{r,t}=$ `r round(cor(X[,c(2,3)])[2], 2)` which may be worth further investigation. It is also interesting to notice that the temperature standard deviation is negatively related to the rainfall amount $\hat{\rho}_{r,t_{sd}}=$ `r round(cor(X[,c(2,4)])[2], 2)`, meaning that for a year with low average rainfall, we can expect slightly higher variation in the average temperature.
 
-\end{multicols}
-
-\begin{figure}[H]
+\onecolumn
+\begin{figure}[bt]
 ```{r esa_pairs_plot}
 par(mar = rep(0, 4))
 pairs(X, col = 'grey60') # shows pairs plot to give an idea of the relationship
@@ -361,20 +332,16 @@ pairs(X, col = 'grey60') # shows pairs plot to give an idea of the relationship
 \label{fig:esa_pairs}
 \caption{Year, Rain, Temperature scatterplot}
 \end{figure}
-
-\begin{multicols}{2}
+\twocolumn
 
 \section{Climate Modeling}
 \label{sec:climate}
 
 We are now going to propose a very simple physical model to describe the temperature behavior. Ascertained that temperature heavily evolves over time, we present a very simple ordinary different equation given the temperature $\tau$ and time $t$
 
-$$ \frac{d}{d t}\ \tau = \gamma\ \tau $$
-which posit a linear evolution of the phenomenon over time. We have seen in the previous section that the relation of interest may not be linear. However, we know that non-linear model may perform wiggly in extrapolation context, therefore we will assume, for simplicity, a linear relationship. Moreover, we add initial condition equal to the average temperature values of the first 5 year. The reason behind this choice is that, within this project, we do not have access to older data and during the exploratory data analysis in section ref{sec:eda} we have seen how the phenomenon is highly variable. Therefore, we choose the mean as initial condition
-$$f(\tau, t = 0) = \tau_0 =16.8 $$
-
-Given the aforesaid model, we are interested of the values the parameter $\gamma$ might take. In particular, we want to tune it to find the best match to the observed data and we are going to do so exploiting the Levenberg-Marquardt algorithm discussed in section \ref{sec:techback}.
-
+$$ \frac{d}{d t}\ \tau = \gamma\ \tau$$
+which posit a linear evolution of the phenomenon over time. We have seen in the previous section that the relation of interest may not be linear. However, we know that non-linear model may perform wiggly in extrapolation context, therefore we will assume, for simplicity, a linear relationship. Moreover, we add initial condition equal to the average temperature values of the first 5 years. The reason behind this choice is that, within this project, we do not have access to older data and during the exploratory data analysis in section \ref{sec:eda} we have seen how the phenomenon is highly variable. Therefore, we choose the mean as initial condition
+$$f(\tau, t = 0) = \tau_{1:5} =16.8$$
 
 ```{r climate_model_temp_ode}
 # model temperature in time with gamma parameter
@@ -388,12 +355,10 @@ tempchange <- function(t, state, parms) {
     return(list(c(dtemp))) # return object as a list
   })
 }
-
 # numerically integrate ODE
 t <- X$time <- X$year - min(X$year, na.rm = TRUE) # extract time from t = 0 for ODE
 yini <- c(temp = mean(X$temp[1:5])) # assign initial condition as the average of the first 5y
 parms <- c(gamma = 1e-3) # give initial guess for the parametrs
-
 # function that calculates residual sum of squares for LM algorithm
 ssq_temp <- function(parms){
   
@@ -414,8 +379,6 @@ ssq_temp <- function(parms){
   
   return(ssqres) # return predicted vs experimental residual
 }
-
-
 # fitting LM algorithm to the residual sum of square returned by the function ssq_temp
 fitval_temp <- nls.lm(par = parms, fn = ssq_temp)
 fit_pe <- fitval_temp$par
@@ -424,7 +387,8 @@ parest_temp <- c(fitval_temp$par - qnorm(.975) * se,
                  fitval_temp$par,
                  fitval_temp$par + qnorm(.975) * se)
 ```
-The algorithm applied to the data set of interest returns a point estimate of $\hat{\gamma}=$`r round(parest_temp[2], 8)` and an estimated standard error of $\hat{SE}(\hat{\gamma})=$`r round(se, 8)`, resulting in the $95\%$ confidence interval
+
+Given the aforesaid model, we are interested of the values the parameter $\gamma$ might take. In particular, we want to tune it to find the best match to the observed data and we are going to do so exploiting the Levenberg-Marquardt algorithm discussed in section \ref{sec:techback}. The algorithm applied to the data set of interest returns a point estimate of $\hat{\gamma}=$`r round(parest_temp[2], 8)` and an estimated standard error of $\hat{SE}(\hat{\gamma})=$`r round(se, 8)`, resulting in the $95\%$ confidence interval
 
 \begin{equation}
 P(\gamma \in [0.00071764, 0.00081291]) = 0.95
@@ -433,13 +397,12 @@ P(\gamma \in [0.00071764, 0.00081291]) = 0.95
 
 Overall, we can claim that, according to the model of interest, the global temperature increases over time by a factor within the region in (\ref{eq:gamma_ci}). We graphically present the estimated model in figure \ref{fig:temp_ode_evolution}. We can clearly notice how the model may underfit the data. This is due to the fact that we have assumed a linear relationship for robustness in the extrapolation context. 
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r ode_temp_low_upp}
 # estimate scenarios with point estimate
 out_temp <- ode(y=yini,times=t,func=tempchange,parms=as.list(parest_temp[2]))
 out_temp_l <- ode(y=yini,times=t,func=tempchange,parms=as.list(parest_temp[1]))
 out_temp_u <- ode(y=yini,times=t,func=tempchange,parms=as.list(parest_temp[3]))
-
 # plot point estimate
 ylim <- range(X$temp)
 plot(out_temp, ylim = ylim, main = 'Annual temperature ODE evolution',
@@ -457,24 +420,21 @@ legend('topleft', col = c('violetred',ggplot2::alpha('red', .1)),
 \label{fig:temp_ode_evolution}
 \end{figure}
 
-We have now available a model which let us understand the evolution of the temperature over time and may lead us to future prediction. In particular, we are interested in what would happen in a 50 years time following the current trend. According to the estimated model and depicted in figure \ref{fig:temp_prediction}, the global temperature may continue to rise up to reaching $19$ Celcius average degree in 50 years time, with a reasonably tight confidence interval.
+We have now available a model which let us understand the evolution of the temperature over time and may lead us to future prediction. In particular, we are interested in what would happen in a 50 years time following the current trend. According to the estimated model and depicted in figure \ref{fig:temp_prediction}, the global temperature may continue to rise up to reaching$19$ Celcius average degree in 50 years time, with a reasonably tight confidence interval. Moreover, here we can appreciate how stable the prediction is, due to the linearity assumption. 
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r temp_long_data}
 # propose longer data for future prediction
 t_long <- 0:170
 X <- merge(X, data.frame(time = t_long), all.y = TRUE) # join data with future years
-
 # predict longer data with lower, upper bound + point estimate
 out_temp_lb = ode(y=yini,times=t_long,func=tempchange,parms=as.list(parest_temp[1]))
 out_temp_pe = ode(y=yini,times=t_long,func=tempchange,parms=as.list(parest_temp[2]))
 out_temp_ub = ode(y=yini,times=t_long,func=tempchange,parms=as.list(parest_temp[3]))
 out_temp_par <- merge(merge(out_temp_lb, out_temp_pe, by = 'time'), out_temp_ub, by = 'time')
 names(out_temp_par) <- c('time', 'lb', 'pe', 'ub') # assign name to data set 
-
 # subset only out of sample year, those to be predicted
 out_temp_par_only <- out_temp_par[out_temp_par$time > max(out_temp[,'time']),]
-
 # plot result
 par(mfrow = c(1,1), las = 2)
 ylim <- range(out_temp_par[,-1], X$temp, na.rm = TRUE)
@@ -494,11 +454,11 @@ legend('topleft', col = c('violetred',ggplot2::alpha('red', .1)),
 \label{fig:temp_prediction}
 \end{figure}
 
-A fundamental requisite for a mathematical model is the robustness with respect to its input. Here, the data is empirically observed and the parameter $\gamma$ is estimated from it. The question we want to address is whether we can rely on this parameter and whether the model output would change if the parameters in input changed, ie for small perturbations in the data. In order to tackle this question, a common and reliable choice is local sensitivity analysis discussed in section \ref{sec:techback}. Given the model $$f(\tau) = \gamma\ \tau $$ the method allow us to derive the sensitivity equation as 
+A fundamental requisite for a mathematical model is the robustness with respect to its input. Here, the data is empirically observed and the parameter $\gamma$ is estimated from it. The question we want to address is whether we can rely on this parameter and whether the model output would change if the parameters in input changed, ie for small perturbations in the data. In order to tackle this question, a common and reliable choice is local sensitivity analysis discussed in section \ref{sec:techback}. Given the model$$f(\tau) = \gamma\ \tau$$ the method allow us to derive the sensitivity equation as 
 
 \begin{equation}
 \begin{split}
-\frac{d}{dt} s & = \frac{d}{d\gamma} f\  s + \frac{d}{d \gamma} f  \\
+\frac{d}{dt} s & = \frac{d}{d\tau} f\  s + \frac{d}{d \gamma} f  \\
 & = \gamma s + \tau
 \end{split}
 \end{equation}
@@ -512,9 +472,9 @@ Therefore, we will need to deal with the system of ordinary differential equatio
 \end{cases}
 \end{equation}
 
-As done previously, we numerically integrate the system of \textit{ODEs} and inspect the result. In particular, we want to investigate what would happen with different values for the input parameter $\gamma$. In this setting, we try to evaluate the model output for values which are 5 time the estimated standard error away from the point estimate $\gamma \pm 5 \times \hat{SE}(\hat{\gamma})$. In figure \ref{fig:temp_sens} we can observe the system output in log-scale. In the first place, plotting the temperature values $\tau$ against time $t$ in log-scale, we do not observe any appreciable difference for such an extreme value of the parameter considered. In the second plot, we depict the sensitivity value $s$ against time $t$ and, as before, we cannot notice any significant difference. This analysis clearly state how the model of interest is robust to fairly small perturbations of the input data. Thus, we can rely its inference.
+As done previously, we numerically integrate the system of \textit{ODEs} and inspect the result. In particular, we want to investigate what would happen with different values for the input parameter $\gamma$. In this setting, we try to evaluate the model output for values which are 5 time the estimated standard error away from the point estimate $\hat{\gamma} \pm 5 \times \hat{SE}(\hat{\gamma})$. In figure \ref{fig:temp_sens} we can observe the system output in log-scale. In the first place, plotting the temperature values $\tau$ against time $t$ in log-scale, we do not observe any appreciable difference for such an extreme value of the parameter considered. In the second plot, we depict the sensitivity value $s$ against time $t$ and, as before, we cannot notice any significant difference. This analysis clearly state how the model of interest is robust to fairly small perturbations of the input data. Thus, we can rely on its inference.
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r temp_lsa}
 tempsens <- function(t, state, parms) {
   
@@ -527,11 +487,8 @@ tempsens <- function(t, state, parms) {
     return(list(c(RHS2, RHS2)))
   })
 }
-
-
 # sensitivity: being only one parameter LSA is OK
 # very solid estimation up to 50 SE
-
 # increase qs if you want to investigate more extreme scenario
 qs <- 5
 for(q in qs){
@@ -566,7 +523,7 @@ for(q in qs){
 Once ascertained the robustness of the temperature model, we are ready to investigate the relationship between the latter and the rainfall amount. In order to do so, we estimate a linear regression model exploiting the \textit{GLM} theory presented in section \ref{sec:techback}, where we add a non-linear component derived by the spline theory \ref{sec:techback} which allows us to write 
 $$\textbf{rain} = f(\mathbf{\tau}) + \mathbf{\epsilon}\ \text{ where } \epsilon \sim N(\mu, \sigma^2)$$
 
-The first trial is not satisfactory as the model presents some deficiency. In particular, from the left plot in figure \ref{fig:res_fit_ols} we can observe the presence of heteroskedasticity, meaning that the variance is not constant over the range of values for the value in input. In order to address the problem, we perform an iterative weighted least square estimation. By doing so, we drastically reduce the parameters estimated standard error, as shown in table \ref{tab:ols_wls_se} and gain a considerable a $29\%$ reduction in the estimated $BIC$ values.
+The first trial is not satisfactory as the model presents some deficiency. In particular, the heteroskedasticity assumption is violated, meaning that the variance is not constant over the range of values for the value in input. In order to address the problem, we perform an iterative weighted least square estimation. By doing so, we drastically reduce the parameters estimated standard error, as shown in table \ref{tab:ols_wls_se} and gain a considerable a $29\%$ reduction in the estimated $BIC$ values.
 
 
 
@@ -574,17 +531,14 @@ The first trial is not satisfactory as the model presents some deficiency. In pa
 # need to understand how temp evolves
 # rain_temp <- merge(rain, temp, by = 'year')
 rain_temp <- X[complete.cases(X),]
-
 # linear model
 fit_rain <- lm(rain ~ splines::ns(temp, 2), data = rain_temp) # fit model
 # fit_rain <- lm(rain ~ splines::ns(temp, 2) + temp_sd, data = rain_temp) # fit model
 # BIC(fit_rain)
 # summary(fit_rain)
-
 # plot(fitted(fit_rain), residuals(fit_rain), main = 'OLS',
 #      xlab = 'fitted', ylab = 'residuals', col = 'grey70')
 # legend('topleft', legend = paste('BIC', round(BIC(fit_rain),2)), bty = 'n')
-
 fit_rain_wi <- fit_rain
 for(i in 1:5){
   wi <- 1 / residuals(fit_rain_wi)**2
@@ -593,7 +547,6 @@ for(i in 1:5){
 # plot(fitted(fit_rain_wi), residuals(fit_rain_wi), main = 'WLS',
 #      xlab = 'fitted', ylab = 'residuals', col = 'grey70')
 # legend('topleft', legend = paste('BIC', round(BIC(fit_rain_wi),2)), bty = 'n')
-
 ols_wls_se <-
   cbind(
     summary(fit_rain)$coefficients[,2],
@@ -602,15 +555,15 @@ ols_wls_se <-
 # xtable::xtable(ols_wls_se, type = 'latex', digits = 8)
 ```
 
-\begin{table}[H]
+\begin{table}[bt]
 \centering
 \begin{tabular}{lrr}
   \hline
  & OLS & WLS \\ 
   \hline
 $\hat{SE}(\hat{\beta}_0)$ & 1.72897239 & 0.00008380 \\ 
-  $\hat{SE}(\hat{\beta}_{1, \tau})$ & 3.65154399 & 0.00015488 \\ 
-  $\hat{SE}(\hat{\beta}_{2, \tau})$ & 2.96582256 & 0.00001818 \\ 
+ $\hat{SE}(\hat{\beta}_{1, \tau})$ & 3.65154399 & 0.00015488 \\ 
+ $\hat{SE}(\hat{\beta}_{2, \tau})$ & 2.96582256 & 0.00001818 \\ 
    \hline
 \end{tabular}
 \caption{OLS and WLS parameters estimated standard error}
@@ -620,34 +573,35 @@ $\hat{SE}(\hat{\beta}_0)$ & 1.72897239 & 0.00008380 \\
 
 The model parameters results are summarised in table \ref{tab:wls_model_summary}. Unsurprisingly, from those we can observe how both the estimated spline coefficients have negative sign with very tiny estimated standard error. Therefore, we can appreciate how, up to 8 decimal precision, the returned P-value is $0$, meaning that we reject the null hypothesis $H_0:\ \beta_i = 0$ in favour of the alternative $H_1:\ \beta_i \neq 0$ for $i = \{0, 1, 2\}$. This means that, according to the estimated model, the relation between temperature and rainfall amount is negative. With higher temperature we can expect to observe lower amount of rainfall and vice versa.
 
-\end{multicols}
-\begin{table}[H]
+\onecolumn
+\begin{table}[bt]
 \centering
 \begin{tabular}{rrrrr}
   \hline\
  & Estimate & Std. Error & t value & Pr($>|t|$) \\ 
   \hline
 $\hat{\beta}_0$ & 41.23907927 & 0.00008380 & 492090.20447958 & 0.00000000 \\ 
-  $\hat{\beta}_{1, \tau}$ & -7.90378231 & 0.00015488 & -51030.55292079 & 0.00000000 \\ 
-  $\hat{\beta}_{2, \tau}$ & -8.53033020 & 0.00001818 & -469180.40392581 & 0.00000000 \\ 
+ $\hat{\beta}_{1, \tau}$ & -7.90378231 & 0.00015488 & -51030.55292079 & 0.00000000 \\ 
+ $\hat{\beta}_{2, \tau}$ & -8.53033020 & 0.00001818 & -469180.40392581 & 0.00000000 \\ 
    \hline
 \end{tabular}
 \caption{Weighted Least Square model estimation for temperature and rainfall amount}
+\label{tab:wls_model_summary}
 \end{table}
-\begin{multicols}{2}
+\twocolumn
+
 
 
 We now need to evaluate the robustness of the model with respect to the parameters in input. As we did previously, we will now try two configuration where we shift the \textit{linear model} parameters estimates by 5 times their standard deviation $\hat{\beta}_i \pm \hat{SE}(\hat{\beta}_i)$. The results are depicted in figure \ref{fig:rain_time_sens_5se}. Here we can notice that, despite of the fact that the different scenarios lead to different intensities, the estimated confidence regions intersect each other, leading to an overall similar trend. Therefore, we can claim that the model is robust with respect to the data and parameters in input and that, considered the worldwide temperature change, the rainfall amount is consequently decreasing over time.
 
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r rain_temp_prediction, warning=FALSE}
 # predict rain from temp
 pred_type <- 'prediction'
 rain_pred_pe <- predict(fit_rain_wi, newdata = data.frame(temp = out_temp_par$pe), interval = pred_type)[,'fit']
 rain_pred_lb <- predict(fit_rain_wi, newdata = data.frame(temp = out_temp_par$lb), interval = pred_type)[,'lwr']
 rain_pred_ub <- predict(fit_rain_wi, newdata = data.frame(temp = out_temp_par$ub), interval = pred_type)[,'upr']
-
 # sensitivity
 # try to impute different values
 q <- 5
@@ -658,14 +612,12 @@ pred_type <- 'prediction'
 rain_pred_pe_e <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_temp_par$pe), interval = pred_type)[,'fit']
 rain_pred_lb_e <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_temp_par$lb), interval = pred_type)[,'lwr']
 rain_pred_ub_e <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_temp_par$ub), interval = pred_type)[,'upr']
-
 fit_rain_wi_edit$coefficients[2] <-  -8.962673 - q *  1.0267
 fit_rain_wi_edit$coefficients[3] <-  -8.6207 - q *  0.3338
 pred_type <- 'prediction'
 rain_pred_pe_f <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_temp_par$pe), interval = pred_type)[,'fit']
 rain_pred_lb_f <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_temp_par$lb), interval = pred_type)[,'lwr']
 rain_pred_ub_f <- predict(fit_rain_wi_edit, newdata = data.frame(temp = out_temp_par$ub), interval = pred_type)[,'upr']
-
 par(las = 2)
 plot(rain_temp$time, rain_temp$rain, type = 'l', xlim = range(out_temp_par$time),
      xaxt = 'n', col = 'grey70', xlab = 'time', ylab = 'rain')
@@ -718,63 +670,44 @@ legend('topright', col = c('red','blue','green'), bty = 'n', lty = 1, lwd = 2,
 In the previous section we have presented the data and respective results on the climate phenomenons including temperature and rainfall information from 1901 up to 2021. In this section, we are going to present the waterbirds species count data over time with the goal to identify the relation between its evolution and the covariates explored earlier. In particular, the data set of interest provide the specie individual count per year from 1975 to 2021. Within this data set we observe monthly variation which, for simplicity and consistency with the climate data, will be averaged over the different years. For different species and genes, we have different number of observation and, as we observe up to 103 species and genes combinations, we decide to keep only those whose numerousness might provide robust result, from $n_i =30$ onward, as per figure \ref{fig:species_barplot}.
 
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r pop_data_viz}
 rm(list = ls()) # clean env
 source('functions.R') # load functions  
 
-# laod packages: need to be installed if not available yet
-library(ggplot2)
-library(gam)
-library(reshape2)
-library(deSolve)
-library(minpack.lm)
-library(viridis)
-library(xtable)
-library(viridisLite)
-library(splines)
-
 # --------------------------------------------------------------------------- #
 #                            load count data                                  #
 # --------------------------------------------------------------------------- #
-
 dat0 <- rbind(
   read.csv("../data/occurrence1.txt", row.names=1),
   read.csv("../data/occurrence2.txt", row.names=1),
   read.csv("../data/occurrence3.txt", row.names=1),
   read.csv("../data/occurrence4.txt", row.names=1)
 )
-
-
 dat <- dat0 # store data
-
 # remove empty species
 dat <- dat[ - which(dat$family == ''), ] 
-
 # sanity check on year
 dat <- dat[dat$year > 1900,]
 years <- cbind( year = min(dat$year) : max(dat$year) )
-
 # create temp dat to compute annual mean data frame
 temp <- dat
 temp$key <- paste0( dat$year, '_', dat$family, '.', dat$genus)
 counts <- tapply(temp$individualCount, temp$key, mean)
-
 # compute data frame
 Y <- data.frame(
   year = as.numeric(substr(names(counts), 1, 4)),
   species = unlist(lapply(strsplit(names(counts), '_'), '[[', 2)),
   individualCount = counts
 )
-
 # count
 Y <- Y[complete.cases(Y) & Y$year > 1900,] # remove NA cases and start from 1975
 fams_tab <- table(Y$species)
 par(las = 2, mar = c(12, 5, 2, 5))
 barplot(fams_tab[order(fams_tab, decreasing = TRUE)], border = NA,
-        col = ggplot2::alpha(viridis(length(fams_tab), direction = -1), .4) )
+        col = 'grey70')
+        #col = ggplot2::alpha(viridis(length(fams_tab), direction = -1), .4) )
 abline(h = 30, col = 'royalblue', lwd = 1, lty = 2)
-
 # subset observation with n > 40
 obs_30 <- names(fams_tab[which(fams_tab > 30)])
 Y <- Y[Y$species %in% obs_30,]
@@ -792,7 +725,7 @@ Once selected the species of interest, we are interested in the overall trend ev
 
 
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r y_wide}
 # create Y_wide such that we will have one species per column 
 # and the related individual count per row
@@ -803,16 +736,13 @@ Y_wide <- data.frame(
     values_from = 'individualCount'
   )
 )
-
 # quick viz
 # matplot(Y_wide[,1], Y_wide[,-1], type = 'l')
  
 # remove extreme observations -----------------------------------------------
-
 # compute stats
 Y_mean <- mean(Y$individualCount, na.rm = TRUE)
 Y_sd <- sd(Y$individualCount, na.rm = TRUE)
-
 # identify those above the threshold
 q <- qnorm(.99) # quantile to look at 
 out_idx <-
@@ -820,7 +750,6 @@ out_idx <-
     Y$individualCount < (Y_mean  - q * Y_sd) | 
       Y$individualCount > (Y_mean  + q * Y_sd)
   )
-
 # identify species to be removed
 species_drop <-
   sort(
@@ -828,37 +757,29 @@ species_drop <-
       Y$species[Y$species %in% unique(Y$species[out_idx])]
       )
     )
-
 # visualize 
 Y_wide_col <- which(names(Y_wide) %in% species_drop)
 # matplot(Y_wide[,1], Y_wide[,   Y_wide_col], type = 'l')
 # matplot(Y_wide[,1], Y_wide[, - Y_wide_col], type = 'l', ylim = c(0, 1300), lwd = .4)
-
       
 # remove 
 Y_wide <- Y_wide[ - Y_wide_col]
 Y <- Y[ - which(Y$species %in% species_drop),]
-
-
-
 # provide a quick visualization ----------------------------------------------
-
 # visulize with mean and median
 wide_mean <- apply(Y_wide[,-1], 1, function(x) mean(x, na.rm = TRUE))
 wide_median <- apply(Y_wide[,-1], 1, function(x) median(x, na.rm = TRUE))
-
 # compute non par fit
 wide_mean_fit <- fitted(loess(wide_mean ~ Y_wide[,1]))
 wide_median_fit <- fitted(loess(wide_median ~ Y_wide[,1]))
-
 # viz with median and mean non parametric fit 
 par(las = 1, mar = c(2, 5, 0, 5))
 layout(matrix(c(1,1,1,1,2,2), ncol = 2, byrow = 1))
-matplot(Y_wide[,1], Y_wide[,-1], type = 'l', lwd = .2, lty = 1,
+matplot(Y_wide[,1], Y_wide[,-1], type = 'l', lwd = .1, lty = 1,
         xlab = 'year', ylab = 'individual count', xaxt = 'n')
 lines(Y_wide[,1], wide_mean_fit, lwd = 2, col = 'red')
 lines(Y_wide[,1], wide_median_fit, lwd = 2, col = 'blue')
-matplot(Y_wide[,1], Y_wide[,-1], type = 'l', lwd = .2, ylim = c(0, 100),
+matplot(Y_wide[,1], Y_wide[,-1], type = 'l', lwd = .1, ylim = c(0, 100),
         xlab = 'year', ylab = 'individual count', xaxt = 'n', lty = 1)
 lines(Y_wide[,1], wide_mean_fit, lwd = 2, col = 'red')
 lines(Y_wide[,1], wide_median_fit, lwd = 2, col = 'blue')
@@ -872,13 +793,11 @@ Once ascertained the decreasing trend, the next step is to relate the individual
 
 $$\epsilon \sim Poi(\lambda)$$
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r count_hist}
 # load climate data
 X <- read.csv('../data/climate_pred.csv')[,-1]
-
 # combine data ----------------------------------------------------------------
-
 # species count
 # pre process data: create Y such that we will have the individual count
 # for each species for each year (min #rows required -> 30)
@@ -887,8 +806,6 @@ Y <- Y[order(Y$species), ] # sort data by species
 Y$individualCount <- round(
   as.numeric(Y$individualCount)
 ) # cast into num
-
-
 # inspect individual count distribution: we can try a Pois distr
 # par(mfrow = c(1,2))
 #hist(Y$individualCount)
@@ -925,26 +842,21 @@ thus varying the intercept of the model according to the species of interest.
 The spline degree has been chosen by making usage of the $BIC$ measure which aims to maximize the likelihood while taking into account a penalization for the number of parameters estimated. The optimal value has empirically shown to be $K= 5$ with the following variables: \textit{average rainfall} and \textit{average temperature}.
 
 Since we are including different predictors in the model, in order to get stable results we apply a pre-processing step which standardize the variables to have mean zero and variance one 
-$$ Z = \frac{X-\mu}{\sigma} $$
+$$ Z = \frac{X-\mu}{\sigma}$$
 
 
 ```{r glmer_model_fit}
 # center data -----------------------------------------------------------------
 cyear <- 1998
 Y$syear <- Y$year - cyear
-
 # further pred: preprocessing
 m_rain <- mean(Y$rain_obs, na.rm = TRUE)
 sd_rain <- sd(Y$rain_obs, na.rm = TRUE)
 Y$srain <- (Y$rain_obs - m_rain)/sd_rain
-
 m_temp <- mean(Y$temp_obs, na.rm = TRUE)
 sd_temp <- sd(Y$temp_obs, na.rm = TRUE)
 Y$stemp <- (Y$temp_obs - m_temp)/sd_temp
-
-
 # fit model -----------------------------------------------------------------
-
 # # define degree
 # bics <- rep(NA, 7)
 # for(i in 1:7){
@@ -957,7 +869,6 @@ Y$stemp <- (Y$temp_obs - m_temp)/sd_temp
 #   bics[i] <- BIC(fit_year_temp)
 # }
 # plot(1:7, bics, type = 'b', pch = 20)
-
 q_temp <- 5
 fit_year_temp <- lme4::glmer(
   # this model returns the best AIC among those explored
@@ -965,51 +876,52 @@ fit_year_temp <- lme4::glmer(
     ns(syear, q_temp) * srain + (1 + stemp| species), 
   family = 'poisson', data = Y
 )
-
 model_res <- summary(fit_year_temp)
 # xtable::xtable(model_res$coefficients, type = 'latex')
 ```
 
 
-
-From the model results presented in table \ref{tab:glmer_model_res}, we can observe how the coefficients related to the $year$ marginal term $\hat{\beta}_{i,year}$ are mainly negative. Moreover, the coefficients related to its interaction terms $\hat{\beta}_{i,year \times \omega}$ are mainly negative as well. On the other hand, we can easily identify positive coefficients for the marginal terms $\hat{\beta}_{\tau}$ and $\hat{\beta}_{r}$. However, their magnitude is relatively small compared to the terms effect they interact with $\hat{\beta}_{i,year, temp}$ and $\hat{\beta}_{i,year, rain}$, therefore, we expect an overall negative effect. 
-
-\end{multicols}
+From the model results presented in table \ref{tab:glmer_model_res}, we can observe how the coefficients related to the $year$, $rain$, and $\tau$  marginal terms $\hat{\beta}_{i,year}$, $\hat{\beta}_{rain}$, $\hat{\beta}_{\tau}$ are mainly positive. However, the model interaction terms, $\hat{\beta}_{i,year \times \omega}$ are mainly negative. Thus, we need to consider all these effects together in order to establish the relationship.
 
 
-\begin{table}[H]
+\onecolumn
+\begin{table}[bt]
 \centering
 \begin{tabular}{crrrr}
 \hline
 & Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
 \hline
-$\hat{\beta}_0$ & 3.14 & 0.20 & 15.84 & 0.00 \\ 
-$\hat{\beta}_{1, y}$ & -0.35 & 0.03 & -11.01 & 0.00 \\ 
-$\hat{\beta}_{2, y}$ & 0.16 & 0.03 & 4.85 & 0.00 \\ 
-$\hat{\beta}_{3, y}$ & -0.04 & 0.08 & -0.54 & 0.59 \\ 
-$\hat{\beta}_{4, y}$ & -1.00 & 0.04 & -24.94 & 0.00 \\ 
-$\hat{\beta}_{\tau}$ & 0.12 & 0.03 & 3.80 & 0.00 \\ 
-$\hat{\beta}_{r}$ & 0.23 & 0.02 & 11.50 & 0.00 \\ 
-$\hat{\beta}_{1, y \times \tau}$ & 0.20 & 0.03 & 6.40 & 0.00 \\ 
-$\hat{\beta}_{2, y \times \tau}$ & -0.52 & 0.04 & -13.65 & 0.00 \\ 
-$\hat{\beta}_{3, y \times \tau}$ & -0.44 & 0.08 & -5.52 & 0.00 \\ 
-$\hat{\beta}_{4, y \times \tau}$ & 0.21 & 0.04 & 5.41 & 0.00 \\ 
-$\hat{\beta}_{1, y \times r}$ & 0.01 & 0.02 & 0.36 & 0.72 \\ 
-$\hat{\beta}_{2, y \times r}$ & -0.80 & 0.03 & -22.94 & 0.00 \\ 
-$\hat{\beta}_{3, y \times r}$ & -0.78 & 0.05 & -14.36 & 0.00 \\ 
-$\hat{\beta}_{4, y \times r}$ & -0.01 & 0.05 & -0.11 & 0.91 \\ 
+ $\hat{\beta}_0$ & 2.829537 & 0.198497 & 14.254789 & 0.000000 \\ 
+ $\hat{\beta}_{1, y}$ & 0.008287 & 0.043617 & 0.189990 & 0.849317 \\ 
+ $\hat{\beta}_{2, y}$ & 0.425417 & 0.057715 & 7.371046 & 0.000000 \\ 
+ $\hat{\beta}_{3, y}$ & 0.045776 & 0.036597 & 1.250793 & 0.211010 \\ 
+ $\hat{\beta}_{4, y}$ & 0.722263 & 0.114729 & 6.295396 & 0.000000 \\ 
+ $\hat{\beta}_{5, y}$ & -0.807545 & 0.045591 & -17.712793 & 0.000000 \\ 
+ $\hat{\beta}_{\tau}$ & 0.361911 & 0.056974 & 6.352164 & 0.000000 \\ 
+ $\hat{\beta}_{rain}$ & 0.208523 & 0.025575 & 8.153318 & 0.000000 \\ 
+ $\hat{\beta}_{1, y \times \tau}$ & 0.120815 & 0.039645 & 3.047392 & 0.002308 \\ 
+ $\hat{\beta}_{2, y \times \tau}$ & -0.817581 & 0.057604 & -14.193191 & 0.000000 \\ 
+ $\hat{\beta}_{3, y \times \tau}$ & -0.368144 & 0.042014 & -8.762385 & 0.000000 \\ 
+ $\hat{\beta}_{4, y \times \tau}$ & -1.072883 & 0.104063 & -10.309945 & 0.000000 \\ 
+ $\hat{\beta}_{5, y \times \tau}$ & -0.084810 & 0.045199 & -1.876369 & 0.060605 \\ 
+ $\hat{\beta}_{1, y \times rain}$ & 0.056719 & 0.026509 & 2.139634 & 0.032384 \\ 
+ $\hat{\beta}_{2, y \times rain}$ & -0.435746 & 0.038606 & -11.287067 & 0.000000 \\ 
+ $\hat{\beta}_{3, y \times rain}$ & -0.614404 & 0.041138 & -14.935070 & 0.000000 \\ 
+ $\hat{\beta}_{4, y \times rain}$ & -0.755862 & 0.069450 & -10.883571 & 0.000000 \\ 
+ $\hat{\beta}_{5, y \times rain}$ & 0.070351 & 0.059929 & 1.173905 & 0.240433 \\ 
 \hline
 \end{tabular}
 \caption{Mixed effects model of the individual count on the temperature and rainfall data results}
 \label{tab:glmer_model_res}
 \end{table}
+\twocolumn
 
 
-\begin{multicols}{2}
+
 
 For the model of interest, we have assumed the error distributed as a \textit{Poisson} distribution, therefore, in the fitted vs residuals inspection, we run into a different behavior. In particular, in figure \ref{fig:glmer_res_fitted} we can observe how the majority of the fitted values are very small number close to zero with very few extreme values. Moreover, we can also observe how the variances grows with the magnitude of the fitted values. This diagnostic produce satisfactory results, hence the model is appropriate to describe the data.
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r glmer_diagnostic_res}
 plot(fitted(fit_year_temp), residuals(fit_year_temp),
      xlab = 'fitted values', ylab = 'residuals', col = 'grey40', lwd = .25)
@@ -1022,93 +934,59 @@ plot(fitted(fit_year_temp), residuals(fit_year_temp),
 With regard to the random effect, we have assumed a \textit{Normal} distribution for each of these. In figure \ref{fig:ranef_qq} we can inspect the results and notice the following:
 
 \begin{itemize}
-\item for the random intercept the assumption does not hold as we can notice a considerable discrepancy between the observed and theoretical quantiles \ref{fig:ranef_qq}. However, the intercept related variance is $\hat{\sigma}_0 =  1.3586$, which counts for the majority variance as we can see in figure \ref{fig:ranef_var}. For instance, in figure \ref{fig:ranef_distr} we can observe a very wide range of variation for the random intercept estimation with very few species around the zero and all the other which confidence interval does not contain the null values.
+\item for the random intercept the assumption does not hold as we can notice a considerable discrepancy between the observed and theoretical quantiles \ref{fig:ranef_qq}. However, the intercept related variance is $\hat{\sigma}_0 =  1.3586$, which counts for the majority variance as we can see in figure \ref{fig:ranef_qq} c). For instance, in figure \ref{fig:ranef_distr} we can observe a very wide range of variation for the random intercept estimation with very few species around the zero and all the other which confidence interval does not contain the null values.
 
-\item on the other hand, for the random slope, the empirical distribution agrees with the theoretical one in the central area, but is shows deficiencies in the tail regions, figure \ref{fig:ranef_qq}. Its contribution to the overall variance is much lower than the previous term but still significant, approximately $9\%$, figure \ref{fig:ranef_var}. With regard to the single term values, we can observe a much tighter range of variation, approximately $[\pm 1]$. Nevertheless, many species slope is estimated to be singificantly different from zero, hence worth including it.
+\item on the other hand, for the random slope, the empirical distribution agrees with the theoretical one in the central area, but is shows deficiencies in the tail regions, figure \ref{fig:ranef_qq}. Its contribution to the overall variance is much lower than the previous term but still significant, approximately $9\%$, figure \ref{fig:ranef_qq} c). With regard to the single term values, we can observe a much tighter range of variation, approximately $[\pm 1]$. Nevertheless, many species slope is estimated to be singificantly different from zero, hence worth including it.
 
 \end{itemize}
 
 
 
-\begin{figure}[H]
+
+\begin{figure}[bt]
 ```{r ranef_estimate}
 # extract object
 fit_ranef <- lme4::ranef(fit_year_temp, condVar = TRUE)
 fit_ranef_df <- fit_ranef$species
-
 # check qqplot
 P <- ncol(fit_ranef_df)
 mux <- sdx <- rep(NA, P)
+
+# par(mfrow = c(1,3))
 for(i in 1:P){
   
   # normality
   qqnorm(fit_ranef_df[,i], main = names(fit_ranef_df)[i])
   qqline(fit_ranef_df[,i], col = 'red', lwd = 1.5)
-
 }
-```
-\label{fig:ranef_qq}
-\caption{Random effects terms quantile - quantile plot}
-\end{figure}
 
-\begin{figure}[H]
-```{r ranef_var}
 sigma_eps <- 1.000
 sigma_0 <- 1.3586  
 sigma_temp <- 0.2597 
-
 vars <- c(sigma_0, sigma_temp, sigma_eps)
 names(vars) <- c('intercept','temperature','residuals')
-
 barplot(vars / sum(vars), border = NA, col = 'grey80',
         main = 'Random effect variance contribution')
 ```
-\label{fig:ranef_var}
-\caption{Random effects variance contribution}
+\label{fig:ranef_qq}
+\caption{a) Intercept random terms qqplot; b) temperature slope andom terms qqplot; c) variance components percentage contribution}
 \end{figure}
 
-\end{multicols}
-
-\begin{figure}[H]
-```{r ranef_dotplot, message=FALSE, fig.height=7}
+\onecolumn
+\begin{figure}[bt]
+```{r ranef_dotplot, message=FALSE, fig.height=6}
 dotplot_ranef <- lattice::dotplot(fit_ranef)
 dotplot_ranef$species
 ```
 \label{fig:ranef_distr}
 \caption{Individual random effect for each specie}
 \end{figure}
+\twocolumn
 
-\clearpage
-
-\begin{multicols}{2}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{Species application}
 
 In the previous section, we have estimated a random effect model to allow for the prediction of the response variable, individual count, by making usage of non-linear relationships with the climate phenomenon.
 
-We now want to present these result for each of the species-genes pairs and compare them with the observed values. Moreover, we provide estimated confidence interval for the next 50 years and what might happen to these species, following the current trend. All the results we are going to describe are depicted in figure \ref{fig:species_applciation_3}. In particular, we can observe that for some of these, the model fits very well the observed data and its trend evolution, see species-pairs $\{4, 6, 19, 25, 36, 38  \}$, while for others, the fit is not suitable at all, see species-genes $\{24, 39, 45 \}$. Nevertheless, excluded the most extreme cases, we can see that the model predicted trends agree with the overall wildlife evolution. In particular, for each of these species, we can notice how easy it is, according to the estimated model, to reach one individual left, in the lower bound, which would not allow for the species survival. According to the estimated model, which has shown to capture the overall data structure, this might happen as soon as in ten years time.  
+We now want to present these result for each of the species-genes pairs and compare them with the observed values. Moreover, we provide estimated confidence interval for the next 50 years and what might happen to these species, following the current trend. All the results we are going to describe are depicted in figure \ref{fig:species_applciation_3}. In particular, we can observe that for some of these, the model fits very well the observed data and its trend evolution, see species-pairs $\{4, 6, 19, 25, 36, 38  \}$, while for others, the fit is not suitable at all, see species-genes $\{24, 39, 45 \}$. Nevertheless, excluded the most extreme cases, we can see that the model predicted trends agree with the overall wildlife evolution. In particular, for each of these species, we can notice how easy it is, according to the estimated model, to reach one individual left, in the lower bound, which would not allow for the species survival. According to the estimated model, which has shown to capture the overall data structure, this might happen as soon as in 15 years time.  
 
 ```{r rmse_barplot}
 # fit model
@@ -1116,11 +994,9 @@ Y$fitted[complete.cases(Y)] <- fitted(fit_year_temp)
 spec_tab <- table(Y$species)
 rmse <- rep(NA, length(spec_tab))
 for(i in 1:length(spec_tab)){
-
   # subset
   ispec <- names(spec_tab[i])
   iy <- Y[Y$species == names(spec_tab[i]),]
-
   # compute rmse
   rmse[i] <- median(
     ( (iy$individualCount - iy$fitted) / iy$individualCount )^2,
@@ -1134,12 +1010,11 @@ order_idx <- order(rmse, decreasing = 1)
 # barplot(rmse[order_idx], main = 'median RMSE', border = NA)
 ```
 
-\end{multicols}
+
 
 
 ```{r top_bot_rmse}
 # X pre processing so taht it fits the model data and assumption
-
 X$year <- min(X$year, na.rm = TRUE) + X$time
 X$syear <- X$year - cyear
 X$srain_lb <- (X$rain_pred_lb - m_rain) / sd_rain
@@ -1149,8 +1024,6 @@ X$stemp_ub <- (X$temp_pred_ub - m_temp) / sd_temp
 X$srain <- (X$srain_ub - X$srain_lb)/2 + X$srain_lb
 X$stemp <- (X$stemp_ub - X$stemp_lb)/2 + X$stemp_lb
 X <- X[X$year >= 1975,]
-
-
 # extract coefficients SE from model estimation
 se <-
   sqrt(
@@ -1162,7 +1035,6 @@ se <-
         )
       )
     )
-
 # compute model 95 confidence interval for model coefficients
 q <- qnorm(.975)
 tab <- data.frame(
@@ -1170,18 +1042,17 @@ tab <- data.frame(
   pe = lme4::fixef(fit_year_temp),
   ub = lme4::fixef(fit_year_temp) + q * se
   )
-
 # create both lb and ub model
 fit_year_temp_lb <- fit_year_temp_ub <- fit_year_temp
 fit_year_temp_lb@beta <- tab$lb
 fit_year_temp_ub@beta <- tab$ub
-
 # extract species names
 spec <- names(rmse)
+hit_one <- rep(NA, length(spec))
 ```
 
-
-\begin{figure}[H]
+\onecolumn
+\begin{figure}[bt]
 ```{r species_18}
 # for each specie, make prediction and plot result
 par(mfrow = c(3,3), las = 2, mar = c(3,3,2,0))
@@ -1257,11 +1128,12 @@ for(i in 1:18){
     col = 'red')
   
   # indentify 0 cases
-  zero_case <- which(round(pred_lb) == 0)
+  zero_case <- which(round(pred_lb) == 1)
   zero_case <- zero_case[zero_case > 2021-1975]
   if(length(zero_case) > 0) {
     abline(v = X$year[zero_case[1]], lty = 2)
     legend('topright', col = 'grey', lty = 2, legend = X$year[zero_case[1]], bty = 'n')
+    hit_one[i] <- X$year[zero_case[1]]
   }
 }
 ```
@@ -1270,7 +1142,7 @@ for(i in 1:18){
 
 \clearpage
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r species_36}
 # for each specie, make prediction and plot result
 par(mfrow = c(3,3), las = 2, mar = c(3,3,2,0))
@@ -1347,11 +1219,12 @@ for(i in 19:36){
   
   
   # indentify 0 cases
-  zero_case <- which(round(pred_lb) == 0)
+  zero_case <- which(round(pred_lb) == 1)
   zero_case <- zero_case[zero_case > 2021-1975]
   if(length(zero_case) > 0) {
     abline(v = X$year[zero_case[1]], lty = 2)
     legend('topright', col = 'grey', lty = 2, legend = X$year[zero_case[1]], bty = 'n')
+    hit_one[i] <- X$year[zero_case[1]]
   }
 }
 ```
@@ -1359,7 +1232,7 @@ for(i in 19:36){
 \end{figure}
 
 
-\begin{figure}[H]
+\begin{figure}[bt]
 ```{r species_50}
 # for each specie, make prediction and plot result
 par(mfrow = c(3,3), las = 2, mar = c(3,3,2,0))
@@ -1436,63 +1309,28 @@ for(i in 37:length(spec)){
   
   
   # indentify 0 cases
-  zero_case <- which(round(pred_lb) == 0)
+  zero_case <- which(round(pred_lb) == 1)
   zero_case <- zero_case[zero_case > 2021-1975]
   if(length(zero_case) > 0) {
     abline(v = X$year[zero_case[1]], lty = 2)
     legend('topright', col = 'grey', lty = 2, legend = X$year[zero_case[1]], bty = 'n')
+    hit_one[i] <- X$year[zero_case[1]]
   }
 }
 ```
 \label{fig:species_applciation_3}
 \end{figure}
+\twocolumn
 
 \clearpage
-
-
-\begin{multicols}{2}
-
-
 
 \section{Conclusion}
 \label{sec:conclusion}
 
 \section{Appendices}
 
-
-
-
-
-
-
-
-
-
-
 \bibliography{sample.bib} 
-\bibliographystyle{ieeetr} 
-
-
-
-
-
-
-
-
-
-
-\end{multicols}
-
-
-
-
-
-
-
-
-
-
-
+\bibliographystyle{ieeetr}
 
 
 

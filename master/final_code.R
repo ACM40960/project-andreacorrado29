@@ -620,100 +620,43 @@ lines(Y_wide[,1], wide_median_fit, lwd = 2, col = 'blue')
 
 
 
-
-
-
-
-
-
-
-
-
-
-stop('arrived here 20210812 1313')
-
-
-
-
-
-
-
-
-
-
-
-
-
-# load climate data
+# load climate data into the environment
 X <- read.csv('../data/climate_pred.csv')[,-1]
 
-# combine data ----------------------------------------------------------------
+# combine climate data and species count by year ---------------------------------------------
 
-# species count
-# pre process data: create Y such that we will have the individual count
-# for each species for each year (min #rows required -> 30)
 Y <- merge(Y, X, by = 'year', all.x = TRUE) # join data by year
 Y <- Y[order(Y$species), ] # sort data by species
 Y$individualCount <- round(
   as.numeric(Y$individualCount)
-) # cast into num
+) # cast into integere
 
 
 # inspect individual count distribution: we can try a Pois distr
-# par(mfrow = c(1,2))
-#hist(Y$individualCount)
 barplot(table(Y$individualCount) / nrow(Y), border = NA, col = viridis(600),
         xlab = 'individual count', ylab = 'frequencies')
-# hist(Y$individualCount[Y$individualCount < 300], main= 'Count distribution',
-#      xlab = 'counts', col = ggplot2::alpha(viridis(15, direction = 1), .4),
-#      border = NA, freq = FALSE)
-#par(mfrow = c(1,1))
-```
-\label{fig:counts_hist}
-\caption{Distribution for animal counts}
-\end{figure}
 
-We now want to estimate a model describing the evolution of the population w.r.t. the climate input feature. In order to do so, we need to employ mixed-effect models, discussed in section \ref{sec:techback}, since its theory allows us to include data from different classes, namely their species, and follow them longitudinally taking account for the within correlation. 
 
-The model to be estimated is of the form 
-$$ \mathbf{count}_i = \mathbf{\alpha}_{1,i}\ \mathbf{Z}_i + f(\mathbf{X}) + \mathbf{\epsilon}$$
-  where $\epsilon \sim Poi(\lambda)$ and $\alpha_{1,i}$ represents the random intercept. The same can be said for the random slope related to the temperature, In fact
-$$f(\tau) = \sum_{k=1}^{K+M}\beta_k\ g_k(\tau) + \alpha_{2,i}\ Z_{ij}$$
-  
-  And positing a distribution on the random terms $\mathbf{\alpha}_i \sim N(\mu_{\alpha_i}, \sigma_{\alpha_i}^2)$ indicates a random intercept which contribution depends on the $\mathbf{Z} \in \mathbb{N}$ matrix which indicates the species belonging
-
-\begin{equation}
-z_{ij}= 
-  \begin{cases}
-1 \text{ if observation i is in species j } \\
-0 \text{ otherwise }
-\end{cases}
-\end{equation}
-
-thus varying the intercept of the model according to the species of interest. 
-
-The spline degree has been chosen by making usage of the $BIC$ measure which aims to maximize the likelihood while taking into account a penalization for the number of parameters estimated. The optimal value has empirically shown to be $K= 5$ with the following variables: \textit{average rainfall} and \textit{average temperature}.
-
-Since we are including different predictors in the model, in order to get stable results we apply a pre-processing step which standardize the variables to have mean zero and variance one 
-$$ Z = \frac{X-\mu}{\sigma} $$
-  
-  
-  ```{r glmer_model_fit}
-# center data -----------------------------------------------------------------
+# data preprocessing: shift data so that it is centered on zero ---------------------------
 cyear <- 1998
 Y$syear <- Y$year - cyear
 
-# further pred: preprocessing
-m_rain <- mean(Y$rain_obs, na.rm = TRUE)
-sd_rain <- sd(Y$rain_obs, na.rm = TRUE)
-Y$srain <- (Y$rain_obs - m_rain)/sd_rain
-
-m_temp <- mean(Y$temp_obs, na.rm = TRUE)
-sd_temp <- sd(Y$temp_obs, na.rm = TRUE)
-Y$stemp <- (Y$temp_obs - m_temp)/sd_temp
+# standardize rain: mean 0 variance 1 and store result to be applied to out out sample obs
+m_rain <- mean(Y$rain_obs, na.rm = TRUE) # compute mean
+sd_rain <- sd(Y$rain_obs, na.rm = TRUE) # compute sd
+Y$srain <- (Y$rain_obs - m_rain)/sd_rain # (x-m)/s
 
 
-# fit model -----------------------------------------------------------------
+# standardize temp: mean 0 variance 1 and store result to be applied to out out sample obs
+m_temp <- mean(Y$temp_obs, na.rm = TRUE) # compute mean
+sd_temp <- sd(Y$temp_obs, na.rm = TRUE) # compute sd 
+Y$stemp <- (Y$temp_obs - m_temp)/sd_temp # (x-m)/s
+
+
+# empirical trial to choose the optimum spline degree --------------------------
+# here we fit the model where the reponse is the individual count for each 
+# species-genes pairs and the predictors are the climate data (rain, temp)
+# and some interactions, those which have shown to be significant
 
 # # define degree
 # bics <- rep(NA, 7)
@@ -728,7 +671,9 @@ Y$stemp <- (Y$temp_obs - m_temp)/sd_temp
 # }
 # plot(1:7, bics, type = 'b', pch = 20)
 
-q_temp <- 5
+q_temp <- 5 # choose spline degree 
+
+# fit model
 fit_year_temp <- lme4::glmer(
   # this model returns the best AIC among those explored
   individualCount ~ ns(syear, q_temp) * stemp +
@@ -736,159 +681,68 @@ fit_year_temp <- lme4::glmer(
   family = 'poisson', data = Y
 )
 
+# store model summary
 model_res <- summary(fit_year_temp)
-# xtable::xtable(model_res$coefficients, type = 'latex')
-```
+xtable::xtable(model_res$coefficients, type = 'latex') # latex table format
 
 
+# model diagnostic: as it is possion we expect most of the fitted to be low values
+# and the residuals to be randomly distributed across zero. we also expect
+# the variance to increas with the mean, as per poisson assumption
 
-From the model results presented in table \ref{tab:glmer_model_res}, we can observe how the coefficients related to the $year$ marginal term $\hat{\beta}_{i,year}$ are mainly negative. Moreover, the coefficients related to its interaction terms $\hat{\beta}_{i,year \times \omega}$ are mainly negative as well. On the other hand, we can easily identify positive coefficients for the marginal terms $\hat{\beta}_{\tau}$ and $\hat{\beta}_{r}$. However, their magnitude is relatively small compared to the terms effect they interact with $\hat{\beta}_{i,year, temp}$ and $\hat{\beta}_{i,year, rain}$, therefore, we expect an overall negative effect. 
-
-\end{multicols}
-
-
-\begin{table}[H]
-\centering
-\begin{tabular}{crrrr}
-\hline
-& Estimate & Std. Error & z value & Pr($>$$|$z$|$) \\ 
-\hline
-$\hat{\beta}_0$ & 3.14 & 0.20 & 15.84 & 0.00 \\ 
-$\hat{\beta}_{1, y}$ & -0.35 & 0.03 & -11.01 & 0.00 \\ 
-$\hat{\beta}_{2, y}$ & 0.16 & 0.03 & 4.85 & 0.00 \\ 
-$\hat{\beta}_{3, y}$ & -0.04 & 0.08 & -0.54 & 0.59 \\ 
-$\hat{\beta}_{4, y}$ & -1.00 & 0.04 & -24.94 & 0.00 \\ 
-$\hat{\beta}_{\tau}$ & 0.12 & 0.03 & 3.80 & 0.00 \\ 
-$\hat{\beta}_{r}$ & 0.23 & 0.02 & 11.50 & 0.00 \\ 
-$\hat{\beta}_{1, y \times \tau}$ & 0.20 & 0.03 & 6.40 & 0.00 \\ 
-$\hat{\beta}_{2, y \times \tau}$ & -0.52 & 0.04 & -13.65 & 0.00 \\ 
-$\hat{\beta}_{3, y \times \tau}$ & -0.44 & 0.08 & -5.52 & 0.00 \\ 
-$\hat{\beta}_{4, y \times \tau}$ & 0.21 & 0.04 & 5.41 & 0.00 \\ 
-$\hat{\beta}_{1, y \times r}$ & 0.01 & 0.02 & 0.36 & 0.72 \\ 
-$\hat{\beta}_{2, y \times r}$ & -0.80 & 0.03 & -22.94 & 0.00 \\ 
-$\hat{\beta}_{3, y \times r}$ & -0.78 & 0.05 & -14.36 & 0.00 \\ 
-$\hat{\beta}_{4, y \times r}$ & -0.01 & 0.05 & -0.11 & 0.91 \\ 
-\hline
-\end{tabular}
-\caption{Mixed effects model of the individual count on the temperature and rainfall data results}
-\label{tab:glmer_model_res}
-\end{table}
-
-
-\begin{multicols}{2}
-
-For the model of interest, we have assumed the error distributed as a \textit{Poisson} distribution, therefore, in the fitted vs residuals inspection, we run into a different behavior. In particular, in figure \ref{fig:glmer_res_fitted} we can observe how the majority of the fitted values are very small number close to zero with very few extreme values. Moreover, we can also observe how the variances grows with the magnitude of the fitted values. This diagnostic produce satisfactory results, hence the model is appropriate to describe the data.
-
-\begin{figure}[H]
-```{r glmer_diagnostic_res}
 plot(fitted(fit_year_temp), residuals(fit_year_temp),
      xlab = 'fitted values', ylab = 'residuals', col = 'grey40', lwd = .25)
-```
-\label{fig:glmer_res_fitted}
-\caption{Distribution for animal counts}
-\end{figure}
 
-
-With regard to the random effect, we have assumed a \textit{Normal} distribution for each of these. In figure \ref{fig:ranef_qq} we can inspect the results and notice the following:
-  
-  \begin{itemize}
-\item for the random intercept the assumption does not hold as we can notice a considerable discrepancy between the observed and theoretical quantiles \ref{fig:ranef_qq}. However, the intercept related variance is $\hat{\sigma}_0 =  1.3586$, which counts for the majority variance as we can see in figure \ref{fig:ranef_var}. For instance, in figure \ref{fig:ranef_distr} we can observe a very wide range of variation for the random intercept estimation with very few species around the zero and all the other which confidence interval does not contain the null values.
-
-\item on the other hand, for the random slope, the empirical distribution agrees with the theoretical one in the central area, but is shows deficiencies in the tail regions, figure \ref{fig:ranef_qq}. Its contribution to the overall variance is much lower than the previous term but still significant, approximately $9\%$, figure \ref{fig:ranef_var}. With regard to the single term values, we can observe a much tighter range of variation, approximately $[\pm 1]$. Nevertheless, many species slope is estimated to be singificantly different from zero, hence worth including it.
-
-\end{itemize}
-
-
-
-\begin{figure}[H]
-```{r ranef_estimate}
-# extract object
+# extract random effect from the model
 fit_ranef <- lme4::ranef(fit_year_temp, condVar = TRUE)
 fit_ranef_df <- fit_ranef$species
 
-# check qqplot
+# check qqplot for each of the random effect
 P <- ncol(fit_ranef_df)
 mux <- sdx <- rep(NA, P)
 for(i in 1:P){
   
-  # normality
+  # normality check
   qqnorm(fit_ranef_df[,i], main = names(fit_ranef_df)[i])
   qqline(fit_ranef_df[,i], col = 'red', lwd = 1.5)
   
 }
-```
-\label{fig:ranef_qq}
-\caption{Random effects terms quantile - quantile plot}
-\end{figure}
 
-\begin{figure}[H]
-```{r ranef_var}
+# extract model terms contribution to variance
 sigma_eps <- 1.000
 sigma_0 <- 1.3586  
 sigma_temp <- 0.2597 
 
+# combine the variances into a vector
 vars <- c(sigma_0, sigma_temp, sigma_eps)
-names(vars) <- c('intercept','temperature','residuals')
+names(vars) <- c('intercept','temperature','residuals') # assign names
 
+
+# plot percentage contirbution of each term to total variance
 barplot(vars / sum(vars), border = NA, col = 'grey80',
         main = 'Random effect variance contribution')
-```
-\label{fig:ranef_var}
-\caption{Random effects variance contribution}
-\end{figure}
 
-\end{multicols}
 
-\begin{figure}[H]
-```{r ranef_dotplot, message=FALSE, fig.height=7}
+# plot confidence interval for each of the random effect term (intercept + slope)
 dotplot_ranef <- lattice::dotplot(fit_ranef)
 dotplot_ranef$species
-```
-\label{fig:ranef_distr}
-\caption{Individual random effect for each specie}
-\end{figure}
-
-\clearpage
-
-\begin{multicols}{2}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\section{Species application}
-
-To make easier, the model comprehension, we will now subset the data to one of the species with the highest numerousness and focus the model analysis exclusively on it. 
-
-
-```{r rmse_barplot}
-# fit model
+# extract fitted values from the model and attach to the original data set
 Y$fitted[complete.cases(Y)] <- fitted(fit_year_temp)
-spec_tab <- table(Y$species)
-rmse <- rep(NA, length(spec_tab))
+spec_tab <- table(Y$species) # compute species numerousness
+rmse <- rep(NA, length(spec_tab)) # initialize vector to store rmse (percentage)
+
+
+##################### RMSE hasn't been included in final report ############################
+
+# for each species compute median rmse percentage and store into vector
 for(i in 1:length(spec_tab)){
   
   # subset  
-  ispec <- names(spec_tab[i])
-  iy <- Y[Y$species == names(spec_tab[i]),]
+  ispec <- names(spec_tab[i]) # select species
+  iy <- Y[Y$species == names(spec_tab[i]),] # subset data
   
   # compute rmse
   rmse[i] <- median(
@@ -896,28 +750,26 @@ for(i in 1:length(spec_tab)){
     na.rm = TRUE
   )
 }
-rmse <- sqrt(rmse)
-names(rmse) <- names(spec_tab)
-order_idx <- order(rmse, decreasing = 1)
+rmse <- sqrt(rmse) # compute square root
+names(rmse) <- names(spec_tab) # assign names to vector
+order_idx <- order(rmse, decreasing = 1) # compute decreasing order indexes
+
+# plot the results
 par(las = 2, mar = c(14, 4, 2, 2), mfrow = c(1,1))
 barplot(rmse[order_idx], main = 'median RMSE', border = NA)
-```
 
-\end{multicols}
+#############################################################################################
 
-
-```{r top_bot_rmse}
-# X pre processing so taht it fits the model data and assumption
-
-X$year <- min(X$year, na.rm = TRUE) + X$time
-X$syear <- X$year - cyear
-X$srain_lb <- (X$rain_pred_lb - m_rain) / sd_rain
-X$srain_ub <- (X$rain_pred_ub - m_rain) / sd_rain
-X$stemp_lb <- (X$temp_pred_lb - m_temp) / sd_temp
-X$stemp_ub <- (X$temp_pred_ub - m_temp) / sd_temp
-X$srain <- (X$srain_ub - X$srain_lb)/2 + X$srain_lb
-X$stemp <- (X$stemp_ub - X$stemp_lb)/2 + X$stemp_lb
-X <- X[X$year >= 1975,]
+# apply pre processing to X so that it matches the model data frame
+X$year <- min(X$year, na.rm = TRUE) + X$time # compute long years
+X$syear <- X$year - cyear # center year
+X$srain_lb <- (X$rain_pred_lb - m_rain) / sd_rain # std rain lb
+X$srain_ub <- (X$rain_pred_ub - m_rain) / sd_rain # std rain ub
+X$stemp_lb <- (X$temp_pred_lb - m_temp) / sd_temp # std temp lb
+X$stemp_ub <- (X$temp_pred_ub - m_temp) / sd_temp # std temp ub
+X$srain <- (X$srain_ub - X$srain_lb)/2 + X$srain_lb # compute rain point estimate
+X$stemp <- (X$stemp_ub - X$stemp_lb)/2 + X$stemp_lb # compute temp point estimate
+X <- X[X$year >= 1975,] # subset data to those higher than 1975
 
 
 # extract coefficients SE from model estimation
@@ -933,28 +785,26 @@ se <-
   )
 
 # compute model 95 confidence interval for model coefficients
-q <- qnorm(.975)
-tab <- data.frame(
+q <- qnorm(.975) # compute normal quantile
+tab <- data.frame( # store in a data frame
   lb = lme4::fixef(fit_year_temp) - q * se,
   pe = lme4::fixef(fit_year_temp),
   ub = lme4::fixef(fit_year_temp) + q * se
 )
 
-# create both lb and ub model
+# create both lb and ub copy model
 fit_year_temp_lb <- fit_year_temp_ub <- fit_year_temp
-fit_year_temp_lb@beta <- tab$lb
-fit_year_temp_ub@beta <- tab$ub
+fit_year_temp_lb@beta <- tab$lb # assign lower bounded coefficients
+fit_year_temp_ub@beta <- tab$ub # assign upper bounded coefficients
 
 # extract species names
 spec <- names(rmse)
-```
 
 
-\begin{figure}[H]
-```{r species_18}
-# for each specie, make prediction and plot result
 par(mfrow = c(3,3), las = 2, mar = c(3,3,2,0))
-for(i in 1:18){
+
+# for each of the species - genes involved
+for(i in 1:length(spec)){
   
   # predict upper and lower bound according to species
   pred_lb <-  predict(
@@ -1025,243 +875,19 @@ for(i in 1:18){
     lwd = 1.5,
     col = 'red')
   
-  # indentify 0 cases
-  zero_case <- which(round(pred_lb) == 0)
+  # indentify 1 cases
+  zero_case <- which(round(pred_lb) == 1)
+  zero_case <- zero_case[zero_case > 2021-1975]
+
+  # add vertical line to indicate 1 individual hit
   if(length(zero_case) > 0) {
     abline(v = X$year[zero_case[1]], lty = 2)
     legend('topright', col = 'grey', lty = 2, legend = X$year[zero_case[1]], bty = 'n')
+    hit_one[i] <- X$year[zero_case[1]] # store result
   }
 }
-```
-\label{fig:species_applciation_1}
-\end{figure}
-
-\clearpage
-
-\begin{figure}[H]
-```{r species_36}
-# for each specie, make prediction and plot result
-par(mfrow = c(3,3), las = 2, mar = c(3,3,2,0))
-for(i in 19:36){
-  
-  # predict upper and lower bound according to species
-  pred_lb <-  predict(
-    fit_year_temp_lb,
-    data.frame(
-      syear = X$syear,
-      stemp = X$stemp_lb,
-      srain = X$srain_lb,
-      species = spec[i]
-    ),
-    type = 'response'
-  )
-  pred_ub <-  predict(
-    fit_year_temp_ub,
-    data.frame(
-      syear = X$syear,
-      stemp = X$stemp_ub,
-      srain = X$srain_ub,
-      species = spec[i]
-    ),
-    type = 'response'
-  )
-  
-  # compute point estimate
-  pred_pe <- (pred_ub - pred_lb)/2 + pred_lb
-  
-  
-  # ylim range values
-  ylim <- c(0, 
-            max(
-              Y$individualCount[Y$species == spec[i]],
-              pred_lb, pred_ub
-            )
-  )
-  
-  # plot observed data
-  plot(
-    X$year,
-    c(
-      Y$individualCount[Y$species == spec[i]],
-      rep(NA, nrow(X) - sum(Y$species == spec[i]))
-    ),
-    type = 'l',
-    ylim = ylim,
-    xlab = '',
-    ylab = paste(spec[i],'individual count'),
-    main = paste0(i,': ',spec[i]),
-    xaxt = 'n'
-  )
-  
-  
-  # plot axis value at bottom line
-  if(i %% 18 > 15 | i %% 18 == 0) axis(1, at = X$year, labels = X$year, tick = FALSE)
-  
-  # superimpose estimated confidence interval
-  polygon(
-    c(X$year, rev(X$year)),
-    c(pred_lb, rev(pred_ub)),
-    border = NA,
-    col = ggplot2::alpha(2, .2)
-  )
-  
-  
-  # superimpose point estimate
-  lines(
-    X$year,
-    pred_pe,
-    lwd = 1.5,
-    col = 'red')
-  
-  
-  # indentify 0 cases
-  zero_case <- which(round(pred_lb) == 0)
-  if(length(zero_case) > 0) {
-    abline(v = X$year[zero_case[1]], lty = 2)
-    legend('topright', col = 'grey', lty = 2, legend = X$year[zero_case[1]], bty = 'n')
-  }
-}
-```
-\label{fig:species_applciation_2}
-\end{figure}
 
 
-\begin{figure}[H]
-```{r species_50}
-# for each specie, make prediction and plot result
-par(mfrow = c(3,3), las = 2, mar = c(3,3,2,0))
-for(i in 37:length(spec)){
-  
-  # predict upper and lower bound according to species
-  pred_lb <-  predict(
-    fit_year_temp_lb,
-    data.frame(
-      syear = X$syear,
-      stemp = X$stemp_lb,
-      srain = X$srain_lb,
-      species = spec[i]
-    ),
-    type = 'response'
-  )
-  pred_ub <-  predict(
-    fit_year_temp_ub,
-    data.frame(
-      syear = X$syear,
-      stemp = X$stemp_ub,
-      srain = X$srain_ub,
-      species = spec[i]
-    ),
-    type = 'response'
-  )
-  
-  # compute point estimate
-  pred_pe <- (pred_ub - pred_lb)/2 + pred_lb
-  
-  
-  # ylim range values
-  ylim <- c(0, 
-            max(
-              Y$individualCount[Y$species == spec[i]],
-              pred_lb, pred_ub
-            )
-  )
-  
-  # plot observed data
-  plot(
-    X$year,
-    c(
-      Y$individualCount[Y$species == spec[i]],
-      rep(NA, nrow(X) - sum(Y$species == spec[i]))
-    ),
-    type = 'l',
-    ylim = ylim,
-    xlab = '',
-    ylab = paste(spec[i],'individual count'),
-    main = paste0(i,': ',spec[i]),
-    xaxt = 'n'
-  )
-  
-  
-  # plot axis value at bottom line
-  if(i %% 18 > 15 | i %% 18 == 0) axis(1, at = X$year, labels = X$year, tick = FALSE)
-  
-  # superimpose estimated confidence interval
-  polygon(
-    c(X$year, rev(X$year)),
-    c(pred_lb, rev(pred_ub)),
-    border = NA,
-    col = ggplot2::alpha(2, .2)
-  )
-  
-  
-  # superimpose point estimate
-  lines(
-    X$year,
-    pred_pe,
-    lwd = 1.5,
-    col = 'red')
-  
-  
-  # indentify 0 cases
-  zero_case <- which(round(pred_lb) == 0)
-  if(length(zero_case) > 0) {
-    abline(v = X$year[zero_case[1]], lty = 2)
-    legend('topright', col = 'grey', lty = 2, legend = X$year[zero_case[1]], bty = 'n')
-  }
-}
-```
-\label{fig:species_applciation_2}
-\end{figure}
-
-\clearpage
-
-
-\begin{multicols}{2}
-
-
-
-\section{Conclusion}
-\label{sec:conclusion}
-
-\section{Appendices}
-
-
-
-
-
-
-
-
-
-
-
-\bibliography{sample.bib} 
-\bibliographystyle{ieeetr} 
-
-
-
-
-
-
-
-
-
-
-\end{multicols}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# compute stas
+mean(hit_one)
+median(hit_one)
