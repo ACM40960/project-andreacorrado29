@@ -1,7 +1,7 @@
 # SA Drought: consequences on species survival
 
 ## Overview 
-Interest to climate change has recently grown considerably. Here, we go through the main phenomenons such as rainfall amount and temperature to understand how their trend is evolving over time.
+Interest to climate change has recently grown considerably. Here, we go through the main phenomenons such as rainfall amount and temperature to understand how their trend is evolving over time. 
 
 #### Rain & Temperature over time
 
@@ -13,11 +13,11 @@ Interest to climate change has recently grown considerably. Here, we go through 
 
 #### Wildlife species survival 
 
-Moreover, we are interested to the relationship this phenomenon has with the wildife survival. in particular, in *South Africa* there have been severe drought which have shown to considerably influence the animals death. 
+Moreover, we are interested to the relationship this phenomenon has with the wildife survival. in particular, in *South Africa* there have been severe drought which have shown to considerably influence the animals death. Here, it is to observe how both the individual count mean and median value are changing over time.
 
 <img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/count.gif" width=40%>
 
-According to the current trend, what would happen in 50 years time?  check the report  `20205529_final.pdf` to find it out.
+The question we try to answer is: *according to the current trend, what would happen in 50 years time to these animals?*  check the report  `20205529_final.pdf` to find it out.
 
 ## Installation instruction
 
