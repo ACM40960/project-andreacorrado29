@@ -43,7 +43,7 @@ In order to run the code you need to install different external packages. To do 
 - get into the project folder `cd <project_folder_path>`
 - run the script into the master folder `Rscript ./master/pacakges_install.R`
 
-This script will install all the package need for the project that are not available yet in the local machine. If you wish to install other packages, you can do that by `install.packages('<package_name')` into the `R` console, where `<package_name>` is the name of the package you wish to install.
+This script will install all the packages needed for the project that are not available yet in the local machine. If you wish to install other packages, you can do that by `install.packages('<package_name')` into the `R` console, where `<package_name>` is the name of the package you wish to install.
 
 
 ## Data Source
