@@ -4,6 +4,11 @@
 #                               useful functions                              #
 # --------------------------------------------------------------------------- #
 
+# function to allow for easy data (x,y) plot plus 
+# non parametric fit estimated according to the value 
+# of the span f given in input to the function
+# plus other optional graphics parameters
+
 plot_lowess <- function(
   x, # input data
   y, # response
