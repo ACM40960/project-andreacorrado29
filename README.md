@@ -7,6 +7,8 @@ Interest to climate change has recently grown considerably. Here, we go through 
 
 <br>
 
+<table><tr><td><img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/rain.gif" width=40%></td><td><img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/temp.gif" width=40%></td></tr></table>"
+
 <img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/rain.gif" width=40%>
 <img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/temp.gif" width=40%>
 
@@ -17,7 +19,7 @@ Moreover, we are interested to the relationship this phenomenon has with the wil
 
 <img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/count.gif" width=40%>
 
-The question we try to answer is: *according to the current trend, what would happen in 50 years time to these animals?*  check the report  `20205529_final.pdf` to find it out.
+The question we try to answer is: *according to the current trend, what would happen in 50 years time to these animals?*  check the report  `report_20205529.pdf` to find it out.
 
 ## Installation instruction
 
@@ -80,7 +82,6 @@ The folder `master` contains:
 - `final_code.R` the `R` source code for reproducibility
 - `functions.R` the `R` script with useful function to be sourced
 - `packages_install.R` the `R` script to install all the useful packages for the analysis
-
 - `git_ACM40960.Rproj` the `RStudio` environment used for the project
 
 The folder `figures` contains:
