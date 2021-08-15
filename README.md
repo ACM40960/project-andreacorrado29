@@ -4,7 +4,7 @@
 #### Module ACM40960 - Lecturer Dr Sarp Akcay
 
 ## Overview 
-Interest to climate change has recently grown considerably. Here, we go through the main phenomenons such as rainfall amount and temperature to understand how their trend is evolving over time. 
+Interest to climate change has recently grown considerably. Here, we go through the main phenomenons such as rainfall amount and temperature to understand how their trends are evolving over time. 
 
 #### Rain & Temperature over time
 
@@ -14,13 +14,13 @@ Interest to climate change has recently grown considerably. Here, we go through 
 
 #### Wildlife species survival 
 
-Moreover, we are interested to the relationship this phenomenon has with the wildife survival. in particular, in *South Africa* there have been severe drought which have shown to considerably influence the animals death. Here, it is to observe how both the individual count mean and median value are changing over time.
+Moreover, we are interested to the relationship this phenomenon has with the wildife survival. in particular, in *South Africa* there have been severe droughts which have shown to considerably influence the animals survival. Here, it is to observe how both the individual count mean and median value are changing over time.
 
 <img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/count.gif" width=40%>
 
 The question we try to answer is: *according to the current trend, what would happen in 50 years time to these animals?*  check the report  `report_20205529.pdf` to find it out.
 
-**NOTE:** FIgure 12 has had a rendering issue on the lines opacity which I have not been able to fix yet. Consider rendering the figure from `final_code.R` at line 613:623.
+**NOTE:** Figure 12 within the report has had a rendering issue on the lines opacity which I have not been able to fix yet. Consider rendering the figure from `final_code.R` at lines 613:623 for the original plot.
 
 ## Installation instruction
 
@@ -45,20 +45,20 @@ In order to run the code you need to install different external packages. To do 
 - get into the project folder `cd <project_folder_path>`
 - run the script into the master folder `Rscript ./master/pacakges_install.R`
 
-This script will install all the packages needed for the project that are not available yet in the local machine. If you wish to install other packages, you can do that by `install.packages('<package_name')` into the `R` console, where `<package_name>` is the name of the package you wish to install.
+This script will install all the packages needed for the project that are not available yet in the local machine. If you wish to install other packages, you can do that by running `install.packages('<package_name')` into the `R` console, where `<package_name>` is the name of the package you wish to install.
 
 
 ## Data Source
 
-All the data analysed within this project, are available in this reporsitory at `./data/`. The occourrence data set has been split into 4 subsets to allows for git hub storage. The file `load_occourrence.R` allows to load the data combined into a unique object.
-Those can be downloaded from the following web services, respectively waterbirds data and climate data:
+All the data analysed within this project, are available in this reporsitory at `./data/`. The occourrence data set has been split into 4 subsets to allows for git hub storage. The file `load_occourrence.R` allows to load the data into the `R` environment combined into a unique object.
+Data can be downloaded from the following web services, respectively for waterbirds data and climate data:
 
 - GBIF - Global Biodiversity Information Facility *Free and open access to biodiversity data* <https://gbif.org/occurrence/>
 - World Bank Group *Climate Change Knowledge Portal* <https://climateknowledgeportal.worldbank.org/download-data>
 
 ## Result reproducibility
 
-In order to reproduce the analysis and extend the results presented in this study, start `final_code.R` from the local folder
+In order to reproduce the analysis and extend the results presented in this research, start `final_code.R` from the local folder. From the terminal:
 
 - `cd <project_folder_path>`
 - `rstudio ./master/final_code.R`
