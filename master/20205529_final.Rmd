@@ -59,7 +59,7 @@ Having access to this information, our goal is to build a model which relates th
 
 \subsection*{Generalized Lienar Model}
 
-During the study we will employ the Generalized Linear Model [@glm_intro] which theory would allow to establish a linear relationship between the quantity of interest $\mathbf{y}$ and a matrix of covariates $\mathbf{X}$ related to each other by a vector of parameters $\mathbf{\beta}$ which values will be determined by the data in input and identified by the \textit{ordinary least square} (OLS) theory. In order to do so, the data matrix $\mathbf{X}$ needs to be of full rank, $rank(\mathbf{X}) = p$, so that we will be able to identify the matrix $(\mathbf{X X}^T)^{-1}$ which will be used in the model estimation. This deterministic part will be combined to a stochastic component which models the uncertainty about the random variable realisation and whose distribution $\mathcal{D(\theta)}$ will be pre-identified and super-imposed in the model estimation
+During the study we will employ the Generalized Linear Model [@glm_intro] which theory would allow to establish a linear relationship between the quantity of interest $\mathbf{y}$ and a matrix of covariates $\mathbf{X}$ related to each other by a vector of parameters $\mathbf{\beta}$ which values will be determined by the data in input and identified by the \textit{ordinary least square} (OLS) theory. In order to do so, the data matrix $\mathbf{X}$ needs to be of full rank, $rank(\mathbf{X}) = p$, so that we will be able to identify the matrix $(\mathbf{X^T}\mathbf{X})^{-1}$ which will be used in the model estimation. This deterministic part will be combined to a stochastic component which models the uncertainty about the random variable realisation and whose distribution $\mathcal{D(\theta)}$ will be pre-identified and super-imposed in the model estimation
 
 $$g(\mathbf{Y})  = \mathbf{X \beta} + \mathbf{\epsilon}$$
 
@@ -477,7 +477,7 @@ Therefore, we will need to deal with the system of ordinary differential equatio
 \end{cases}
 \end{equation}
 
-As done previously, we numerically integrate the system of \textit{ODEs} and inspect the result. In particular, we want to investigate what would happen with different values for the input parameter $\gamma$. In this setting, we try to evaluate the model output for values which are 5 times the estimated standard error away from the point estimate, $\hat{\gamma} \pm 5 \times \hat{SE}(\hat{\gamma})$. In figure \ref{fig:temp_sens} we can observe the system output in log-scale. In the first place, plotting the temperature values $\tau$ against time $t$ in log-scale, we do not observe any appreciable difference for such an extreme shift of the parameter considered. In the second plot, we depict the sensitivity value $s$ against time $t$ and, as before, we cannot notice any significant difference. This analysis clearly state how the model of interest is robust to fairly small perturbations of the input data. Thus, we can rely on its inference.
+As done previously, we numerically integrate the system of \textit{ODEs} and inspect the result. In particular, we want to investigate what would happen with different values for the input parameter $\gamma$. In this setting, we try to evaluate the model output for values which are 5 times the estimated standard error away from the point estimate, $\hat{\gamma} \pm 5 \times \hat{SE}(\hat{\gamma})$. In figure \ref{fig:temp_sens} we can observe the system output in log-scale. In the first place, plotting the temperature values $\tau$ against time $t$ in log-scale, we do not observe any appreciable difference for such an extreme shift of the parameter considered. In the second plot, we depict the sensitivity value $s$ against time $t$ and, as before, we cannot notice any significant difference. This analysis clearly states how the model of interest is robust to fairly small perturbations of the input data. Thus, we can rely on its inference.
 
 \begin{figure}[hbt]
 ```{r temp_lsa}
@@ -534,7 +534,7 @@ for(q in qs){
 Once ascertained the robustness of the temperature model, we are ready to investigate the relationship between the latter and the rainfall amount. In order to do so, we estimate a linear regression model exploiting the \textit{GLM} theory presented in section \ref{sec:techback}, where we add a non-linear component derived by the spline theory leading to a \textit{GAM} which allows us to write 
 $$\textbf{rain} = f(\mathbf{\tau}) + \mathbf{\epsilon}\ \text{ where } \epsilon \sim N(\mu, \sigma^2)$$
 
-The first trial is not satisfactory as the model presents some deficiencies. In particular, the homoskedasticity assumption is violated, meaning that the variance is not constant over the range of values for the input space. In order to address the problem, we perform an iterative weighted least square estimation. By doing so, we drastically reduce the parameters estimated standard error, as shown in table \ref{tab:ols_wls_se}, and gain a considerable $29\%$ reduction in the estimated $BIC$ values.
+Here, the spline degree has been empirically chosen by making usage of the $BIC$, a penalized likelihood criteria, which is optimized for $K=2$. From the results inspection, the first trial is not satisfactory as the model presents some deficiencies. In particular, the homoskedasticity assumption is violated, meaning that the variance is not constant over the range of values for the input space. In order to address the problem, we perform an iterative weighted least square estimation. By doing so, we drastically reduce the parameters estimated standard error, as shown in table \ref{tab:ols_wls_se}, and gain a considerable $29\%$ reduction in the estimated $BIC$ values.
 
 
 
@@ -603,7 +603,7 @@ $\hat{\beta}_0$ & 41.23907927 & 0.00008380 & 492090.20447958 & 0.00000000 \\
 
 
 
-We now need to evaluate the robustness of the model with respect to the parameters in input. As we did previously, we will now try two configuration where we shift the \textit{linear model} parameters estimates by 5 times their standard deviation, $\hat{\beta}_i \pm \hat{SE}(\hat{\beta}_i)$. The results are depicted in figure \ref{fig:rain_time_sens_5se}. Here we can notice that, despite of the fact that the different scenarios lead to different intensities, the estimated confidence regions intersect each other, leading to an overall similar trend. Therefore, we can claim that the model is robust with respect to the data and parameters in input and that, considered the worldwide temperature change, the rainfall amount is consequently decreasing over time.
+We now need to evaluate the robustness of the model with respect to the parameters in input. As we did previously, we will now try two configurations where we shift the \textit{linear model} parameters estimates by 5 times their standard deviation, $\hat{\beta}_i \pm \hat{SE}(\hat{\beta}_i)$. The results are depicted in figure \ref{fig:rain_time_sens_5se}. Here we can notice that, despite of the fact that the different scenarios lead to different intensities, the estimated confidence regions intersect each other, leading to an overall similar trend. Therefore, we can claim that the model is robust with respect to the data and parameters in input and that, considered the worldwide temperature change, the rainfall amount is consequently decreasing over time.
 
 
 \begin{figure}[hbt]
@@ -656,8 +656,8 @@ legend('topright', col = c('red','blue','green'), bty = 'n', lty = 1, lwd = 2,
                   )
 )
 ```
-\label{fig:rain_time_sens_5se}
 \caption{Evolution of rainfall w.r.t. temperature with input parameter $\pm$ 5 $\hat{SE}(\hat{\gamma})$}
+\label{fig:rain_time_sens_5se}
 \end{figure}
 
 
@@ -899,7 +899,7 @@ model_res <- summary(fit_year_temp)
 ```
 
 
-From the model results presented in table \ref{tab:glmer_model_res}, we can observe how the coefficients related to the $year$, $rain$, and $\tau$  marginal terms $\hat{\beta}_{i,year}$, $\hat{\beta}_{rain}$, $\hat{\beta}_{\tau}$ are mainly positive. However, the model interaction terms, $\hat{\beta}_{i,year \times \omega}$ are mainly negative. Moreover, the majority of the estimated standard error is very small compared to the point estimate. This returns an high value of the $z-score$ which implies the coefficient to be statistically significant. All the estimated coefficients are part of a global non-linear function of the predictors which have been standardized. Hence, in order to comment on the results, we need to be consider the features simultaneously. We will do it later in the report, after the model will have been validated, by showing its practical application to the data of interest.
+From the model results presented in table \ref{tab:glmer_model_res}, we can observe how the coefficients related to the $year$, $rain$, and $\tau$  marginal terms $\hat{\beta}_{i,year}$, $\hat{\beta}_{rain}$, $\hat{\beta}_{\tau}$ are mainly positive. However, the model interaction terms, $\hat{\beta}_{i,year \times \omega}$ are mainly negative. Moreover, the majority of the estimated standard error is very small compared to the point estimate. This returns an high value of the $z-score$ which implies the coefficient to be statistically significant. All the estimated coefficients are part of a global non-linear function of the predictors which have been standardized. Hence, in order to comment on the results, we need to consider the features simultaneously. We will do it later in the report, after the model will have been validated, by showing its practical application to the data of interest.
 
 
 \onecolumn
@@ -952,9 +952,9 @@ plot(fitted(fit_year_temp), residuals(fit_year_temp),
 With regard to the random effects, we have assumed a \textit{Normal} distribution for each of these. In figure \ref{fig:ranef_qq} we can inspect the results and notice the following:
 
 \begin{itemize}
-\item for the random intercept the assumption does not hold as we can notice a considerable discrepancy between the observed and theoretical quantiles, figure \ref{fig:ranef_qq} a). However, the intercept related variance is $\hat{\sigma}_0^2 =  1.84571$, which counts for the majority of the total variance, approximately $63\%$, as we can see in table \ref{tab:re_var}. For instance, in figure \ref{fig:ranef_distr} we can observe a very wide range of variation for the random intercept estimation with very few species around the zero and all the other with $95\%$ confidence interval which does not contain the null values, hence statistically significant.
+\item for the random intercept the assumption does not hold much as we can notice a considerable discrepancy between the observed and theoretical quantiles, figure \ref{fig:ranef_qq} a). However, the intercept related variance is $\hat{\sigma}_0^2 =  1.84571$, which counts for the majority of the total variance, approximately $63\%$, as we can see in table \ref{tab:re_var}. For instance, in figure \ref{fig:ranef_distr} we can observe a very wide range of variation for the random intercept estimation with very few species around the zero and all the other with $95\%$ confidence interval which does not contain the null values, hence statistically significant.
 
-\item on the other hand, for the random slope, the empirical distribution agrees with the theoretical one in the central area, but it shows deficiencies in the tail regions, figure \ref{fig:ranef_qq} b). Its contribution to the overall variance is much lower than the previous, approximately $2\%$, table \ref{tab:re_var}, but still worth it since it allows for different effects on different species. With regard to the single term values, we can observe a much tighter range of variation, approximately $[\pm 1]$. Nevertheless, many species-genes slope is estimated to be singificantly different from zero, hence worth including it.
+\item on the other hand, for the random slope, the empirical distribution agrees with the theoretical one in the central area, but it shows deficiencies in the tail regions, figure \ref{fig:ranef_qq} b). Its contribution to the overall variance is much lower than the previous, approximately $2\%$, table \ref{tab:re_var}, but still worth it since it allows for different effects on different species. With regard to the single term values, we can observe a much tighter range of variation, approximately $[\pm 1]$. Nevertheless, many species-genes slopes are estimated to be singificantly different from zero, hence worth including them.
 
 \end{itemize}
 
