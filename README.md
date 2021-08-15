@@ -9,10 +9,6 @@ Interest to climate change has recently grown considerably. Here, we go through 
 
 <table><tr><td><img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/rain.gif"></td><td><img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/temp.gif"></td></tr></table>"
 
-<img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/rain.gif" width=40%>
-<img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/temp.gif" width=40%>
-
-
 #### Wildlife species survival 
 
 Moreover, we are interested to the relationship this phenomenon has with the wildife survival. in particular, in *South Africa* there have been severe drought which have shown to considerably influence the animals death. Here, it is to observe how both the individual count mean and median value are changing over time.
