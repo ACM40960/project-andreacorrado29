@@ -32,9 +32,9 @@ library(splines)
 
 \section*{Abstract}
 
-In this short study, we investigate the major climate change phenomenons such as a rainfall amount and temperature over the last century. We find a relation between year and temperature and between temperature and rainfall amount which we exploit to make prediction about the future 50 years behavior. Moreover, we focus our attention to species survival in South Africa in relation to the climate phenomenons. What we find is that the temperature is steeply raising over time and, as it is negatively correlated, the rainfall amount is consequently decreasing. We also find that these phenomenons are associated to the animals evolution in time which, according the estimated model, is decreasing as well. After the model validation, we provide a possible estimation of the species evolution and notice that the may reach only one individual left, as soon as in 15 years time on average, which would allow them to reproduce anymore. This clearly implies the species extinction.
+In this short study, we investigate the major climate change phenomenons, such as a rainfall amount and temperature, over the last century. We find a relation between year and temperature and between temperature and rainfall amount which we exploit to make prediction about a future plausible 50 years behavior. Moreover, we focus our attention on the species survival in South Africa in relation to the climate phenomenons. What we find is that the temperature is steeply raising over time and, as it is negatively correlated, the rainfall amount is consequently decreasing. We also find that these phenomenons are associated to the animals individual count evolution in time which, according to the estimated model, is decreasing as well. After the model validation, we provide a possible estimation of the species evolution and notice that they may reach only one individual left, as soon as in 15 years time, on average, which would not allow them to reproduce anymore. This clearly implies the species extinction.
 
-In section \ref{sec:intro} we introduce the reader to the topic of interest. In section \ref{sec:techback} we briefly introduce the methodology employed in this research. In section \ref{sec:eda} we perform a data exploratory analysis on the climate phenomenons. In section \ref{sec:climate} we model the climate data and quantify the model uncertainty. In section \ref{sec:population} we model the wildlife count in relation to the climate data and provide a possible scenario for the future 50 years time. In section \ref{sec:conclusion} we summarise the finding of this research.
+In section \ref{sec:intro} we introduce the reader to the topic of interest. In section \ref{sec:techback} we briefly introduce the methodology employed in this research. In section \ref{sec:eda} we perform a data exploratory analysis on the climate phenomenons. In section \ref{sec:climate} we model the climate data and quantify the model uncertainty. In section \ref{sec:population} we model the wildlife individual count in relation to the climate data and provide a possible scenario for the future 50 years time. In section \ref{sec:conclusion} we summarise the finding of this research.
 
 \thispagestyle{empty}
 \clearpage
@@ -680,7 +680,7 @@ legend('topright', col = c('red','blue','green'), bty = 'n', lty = 1, lwd = 2,
 
 \subsection*{Data Pre Processing}
 
-In the previous section we have presented the data and respective results on the climate phenomenons including temperature and rainfall information from 1901 up to 2021. In this section, we are going to present the waterbirds species count data over time with the goal to identify the relation between its evolution and the covariates explored earlier. In particular, the data set of interest provide the specie individual count per year from 1975 to 2021. Within this data set we observe monthly variation which, for simplicity and consistency with the climate data, will be averaged over the different years. For different species and genes, we have different number of observation and, as we observe up to 103 species and genes combinations, we decide to keep only those whose numerousness can provide robust results, from $n_i =30$ onward, as per figure 11.
+In the previous section we have presented the data and respective results on the climate phenomenons including temperature and rainfall information from 1901 up to 2021. In this section, we are going to present the waterbirds species count data over time with the goal to identify the relation between its evolution and the covariates explored earlier. In particular, the data set of interest provide the species individual count per year from 1975 to 2021. Within this data set we observe monthly variation which, for simplicity and consistency with the climate data, will be averaged over the different years. For different species and genes, we have different number of observation and, as we observe up to 103 species and genes combinations, we decide to keep only those whose numerousness can provide robust results, from $n_i =30$ onward, as per figure 11.
 
 
 \begin{figure}[hbt]
@@ -1011,7 +1011,7 @@ $\sigma_i^2 / \sigma_Y^2$ & 0.6336 & 0.0231 & 0.3433 \\
 dotplot_ranef <- lattice::dotplot(fit_ranef)
 dotplot_ranef$species
 ```
-\caption{Individual random effect for each specie}
+\caption{Individual random effect for each species}
 \label{fig:ranef_distr}
 \end{figure}
 \twocolumn
