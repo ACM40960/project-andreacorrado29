@@ -28,6 +28,8 @@ Moreover, we are interested to the relationship this phenomenon has with the wil
 
 The question we try to answer is: *according to the current trend, what would happen in 50 years time to these animals?*  check the report  `report_20205529.pdf` to find it out.
 
+**NOTE:** FIgure 12 has had a rendering issue on the lines opacity which I have not been able to fix yet. Consider rendering the figure from `final_code.R` at line 613:623.
+
 ## Installation instruction
 
 #### R
