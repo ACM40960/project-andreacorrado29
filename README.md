@@ -61,7 +61,7 @@ In order to reproduce the analysis and extend the results presented in this stud
 - `cd <project_folder_path>`
 - `rstudio ./master/final_code.R`
 
-The code is clearly commented, therefore, once you have opened the `final_code` into your environment, you can easily change the settings and play with the code according to your interest. Do not forget to contribute with the interesting findings you will have!
+The code is clearly commented, therefore, once you have opened the `final_code.R` into your environment, you can easily change the settings and play with the code according to your interest. Do not forget to contribute with the interesting findings you will get!
 
 ## Repository Files
 Within this repository, you will have access to the data folder `data` which includes:
