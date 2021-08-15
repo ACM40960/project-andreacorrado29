@@ -7,6 +7,8 @@ Interest to climate change has recently grown considerably. Here, we go through 
 
 <br>
 
+<table><tr><td><img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/rain.gif" width=40%></td><td><img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/temp.gif" width=40%></td></tr></table>"
+
 <img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/rain.gif" width=40%>
 <img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/temp.gif" width=40%>
 
