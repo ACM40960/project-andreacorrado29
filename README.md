@@ -1,5 +1,8 @@
 # SA Drought: consequences on species survival
 
+#### Andrea Corrado 20205529 Msc Data & Computational Science
+#### Module ACM40960 - Lecturer Dr Sarp Akcay
+
 ## Overview 
 Interest to climate change has recently grown considerably. Here, we go through the main phenomenons such as rainfall amount and temperature to understand how their trend is evolving over time. 
 
