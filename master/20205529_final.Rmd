@@ -59,7 +59,7 @@ Having access to this information, our goal is to build a model which relates th
 
 \subsection*{Generalized Lienar Model}
 
-During the study we will employ the Generalized Linear Model [@glm_intro] which theory would allow to establish a linear relationship between the quantity of interest $\mathbf{y}$ and a matrix of covariates $\mathbf{X}$ related to each other by a vector of parameters $\mathbf{\beta}$ which values will be determined by the data in input and identified by the \textit{ordinary least square} (OLS) theory. In order to do so, the data matrix $\mathbf{X}$ needs to be of full rank $rank(\mathbf{X}) = p$ so that we will be able to identify its inverse which will be used in the model estimation. This deterministic part will be combined to a stochastic component which models the uncertainty about the random variable realisation and whose distribution $\mathcal{D(\theta)}$ will be pre-identified and super-imposed in the model estimation
+During the study we will employ the Generalized Linear Model [@glm_intro] which theory would allow to establish a linear relationship between the quantity of interest $\mathbf{y}$ and a matrix of covariates $\mathbf{X}$ related to each other by a vector of parameters $\mathbf{\beta}$ which values will be determined by the data in input and identified by the \textit{ordinary least square} (OLS) theory. In order to do so, the data matrix $\mathbf{X}$ needs to be of full rank, $rank(\mathbf{X}) = p$, so that we will be able to identify the matrix $(\mathbf{X X}^T)^{-1}$ which will be used in the model estimation. This deterministic part will be combined to a stochastic component which models the uncertainty about the random variable realisation and whose distribution $\mathcal{D(\theta)}$ will be pre-identified and super-imposed in the model estimation
 
 $$g(\mathbf{Y})  = \mathbf{X \beta} + \mathbf{\epsilon}$$
 
@@ -92,7 +92,7 @@ Local weighted regression is a non parametric framework which allows for an esti
 
 $$ \mathbf{y} = f(\mathbf{X}) + \epsilon $$
 
-The model depends on the hyperparameter $span$ which controls the number of observation to be included in the estimation of each $y_i$ and varies in $[0,1]$
+The model depends on the span hyperparameter $s$  which controls the number of observation to be included in the estimation of each $y_i$ and varies in $[0,1]$
 $$ \lceil s \times n \rceil = k $$
 where $n$ is the total number of observations. By doing so, for each response unit, we will use the $s$ percentage of the point that are the closest in the p-dimensional space of the covariate according to a distance measure, such the \textit{Euclidean distance}. Clearly, $s=1$ would lead to the usage of all the data points, hence a global estimation, while a smaller value $s\rightarrow0$ would lead to a more local estimation, with very few points being used.
 
@@ -233,12 +233,12 @@ In order to keep track the evolution of the phenomenon over time and to give an 
 \item $50\%$ of the neighbor data to allow for a more local structure
 \end{itemize}
 
-By investigating the results in figure \ref{fig:esa_rain_temp} we can notice how the global fit to the rain data shows a constant trend up to the 1950 which evolves in a slightly linear decreasing trend onward, plot a). On the other hand, the local fit shows an overall constant trend up to the 1980s which evolves in a steeper decrease for the later year, b). Nevertheless, both the models suggest an evolution of the amount of rainfall which negatively changes over time.
+By investigating the results in figure \ref{fig:esa_rain_temp} we can notice how the global fit to the rain data shows a constant trend up to the 1950 which evolves in a slightly linear decreasing trend onward, plot a). On the other hand, the local fit shows an overall constant trend up to the 1980s which evolves in a steeper decrease for the later years, b). Nevertheless, both the models suggest an evolution of the amount of rainfall which negatively changes over time.
 
-Afterwards, we fit a the same two models for the temperature data. Here the relation with time is much clearer. For instance, we can observe how the global fit shows a linearly increasing trend over time, with constant velocity, c). In contrast, the local fit shows an increasing trend with different intensities in different period allowing for non linear relationship d). Nevertheless, the overall trend does not change dramatically. The annual average temperature has clearly been increasing over the last century.
+Afterwards, we fit a the same two models for the temperature data. Here the relation with time is much clearer. For instance, we can observe how the global fit shows a linearly increasing trend over time, with constant velocity, c). In contrast, the local fit shows an increasing trend with different intensities in different periods allowing for non linear relationship d). Nevertheless, the overall trend does not change dramatically. The annual average temperature has clearly been increasing over the last century.
 
 
-Then, we investigate the annual temperature increment In figure e) with span size $s = 100$ we can see a flat trend up to the last half century, and then an increasing trend, indicating more positive values than negative ones. In figure f) with span size $s = 50$ we can see an initial slightly increasing trend, followed by a fairly negative period during the 50s, followed by a clearly steep increasing trend from the 60s onward. The results is approximately the same, the growth in tempeature over the last decades is clearly positive.
+Then, we investigate the annual temperature increment. In figure e) with span size $s = 1$ we can see a flat trend up to the last half century, and then an increasing trend, indicating more positive values than negative ones. In figure f) with span size $s = .5$ we can see an initial slightly increasing trend, followed by a fairly negative period during the 50s, followed by a clearly steep increasing trend from the 60s onward. The results are approximately the same, the growth in tempeature over the last decades is clearly positive.
 
 
 ```{r esa_loadX}
