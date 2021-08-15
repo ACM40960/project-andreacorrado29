@@ -480,7 +480,7 @@ Therefore, we will need to deal with the system of ordinary differential equatio
 As done previously, we numerically integrate the system of \textit{ODEs} and inspect the result. In particular, we want to investigate what would happen with different values for the input parameter $\gamma$. In this setting, we try to evaluate the model output for values which are 5 times the estimated standard error away from the point estimate, $\hat{\gamma} \pm 5 \times \hat{SE}(\hat{\gamma})$. In figure \ref{fig:temp_sens} we can observe the system output in log-scale. In the first place, plotting the temperature values $\tau$ against time $t$ in log-scale, we do not observe any appreciable difference for such an extreme shift of the parameter considered. In the second plot, we depict the sensitivity value $s$ against time $t$ and, as before, we cannot notice any significant difference. This analysis clearly states how the model of interest is robust to fairly small perturbations of the input data. Thus, we can rely on its inference.
 
 \begin{figure}[hbt]
-```{r temp_lsa}
+```{r temp_lsa,fig.height=3}
 tempsens <- function(t, state, parms) {
   
   with(as.list(c(state,parms)), {
@@ -508,6 +508,7 @@ for(q in qs){
   
   f <- function(x) log(x)
   ylim <- f(range(out_temp_sens1[,2], out_temp_sens2[,2], out_temp_sens3[,2]))
+  par(mar = c(5.1, 4.1, 4.1, 4.1))
   plot(out_temp_sens1[,1],  f(out_temp_sens1[,2]), type = 'l', xlab = 'time',
        ylab = 'temperature', ylim = ylim)
   lines(out_temp_sens2[,1], f(out_temp_sens2[,2]), type = 'l', col = 'red')
