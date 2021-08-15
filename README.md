@@ -1,5 +1,8 @@
 # SA Drought: consequences on species survival
 
+#### Andrea Corrado 20205529 Msc Data & Computational Science
+#### Module ACM40960 - Lecturer Dr Sarp Akcay
+
 ## Overview 
 Interest to climate change has recently grown considerably. Here, we go through the main phenomenons such as rainfall amount and temperature to understand how their trend is evolving over time. 
 
@@ -7,11 +10,15 @@ Interest to climate change has recently grown considerably. Here, we go through 
 
 <br>
 
+<<<<<<< HEAD
 <table><tr><td><img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/rain.gif" width=40%></td><td><img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/temp.gif" width=40%></td></tr></table>"
 
 <img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/rain.gif" width=40%>
 <img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/temp.gif" width=40%>
 
+=======
+<table><tr><td><img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/rain.gif"></td><td><img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/temp.gif"></td></tr></table>"
+>>>>>>> 489bc1163a2012b8553d7fe8eebb1d49162b5f80
 
 #### Wildlife species survival 
 
@@ -44,7 +51,7 @@ In order to run the code you need to install different external packages. To do 
 - get into the project folder `cd <project_folder_path>`
 - run the script into the master folder `Rscript ./master/pacakges_install.R`
 
-This script will install all the package need for the project that are not available yet in the local machine. If you wish to install other packages, you can do that by `install.packages('<package_name')` into the `R` console, where `<package_name>` is the name of the package you wish to install.
+This script will install all the packages needed for the project that are not available yet in the local machine. If you wish to install other packages, you can do that by `install.packages('<package_name')` into the `R` console, where `<package_name>` is the name of the package you wish to install.
 
 
 ## Data Source
@@ -52,7 +59,7 @@ This script will install all the package need for the project that are not avail
 All the data analysed within this project, are available in this reporsitory at `./data/`. The occourrence data set has been split into 4 subsets to allows for git hub storage. The file `load_occourrence.R` allows to load the data combined into a unique object.
 Those can be downloaded from the following web services, respectively waterbirds data and climate data:
 
-- GBIF - Global Biodiversity Information Facility *Free and open access to biodiversity data* <www.gbif.org/occurrence/>
+- GBIF - Global Biodiversity Information Facility *Free and open access to biodiversity data* <https://gbif.org/occurrence/>
 - World Bank Group *Climate Change Knowledge Portal* <https://climateknowledgeportal.worldbank.org/download-data>
 
 ## Result reproducibility
@@ -62,7 +69,7 @@ In order to reproduce the analysis and extend the results presented in this stud
 - `cd <project_folder_path>`
 - `rstudio ./master/final_code.R`
 
-The code is clearly commented, therefore, once you have opened the `final_code` into your environment, you can easily change the settings and play with the code according to your interest. Do not forget to contribute with the interesting findings you will have!
+The code is clearly commented, therefore, once you have opened the `final_code.R` into your environment, you can easily change the settings and play with the code according to your interest. Do not forget to contribute with the interesting findings you will get!
 
 ## Repository Files
 Within this repository, you will have access to the data folder `data` which includes:
