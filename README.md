@@ -17,7 +17,7 @@ Moreover, we are interested to the relationship this phenomenon has with the wil
 
 <img src="https://github.com/ACM40960/project-andreacorrado29/blob/master/figures/count.gif" width=40%>
 
-The question we try to answer is: *according to the current trend, what would happen in 50 years time to these animals?*  check the report  `20205529_final.pdf` to find it out.
+The question we try to answer is: *according to the current trend, what would happen in 50 years time to these animals?*  check the report  `report_20205529.pdf` to find it out.
 
 ## Installation instruction
 
@@ -50,7 +50,7 @@ This script will install all the package need for the project that are not avail
 All the data analysed within this project, are available in this reporsitory at `./data/`. The occourrence data set has been split into 4 subsets to allows for git hub storage. The file `load_occourrence.R` allows to load the data combined into a unique object.
 Those can be downloaded from the following web services, respectively waterbirds data and climate data:
 
-- GBIF - Global Biodiversity Information Facility *Free and open access to biodiversity data* <www.gbif.org/occurrence/>
+- GBIF - Global Biodiversity Information Facility *Free and open access to biodiversity data* <https://gbif.org/occurrence/>
 - World Bank Group *Climate Change Knowledge Portal* <https://climateknowledgeportal.worldbank.org/download-data>
 
 ## Result reproducibility
