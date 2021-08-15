@@ -94,14 +94,18 @@ legend('topleft', col = 'grey', lty = NA, lwd = NA, bty = 'n', pch = 1,
 
 # plot non parametric local regression to for rainfall ----------------------------
 
-# span value: 1
+# plot_lowess: function to allows for easy plot and non parametric fit line
+# sourced from `functions.R`, check it out for more details on its functionality
+# and the description of the parameters in input
+
+# span value: f = 1
 plot_lowess(rain$year, rain$rain, f = 1, 
             main = 'Average rain fall amount per year', ax = rain$year,
             xlab = 'year', ylab = 'rain fall amount', type = 'l')
 legend('topright', legend = c('span 100%'), lty = 1, lwd = 2,
        bty = 'n', col = c('violetred'))
 
-# span value: .5
+# span value: f = .5
 plot_lowess(rain$year, rain$rain, f = .5, 
             main = 'Average rain fall amount per year', ax = rain$year,
             xlab = 'year', ylab = 'rain fall amount', type = 'l',
@@ -115,7 +119,7 @@ legend('topright', legend = c('span  50%'), lty = 1, lwd = 2,
 # plot non parametric local regression to for temperature ----------------------------
 
 
-# span 1
+# span: f = 1
 plot_lowess(temp$year, temp$temp, f = 1, ax = temp$year,
             xlab = 'year', ylab = 'temperature', type = 'l',
             main = 'Annual temperature over year')
@@ -123,7 +127,7 @@ plot_lowess(temp$year, temp$temp, f = 1, ax = temp$year,
 legend('topleft', legend = c('span  100%'), lty = 1, lwd = 2,
        bty = 'n', col = c('violetred'))
 
-# span .5
+# span: f = .5
 plot_lowess(temp$year, temp$temp, f = .5, ax = temp$year,
             xlab = 'year', ylab = 'temperature', type = 'l',
             add = 0, fit.col = 'blue', main = 'Annual temperature over year')
@@ -134,7 +138,7 @@ legend('topleft', legend = c('span  50%'), lty = 1, lwd = 2,
 # plot non parametric local regression to for temp increment ------------------------
 
 
-# span 1 
+# span: f = 1 
 plot_lowess(temp$year, c(0, diff(temp$temp)), f = 1, ax = temp$year,
             xlab = 'year', ylab = 'temperature', type = 'l',
             main = 'Annual temperature increment')
@@ -144,7 +148,7 @@ legend('topleft', legend = c('span  100%'), lty = 1, lwd = 2,
        bty = 'n', col = c('violetred'))
 
 
-# span .5
+# span: f = .5
 plot_lowess(temp$year, c(0, diff(temp$temp)), f = .5, ax = temp$year,
             xlab = 'year', ylab = 'temperature', type = 'l',
             main = 'Annual temperature increment',
